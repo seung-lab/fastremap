@@ -152,6 +152,36 @@ def renumber(arr, uint64_t start=1, preserve_zero=True):
   return output, remap_dict
 
 @cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)          
+def remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False):
+  """
+  remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False)
+
+  Remap an input numpy array in-place according to the values in the given 
+  dictionary "table". Depending on the value of "preserve_missing_labels", 
+  if an array value is not present in "table", leave it alone or throw a KeyError.
+
+  Returns: remapped array
+  """
+  cdef ALLINT[:] arrview = arr
+  cdef int i = 0
+
+  cdef int size = arr.size
+
+  for i in range(size):
+    elem = arr[i]
+    try:
+      arrview[i] = table[elem]
+    except KeyError:
+      if preserve_missing_labels:
+        continue
+      else:
+        raise
+
+  return arr
+
+@cython.boundscheck(False)
 def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
   cdef UINT[:] valview = vals
   cdef UINT[:] arrview = arr
@@ -200,32 +230,4 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
   return arr
 
-@cython.boundscheck(False)
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
-@cython.nonecheck(False)          
-def remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False):
-  """
-  remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False)
 
-  Remap an input numpy array in-place according to the values in the given 
-  dictionary "table". Depending on the value of "preserve_missing_labels", 
-  if an array value is not present in "table", leave it alone or throw a KeyError.
-
-  Returns: remapped array
-  """
-  cdef ALLINT[:] arrview = arr
-  cdef int i = 0
-
-  cdef int size = arr.size
-
-  for i in range(size):
-    elem = arr[i]
-    try:
-      arrview[i] = table[elem]
-    except KeyError:
-      if preserve_missing_labels:
-        continue
-      else:
-        raise
-
-  return arr
