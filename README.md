@@ -78,7 +78,7 @@ python setup.py develop
 python setup.py install 
 ```
 
---
+--  
 Made with <3
 
 
