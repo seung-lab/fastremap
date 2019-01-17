@@ -8659,13 +8659,14 @@ static PyObject *__pyx_pf_9fastremap_22remap(CYTHON_UNUSED PyObject *__pyx_self,
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_9fastremap_5remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_9fastremap_5remap_from_array = {"remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9fastremap_5remap_from_array, METH_VARARGS|METH_KEYWORDS, 0};
+static char __pyx_doc_9fastremap_4remap_from_array[] = "\n  remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)\n  ";
+static PyMethodDef __pyx_mdef_9fastremap_5remap_from_array = {"remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9fastremap_5remap_from_array, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_4remap_from_array};
 static PyObject *__pyx_pw_9fastremap_5remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_signatures = 0;
   PyObject *__pyx_v_args = 0;
@@ -9299,7 +9300,7 @@ static PyObject *__pyx_pf_9fastremap_4remap_from_array(CYTHON_UNUSED PyObject *_
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_27remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_0__pyx_mdef_9fastremap_27remap_from_array = {"__pyx_fuse_0remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_0__pyx_pw_9fastremap_27remap_from_array, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_0__pyx_mdef_9fastremap_27remap_from_array = {"__pyx_fuse_0remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_0__pyx_pw_9fastremap_27remap_from_array, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_4remap_from_array};
 static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_27remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_vals = 0;
@@ -9409,31 +9410,31 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":186
- * @cython.boundscheck(False)
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":189
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
+ *   """
  *   cdef UINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef UINT[:] arrview = arr
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 189, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":187
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":190
+ *   """
  *   cdef UINT[:] valview = vals
  *   cdef UINT[:] arrview = arr             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t i = 0
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 190, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":189
+  /* "fastremap.pyx":192
  *   cdef UINT[:] arrview = arr
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -9442,36 +9443,36 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":190
+  /* "fastremap.pyx":193
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size             # <<<<<<<<<<<<<<
  *   cdef size_t maxkey = vals.size - 1
  *   cdef UINT elem
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_size = __pyx_t_3;
 
-  /* "fastremap.pyx":191
+  /* "fastremap.pyx":194
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size
  *   cdef size_t maxkey = vals.size - 1             # <<<<<<<<<<<<<<
  *   cdef UINT elem
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_maxkey = __pyx_t_3;
 
-  /* "fastremap.pyx":194
+  /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -9486,7 +9487,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":195
+        /* "fastremap.pyx":198
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -9498,7 +9499,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
         for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
           __pyx_v_i = __pyx_t_6;
 
-          /* "fastremap.pyx":196
+          /* "fastremap.pyx":199
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -9508,7 +9509,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_t_7 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":197
+          /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -9526,7 +9527,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_L9_bool_binop_done:;
           if (__pyx_t_8) {
 
-            /* "fastremap.pyx":198
+            /* "fastremap.pyx":201
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:
  *         continue             # <<<<<<<<<<<<<<
@@ -9535,7 +9536,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
  */
             goto __pyx_L6_continue;
 
-            /* "fastremap.pyx":197
+            /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -9544,7 +9545,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
  */
           }
 
-          /* "fastremap.pyx":199
+          /* "fastremap.pyx":202
  *       if elem < 0 or elem > maxkey:
  *         continue
  *       arrview[i] = vals[elem]             # <<<<<<<<<<<<<<
@@ -9558,7 +9559,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
         }
       }
 
-      /* "fastremap.pyx":194
+      /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -9577,7 +9578,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
       }
   }
 
-  /* "fastremap.pyx":201
+  /* "fastremap.pyx":204
  *       arrview[i] = vals[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -9593,8 +9594,8 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
 
   /* function exit code */
@@ -9625,7 +9626,7 @@ static PyObject *__pyx_pf_9fastremap_26remap_from_array(CYTHON_UNUSED PyObject *
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_29remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_1__pyx_mdef_9fastremap_29remap_from_array = {"__pyx_fuse_1remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_1__pyx_pw_9fastremap_29remap_from_array, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_1__pyx_mdef_9fastremap_29remap_from_array = {"__pyx_fuse_1remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_1__pyx_pw_9fastremap_29remap_from_array, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_4remap_from_array};
 static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_29remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_vals = 0;
@@ -9735,31 +9736,31 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":186
- * @cython.boundscheck(False)
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":189
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
+ *   """
  *   cdef UINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef UINT[:] arrview = arr
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 189, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":187
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":190
+ *   """
  *   cdef UINT[:] valview = vals
  *   cdef UINT[:] arrview = arr             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t i = 0
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 190, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":189
+  /* "fastremap.pyx":192
  *   cdef UINT[:] arrview = arr
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -9768,36 +9769,36 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":190
+  /* "fastremap.pyx":193
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size             # <<<<<<<<<<<<<<
  *   cdef size_t maxkey = vals.size - 1
  *   cdef UINT elem
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_size = __pyx_t_3;
 
-  /* "fastremap.pyx":191
+  /* "fastremap.pyx":194
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size
  *   cdef size_t maxkey = vals.size - 1             # <<<<<<<<<<<<<<
  *   cdef UINT elem
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_maxkey = __pyx_t_3;
 
-  /* "fastremap.pyx":194
+  /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -9812,7 +9813,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":195
+        /* "fastremap.pyx":198
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -9824,7 +9825,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
         for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
           __pyx_v_i = __pyx_t_6;
 
-          /* "fastremap.pyx":196
+          /* "fastremap.pyx":199
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -9834,7 +9835,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_t_7 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":197
+          /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -9852,7 +9853,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_L9_bool_binop_done:;
           if (__pyx_t_8) {
 
-            /* "fastremap.pyx":198
+            /* "fastremap.pyx":201
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:
  *         continue             # <<<<<<<<<<<<<<
@@ -9861,7 +9862,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
  */
             goto __pyx_L6_continue;
 
-            /* "fastremap.pyx":197
+            /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -9870,7 +9871,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
  */
           }
 
-          /* "fastremap.pyx":199
+          /* "fastremap.pyx":202
  *       if elem < 0 or elem > maxkey:
  *         continue
  *       arrview[i] = vals[elem]             # <<<<<<<<<<<<<<
@@ -9884,7 +9885,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
         }
       }
 
-      /* "fastremap.pyx":194
+      /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -9903,7 +9904,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
       }
   }
 
-  /* "fastremap.pyx":201
+  /* "fastremap.pyx":204
  *       arrview[i] = vals[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -9919,8 +9920,8 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
 
   /* function exit code */
@@ -9951,7 +9952,7 @@ static PyObject *__pyx_pf_9fastremap_28remap_from_array(CYTHON_UNUSED PyObject *
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_31remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_2__pyx_mdef_9fastremap_31remap_from_array = {"__pyx_fuse_2remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_2__pyx_pw_9fastremap_31remap_from_array, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_2__pyx_mdef_9fastremap_31remap_from_array = {"__pyx_fuse_2remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_2__pyx_pw_9fastremap_31remap_from_array, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_4remap_from_array};
 static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_31remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_vals = 0;
@@ -10061,31 +10062,31 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":186
- * @cython.boundscheck(False)
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":189
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
+ *   """
  *   cdef UINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef UINT[:] arrview = arr
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 189, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":187
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":190
+ *   """
  *   cdef UINT[:] valview = vals
  *   cdef UINT[:] arrview = arr             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t i = 0
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 190, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":189
+  /* "fastremap.pyx":192
  *   cdef UINT[:] arrview = arr
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -10094,36 +10095,36 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":190
+  /* "fastremap.pyx":193
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size             # <<<<<<<<<<<<<<
  *   cdef size_t maxkey = vals.size - 1
  *   cdef UINT elem
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_size = __pyx_t_3;
 
-  /* "fastremap.pyx":191
+  /* "fastremap.pyx":194
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size
  *   cdef size_t maxkey = vals.size - 1             # <<<<<<<<<<<<<<
  *   cdef UINT elem
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_maxkey = __pyx_t_3;
 
-  /* "fastremap.pyx":194
+  /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -10138,7 +10139,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":195
+        /* "fastremap.pyx":198
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -10150,7 +10151,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
         for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
           __pyx_v_i = __pyx_t_6;
 
-          /* "fastremap.pyx":196
+          /* "fastremap.pyx":199
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -10160,7 +10161,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_t_7 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":197
+          /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -10178,7 +10179,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_L9_bool_binop_done:;
           if (__pyx_t_8) {
 
-            /* "fastremap.pyx":198
+            /* "fastremap.pyx":201
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:
  *         continue             # <<<<<<<<<<<<<<
@@ -10187,7 +10188,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
  */
             goto __pyx_L6_continue;
 
-            /* "fastremap.pyx":197
+            /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -10196,7 +10197,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
  */
           }
 
-          /* "fastremap.pyx":199
+          /* "fastremap.pyx":202
  *       if elem < 0 or elem > maxkey:
  *         continue
  *       arrview[i] = vals[elem]             # <<<<<<<<<<<<<<
@@ -10210,7 +10211,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
         }
       }
 
-      /* "fastremap.pyx":194
+      /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -10229,7 +10230,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
       }
   }
 
-  /* "fastremap.pyx":201
+  /* "fastremap.pyx":204
  *       arrview[i] = vals[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -10245,8 +10246,8 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
 
   /* function exit code */
@@ -10277,7 +10278,7 @@ static PyObject *__pyx_pf_9fastremap_30remap_from_array(CYTHON_UNUSED PyObject *
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_33remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_3__pyx_mdef_9fastremap_33remap_from_array = {"__pyx_fuse_3remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_3__pyx_pw_9fastremap_33remap_from_array, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_3__pyx_mdef_9fastremap_33remap_from_array = {"__pyx_fuse_3remap_from_array", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_3__pyx_pw_9fastremap_33remap_from_array, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_4remap_from_array};
 static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_33remap_from_array(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_vals = 0;
@@ -10387,31 +10388,31 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":186
- * @cython.boundscheck(False)
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":189
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
+ *   """
  *   cdef UINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef UINT[:] arrview = arr
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 189, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":187
- * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  /* "fastremap.pyx":190
+ *   """
  *   cdef UINT[:] valview = vals
  *   cdef UINT[:] arrview = arr             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t i = 0
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 190, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":189
+  /* "fastremap.pyx":192
  *   cdef UINT[:] arrview = arr
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -10420,36 +10421,36 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":190
+  /* "fastremap.pyx":193
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size             # <<<<<<<<<<<<<<
  *   cdef size_t maxkey = vals.size - 1
  *   cdef UINT elem
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_size = __pyx_t_3;
 
-  /* "fastremap.pyx":191
+  /* "fastremap.pyx":194
  *   cdef size_t i = 0
  *   cdef size_t size = arr.size
  *   cdef size_t maxkey = vals.size - 1             # <<<<<<<<<<<<<<
  *   cdef UINT elem
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_maxkey = __pyx_t_3;
 
-  /* "fastremap.pyx":194
+  /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -10464,7 +10465,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":195
+        /* "fastremap.pyx":198
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -10476,7 +10477,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
         for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
           __pyx_v_i = __pyx_t_6;
 
-          /* "fastremap.pyx":196
+          /* "fastremap.pyx":199
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -10486,7 +10487,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_t_7 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":197
+          /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -10504,7 +10505,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
           __pyx_L9_bool_binop_done:;
           if (__pyx_t_8) {
 
-            /* "fastremap.pyx":198
+            /* "fastremap.pyx":201
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:
  *         continue             # <<<<<<<<<<<<<<
@@ -10513,7 +10514,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
  */
             goto __pyx_L6_continue;
 
-            /* "fastremap.pyx":197
+            /* "fastremap.pyx":200
  *     for i in range(size):
  *       elem = arr[i]
  *       if elem < 0 or elem > maxkey:             # <<<<<<<<<<<<<<
@@ -10522,7 +10523,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
  */
           }
 
-          /* "fastremap.pyx":199
+          /* "fastremap.pyx":202
  *       if elem < 0 or elem > maxkey:
  *         continue
  *       arrview[i] = vals[elem]             # <<<<<<<<<<<<<<
@@ -10536,7 +10537,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
         }
       }
 
-      /* "fastremap.pyx":194
+      /* "fastremap.pyx":197
  *   cdef UINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -10555,7 +10556,7 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
       }
   }
 
-  /* "fastremap.pyx":201
+  /* "fastremap.pyx":204
  *       arrview[i] = vals[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -10571,8 +10572,8 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
 
   /* function exit code */
@@ -10601,17 +10602,18 @@ static PyObject *__pyx_pf_9fastremap_32remap_from_array(CYTHON_UNUSED PyObject *
   return __pyx_r;
 }
 
-/* "fastremap.pyx":204
+/* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_9fastremap_7remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_9fastremap_7remap_from_array_kv = {"remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9fastremap_7remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static char __pyx_doc_9fastremap_6remap_from_array_kv[] = "\n  remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)\n  ";
+static PyMethodDef __pyx_mdef_9fastremap_7remap_from_array_kv = {"remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9fastremap_7remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_pw_9fastremap_7remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_signatures = 0;
   PyObject *__pyx_v_args = 0;
@@ -10647,23 +10649,23 @@ static PyObject *__pyx_pw_9fastremap_7remap_from_array_kv(PyObject *__pyx_self, 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kwargs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_defaults)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -10680,7 +10682,7 @@ static PyObject *__pyx_pw_9fastremap_7remap_from_array_kv(PyObject *__pyx_self, 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -10739,7 +10741,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
   int __pyx_t_18;
   __Pyx_RefNannySetupContext("remap_from_array_kv", 0);
   __Pyx_INCREF(__pyx_v_kwargs);
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
@@ -10753,7 +10755,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
     __pyx_t_2 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
@@ -10761,7 +10763,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
     __Pyx_INCREF(Py_None);
     __Pyx_DECREF_SET(__pyx_v_kwargs, Py_None);
   }
-  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_ndarray = ((PyTypeObject*)__pyx_t_1);
   __pyx_t_1 = 0;
@@ -10776,14 +10778,14 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
   __pyx_v____pyx_int64_t_is_signed = (!((((int64_t)-1L) > 0) != 0));
   if (unlikely(__pyx_v_args == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 204, __pyx_L1_error)
+    __PYX_ERR(0, 207, __pyx_L1_error)
   }
-  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_t_2 = ((0 < __pyx_t_5) != 0);
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 204, __pyx_L1_error)
+      __PYX_ERR(0, 207, __pyx_L1_error)
     }
     __pyx_t_1 = PyTuple_GET_ITEM(((PyObject*)__pyx_v_args), 0);
     __Pyx_INCREF(__pyx_t_1);
@@ -10800,18 +10802,18 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
   }
   if (unlikely(__pyx_v_kwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 204, __pyx_L1_error)
+    __PYX_ERR(0, 207, __pyx_L1_error)
   }
-  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_4 != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_kwargs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 204, __pyx_L1_error)
+      __PYX_ERR(0, 207, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -10820,12 +10822,12 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
   /*else*/ {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 204, __pyx_L1_error)
+      __PYX_ERR(0, 207, __pyx_L1_error)
     }
-    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 207, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_int_3);
     __Pyx_GIVEREF(__pyx_int_3);
@@ -10836,15 +10838,15 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 204, __pyx_L1_error)
+    __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_L6:;
   while (1) {
@@ -10854,7 +10856,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg, __pyx_v_ndarray); 
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_dtype = __pyx_t_6;
         __pyx_t_6 = 0;
@@ -10863,14 +10865,14 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_2 = __pyx_memoryview_check(__pyx_v_arg); 
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_arg_base = __pyx_t_6;
         __pyx_t_6 = 0;
         __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg_base, __pyx_v_ndarray); 
         __pyx_t_2 = (__pyx_t_3 != 0);
         if (__pyx_t_2) {
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_v_dtype = __pyx_t_6;
           __pyx_t_6 = 0;
@@ -10892,14 +10894,14 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_2 = (__pyx_v_dtype != Py_None);
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_itemsize = __pyx_t_5;
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_kind = __pyx_t_7;
         __pyx_v_dtype_signed = (__pyx_v_kind == 'i');
@@ -10912,9 +10914,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L16_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -10926,7 +10928,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L16_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint16_t)) == __pyx_v_itemsize) != 0);
@@ -10935,9 +10937,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L20_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -10949,7 +10951,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L20_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint32_t)) == __pyx_v_itemsize) != 0);
@@ -10958,9 +10960,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L24_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -10972,7 +10974,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L24_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint64_t)) == __pyx_v_itemsize) != 0);
@@ -10981,9 +10983,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L28_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -10995,7 +10997,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L28_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int8_t)) == __pyx_v_itemsize) != 0);
@@ -11004,9 +11006,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L32_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -11018,7 +11020,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L32_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int16_t)) == __pyx_v_itemsize) != 0);
@@ -11027,9 +11029,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L36_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -11041,7 +11043,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L36_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int32_t)) == __pyx_v_itemsize) != 0);
@@ -11050,9 +11052,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L40_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -11064,7 +11066,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L40_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int64_t)) == __pyx_v_itemsize) != 0);
@@ -11073,9 +11075,9 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L44_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 1) != 0);
           if (__pyx_t_2) {
@@ -11087,7 +11089,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
           __pyx_t_3 = __pyx_t_2;
           __pyx_L44_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -11116,7 +11118,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11138,7 +11140,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11160,7 +11162,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11182,7 +11184,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11204,7 +11206,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11226,7 +11228,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11248,7 +11250,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -11270,27 +11272,27 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
         PyErr_Clear(); 
       }
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
     goto __pyx_L10_break;
   }
   __pyx_L10_break:;
-  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_candidates = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
   __pyx_t_5 = 0;
   if (unlikely(__pyx_v_signatures == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 204, __pyx_L1_error)
+    __PYX_ERR(0, 207, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_6);
   __pyx_t_6 = __pyx_t_1;
@@ -11298,12 +11300,12 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
   while (1) {
     __pyx_t_11 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_9, &__pyx_t_5, &__pyx_t_1, NULL, NULL, __pyx_t_10);
     if (unlikely(__pyx_t_11 == 0)) break;
-    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_sig, __pyx_t_1);
     __pyx_t_1 = 0;
     __pyx_v_match_found = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __pyx_t_14 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
@@ -11317,10 +11319,10 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
     }
     __pyx_t_12 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_14, __pyx_kp_s__2) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__2);
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_t_12 = NULL;
@@ -11335,27 +11337,27 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
     }
     __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_12, __pyx_kp_s__3) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__3);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_XDECREF_SET(__pyx_v_src_sig, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 207, __pyx_L1_error)
     __pyx_t_16 = __pyx_t_15;
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_i = __pyx_t_17;
-      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_XDECREF_SET(__pyx_v_dst_type, __pyx_t_1);
       __pyx_t_1 = 0;
       __pyx_t_3 = (__pyx_v_dst_type != Py_None);
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         if (__pyx_t_2) {
           __pyx_v_match_found = 1;
@@ -11371,35 +11373,35 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
     __pyx_L82_break:;
     __pyx_t_2 = (__pyx_v_match_found != 0);
     if (__pyx_t_2) {
-      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 207, __pyx_L1_error)
     }
   }
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = (PyList_GET_SIZE(__pyx_v_candidates) != 0);
   __pyx_t_3 = ((!__pyx_t_2) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 204, __pyx_L1_error)
+    __PYX_ERR(0, 207, __pyx_L1_error)
   }
-  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_t_3 = ((__pyx_t_9 > 1) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 204, __pyx_L1_error)
+    __PYX_ERR(0, 207, __pyx_L1_error)
   }
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_signatures == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 204, __pyx_L1_error)
+      __PYX_ERR(0, 207, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), PyList_GET_ITEM(__pyx_v_candidates, 0)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), PyList_GET_ITEM(__pyx_v_candidates, 0)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_r = __pyx_t_6;
     __pyx_t_6 = 0;
@@ -11433,7 +11435,7 @@ static PyObject *__pyx_pf_9fastremap_6remap_from_array_kv(CYTHON_UNUSED PyObject
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_37remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_0__pyx_mdef_9fastremap_37remap_from_array_kv = {"__pyx_fuse_0remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_0__pyx_pw_9fastremap_37remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_0__pyx_mdef_9fastremap_37remap_from_array_kv = {"__pyx_fuse_0remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_0__pyx_pw_9fastremap_37remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_37remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -11466,17 +11468,17 @@ static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_37remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -11491,15 +11493,15 @@ static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_37remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_36remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -11554,57 +11556,57 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -11613,23 +11615,23 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -11638,20 +11640,20 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -11666,7 +11668,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -11678,7 +11680,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -11691,7 +11693,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -11710,7 +11712,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -11719,20 +11721,20 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -11747,7 +11749,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -11759,7 +11761,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -11769,7 +11771,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -11779,7 +11781,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -11788,7 +11790,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -11797,7 +11799,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -11812,7 +11814,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -11831,7 +11833,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -11843,12 +11845,12 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -11883,7 +11885,7 @@ static PyObject *__pyx_pf_9fastremap_36remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_39remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_1__pyx_mdef_9fastremap_39remap_from_array_kv = {"__pyx_fuse_1remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_1__pyx_pw_9fastremap_39remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_1__pyx_mdef_9fastremap_39remap_from_array_kv = {"__pyx_fuse_1remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_1__pyx_pw_9fastremap_39remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_39remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -11916,17 +11918,17 @@ static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_39remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -11941,15 +11943,15 @@ static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_39remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_38remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -12004,57 +12006,57 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -12063,23 +12065,23 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -12088,20 +12090,20 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12116,7 +12118,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -12128,7 +12130,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -12141,7 +12143,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12160,7 +12162,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -12169,20 +12171,20 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12197,7 +12199,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -12209,7 +12211,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -12219,7 +12221,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -12229,7 +12231,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -12238,7 +12240,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -12247,7 +12249,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -12262,7 +12264,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12281,7 +12283,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -12293,12 +12295,12 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -12333,7 +12335,7 @@ static PyObject *__pyx_pf_9fastremap_38remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_41remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_2__pyx_mdef_9fastremap_41remap_from_array_kv = {"__pyx_fuse_2remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_2__pyx_pw_9fastremap_41remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_2__pyx_mdef_9fastremap_41remap_from_array_kv = {"__pyx_fuse_2remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_2__pyx_pw_9fastremap_41remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_41remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -12366,17 +12368,17 @@ static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_41remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -12391,15 +12393,15 @@ static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_41remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_40remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -12454,57 +12456,57 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -12513,23 +12515,23 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -12538,20 +12540,20 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12566,7 +12568,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -12578,7 +12580,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -12591,7 +12593,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12610,7 +12612,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -12619,20 +12621,20 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12647,7 +12649,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -12659,7 +12661,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -12669,7 +12671,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -12679,7 +12681,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -12688,7 +12690,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -12697,7 +12699,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -12712,7 +12714,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -12731,7 +12733,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -12743,12 +12745,12 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -12783,7 +12785,7 @@ static PyObject *__pyx_pf_9fastremap_40remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_43remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_3__pyx_mdef_9fastremap_43remap_from_array_kv = {"__pyx_fuse_3remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_3__pyx_pw_9fastremap_43remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_3__pyx_mdef_9fastremap_43remap_from_array_kv = {"__pyx_fuse_3remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_3__pyx_pw_9fastremap_43remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_43remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -12816,17 +12818,17 @@ static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_43remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -12841,15 +12843,15 @@ static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_43remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_42remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -12904,57 +12906,57 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -12963,23 +12965,23 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -12988,20 +12990,20 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13016,7 +13018,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -13028,7 +13030,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -13041,7 +13043,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13060,7 +13062,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -13069,20 +13071,20 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13097,7 +13099,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -13109,7 +13111,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -13119,7 +13121,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -13129,7 +13131,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -13138,7 +13140,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -13147,7 +13149,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -13162,7 +13164,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13181,7 +13183,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -13193,12 +13195,12 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -13233,7 +13235,7 @@ static PyObject *__pyx_pf_9fastremap_42remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_45remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_4__pyx_mdef_9fastremap_45remap_from_array_kv = {"__pyx_fuse_4remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_4__pyx_pw_9fastremap_45remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_4__pyx_mdef_9fastremap_45remap_from_array_kv = {"__pyx_fuse_4remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_4__pyx_pw_9fastremap_45remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_45remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -13266,17 +13268,17 @@ static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_45remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -13291,15 +13293,15 @@ static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_45remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_44remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -13354,57 +13356,57 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -13413,23 +13415,23 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -13438,20 +13440,20 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13466,7 +13468,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -13478,7 +13480,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -13491,7 +13493,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13510,7 +13512,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -13519,20 +13521,20 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13547,7 +13549,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -13559,7 +13561,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -13569,7 +13571,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -13579,7 +13581,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -13588,7 +13590,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -13597,7 +13599,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -13612,7 +13614,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13631,7 +13633,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -13643,12 +13645,12 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -13683,7 +13685,7 @@ static PyObject *__pyx_pf_9fastremap_44remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_47remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_5__pyx_mdef_9fastremap_47remap_from_array_kv = {"__pyx_fuse_5remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_5__pyx_pw_9fastremap_47remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_5__pyx_mdef_9fastremap_47remap_from_array_kv = {"__pyx_fuse_5remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_5__pyx_pw_9fastremap_47remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_47remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -13716,17 +13718,17 @@ static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_47remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -13741,15 +13743,15 @@ static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_47remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_46remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -13804,57 +13806,57 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -13863,23 +13865,23 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -13888,20 +13890,20 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13916,7 +13918,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -13928,7 +13930,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -13941,7 +13943,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13960,7 +13962,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -13969,20 +13971,20 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -13997,7 +13999,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -14009,7 +14011,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -14019,7 +14021,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -14029,7 +14031,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -14038,7 +14040,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -14047,7 +14049,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -14062,7 +14064,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14081,7 +14083,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -14093,12 +14095,12 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -14133,7 +14135,7 @@ static PyObject *__pyx_pf_9fastremap_46remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_49remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_6__pyx_mdef_9fastremap_49remap_from_array_kv = {"__pyx_fuse_6remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_6__pyx_pw_9fastremap_49remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_6__pyx_mdef_9fastremap_49remap_from_array_kv = {"__pyx_fuse_6remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_6__pyx_pw_9fastremap_49remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_49remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -14166,17 +14168,17 @@ static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_49remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -14191,15 +14193,15 @@ static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_49remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_48remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -14254,57 +14256,57 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -14313,23 +14315,23 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -14338,20 +14340,20 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14366,7 +14368,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -14378,7 +14380,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -14391,7 +14393,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14410,7 +14412,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -14419,20 +14421,20 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14447,7 +14449,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -14459,7 +14461,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -14469,7 +14471,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -14479,7 +14481,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -14488,7 +14490,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -14497,7 +14499,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -14512,7 +14514,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14531,7 +14533,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -14543,12 +14545,12 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -14583,7 +14585,7 @@ static PyObject *__pyx_pf_9fastremap_48remap_from_array_kv(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_51remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_fuse_7__pyx_mdef_9fastremap_51remap_from_array_kv = {"__pyx_fuse_7remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_7__pyx_pw_9fastremap_51remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyMethodDef __pyx_fuse_7__pyx_mdef_9fastremap_51remap_from_array_kv = {"__pyx_fuse_7remap_from_array_kv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_fuse_7__pyx_pw_9fastremap_51remap_from_array_kv, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_6remap_from_array_kv};
 static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_51remap_from_array_kv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_arr = 0;
   PyArrayObject *__pyx_v_keys = 0;
@@ -14616,17 +14618,17 @@ static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_51remap_from_array_kv(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_keys)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 1); __PYX_ERR(0, 207, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vals)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 204, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, 2); __PYX_ERR(0, 207, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 204, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remap_from_array_kv") < 0)) __PYX_ERR(0, 207, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -14641,15 +14643,15 @@ static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_51remap_from_array_kv(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 204, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remap_from_array_kv", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 207, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.remap_from_array_kv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keys), __pyx_ptype_5numpy_ndarray, 1, "keys", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_50remap_from_array_kv(__pyx_self, __pyx_v_arr, __pyx_v_keys, __pyx_v_vals);
 
   /* function exit code */
@@ -14704,57 +14706,57 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_keys.rcbuffer->pybuffer, (PyObject*)__pyx_v_keys, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_keys.diminfo[0].strides = __pyx_pybuffernd_keys.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_keys.diminfo[0].shape = __pyx_pybuffernd_keys.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 204, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 207, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "fastremap.pyx":205
- * @cython.boundscheck(False)
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":211
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+ *   """
  *   cdef ALLINT[:] keyview = keys             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(((PyObject *)__pyx_v_keys), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 211, __pyx_L1_error)
   __pyx_v_keyview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":206
- * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  /* "fastremap.pyx":212
+ *   """
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals             # <<<<<<<<<<<<<<
  *   cdef ALLINT[:] arrview = arr
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(((PyObject *)__pyx_v_vals), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_valview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":207
+  /* "fastremap.pyx":213
  *   cdef ALLINT[:] keyview = keys
  *   cdef ALLINT[:] valview = vals
  *   cdef ALLINT[:] arrview = arr             # <<<<<<<<<<<<<<
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(((PyObject *)__pyx_v_arr), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_arrview = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "fastremap.pyx":210
+  /* "fastremap.pyx":216
  *   cdef unordered_map[ALLINT, ALLINT] remap_dict
  * 
  *   assert keys.size == vals.size             # <<<<<<<<<<<<<<
@@ -14763,23 +14765,23 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_vals), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 210, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_5)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 210, __pyx_L1_error)
+      __PYX_ERR(0, 216, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastremap.pyx":212
+  /* "fastremap.pyx":218
  *   assert keys.size == vals.size
  * 
  *   cdef size_t i = 0             # <<<<<<<<<<<<<<
@@ -14788,20 +14790,20 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":213
+  /* "fastremap.pyx":219
  * 
  *   cdef size_t i = 0
  *   cdef size_t size = keys.size             # <<<<<<<<<<<<<<
  *   cdef ALLINT elem
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_keys), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":216
+  /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14816,7 +14818,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":217
+        /* "fastremap.pyx":223
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -14828,7 +14830,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":218
+          /* "fastremap.pyx":224
  *   with nogil:
  *     for i in range(size):
  *       remap_dict[keys[i]] = vals[i]             # <<<<<<<<<<<<<<
@@ -14841,7 +14843,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":216
+      /* "fastremap.pyx":222
  *   cdef ALLINT elem
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14860,7 +14862,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":220
+  /* "fastremap.pyx":226
  *       remap_dict[keys[i]] = vals[i]
  * 
  *   i = 0             # <<<<<<<<<<<<<<
@@ -14869,20 +14871,20 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":221
+  /* "fastremap.pyx":227
  * 
  *   i = 0
  *   size = arr.size             # <<<<<<<<<<<<<<
  * 
  *   with nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_size = __pyx_t_6;
 
-  /* "fastremap.pyx":223
+  /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14897,7 +14899,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
       #endif
       /*try:*/ {
 
-        /* "fastremap.pyx":224
+        /* "fastremap.pyx":230
  * 
  *   with nogil:
  *     for i in range(size):             # <<<<<<<<<<<<<<
@@ -14909,7 +14911,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "fastremap.pyx":225
+          /* "fastremap.pyx":231
  *   with nogil:
  *     for i in range(size):
  *       elem = arr[i]             # <<<<<<<<<<<<<<
@@ -14919,7 +14921,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_11 = __pyx_v_i;
           __pyx_v_elem = (*__Pyx_BufPtrStrided1d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[0].strides));
 
-          /* "fastremap.pyx":226
+          /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -14929,7 +14931,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
           __pyx_t_5 = ((__pyx_v_remap_dict.find(__pyx_v_elem) == __pyx_v_remap_dict.end()) != 0);
           if (__pyx_t_5) {
 
-            /* "fastremap.pyx":227
+            /* "fastremap.pyx":233
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():
  *         continue             # <<<<<<<<<<<<<<
@@ -14938,7 +14940,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
             goto __pyx_L11_continue;
 
-            /* "fastremap.pyx":226
+            /* "fastremap.pyx":232
  *     for i in range(size):
  *       elem = arr[i]
  *       if remap_dict.find(elem) == remap_dict.end():             # <<<<<<<<<<<<<<
@@ -14947,7 +14949,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
  */
           }
 
-          /* "fastremap.pyx":229
+          /* "fastremap.pyx":235
  *         continue
  *       else:
  *           arrview[i] = remap_dict[elem]             # <<<<<<<<<<<<<<
@@ -14962,7 +14964,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
         }
       }
 
-      /* "fastremap.pyx":223
+      /* "fastremap.pyx":229
  *   size = arr.size
  * 
  *   with nogil:             # <<<<<<<<<<<<<<
@@ -14981,7 +14983,7 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
       }
   }
 
-  /* "fastremap.pyx":231
+  /* "fastremap.pyx":237
  *           arrview[i] = remap_dict[elem]
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -14993,12 +14995,12 @@ static PyObject *__pyx_pf_9fastremap_50remap_from_array_kv(CYTHON_UNUSED PyObjec
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
 
   /* function exit code */
@@ -31441,25 +31443,25 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
   __pyx_tuple__35 = PyTuple_Pack(8, __pyx_n_s_arr, __pyx_n_s_vals, __pyx_n_s_valview, __pyx_n_s_arrview, __pyx_n_s_i, __pyx_n_s_size, __pyx_n_s_maxkey, __pyx_n_s_elem); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__35);
   __Pyx_GIVEREF(__pyx_tuple__35);
   __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_remap_from_array, 185, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 185, __pyx_L1_error)
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
-  __pyx_tuple__37 = PyTuple_Pack(10, __pyx_n_s_arr, __pyx_n_s_keys, __pyx_n_s_vals, __pyx_n_s_keyview, __pyx_n_s_valview, __pyx_n_s_arrview, __pyx_n_s_remap_dict, __pyx_n_s_i, __pyx_n_s_size, __pyx_n_s_elem); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_tuple__37 = PyTuple_Pack(10, __pyx_n_s_arr, __pyx_n_s_keys, __pyx_n_s_vals, __pyx_n_s_keyview, __pyx_n_s_valview, __pyx_n_s_arrview, __pyx_n_s_remap_dict, __pyx_n_s_i, __pyx_n_s_size, __pyx_n_s_elem); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__37);
   __Pyx_GIVEREF(__pyx_tuple__37);
-  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_remap_from_array_kv, 204, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_remap_from_array_kv, 207, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 207, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -32053,8 +32055,8 @@ if (!__Pyx_RefNanny) {
  * 
  * @cython.boundscheck(False)
  * def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):             # <<<<<<<<<<<<<<
- *   cdef UINT[:] valview = vals
- *   cdef UINT[:] arrview = arr
+ *   """
+ *   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
  */
   __pyx_t_4 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -32086,61 +32088,61 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_remap_from_array, __pyx_t_5) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "fastremap.pyx":204
+  /* "fastremap.pyx":207
  * 
  * @cython.boundscheck(False)
  * def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):             # <<<<<<<<<<<<<<
- *   cdef ALLINT[:] keyview = keys
- *   cdef ALLINT[:] valview = vals
+ *   """
+ *   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
  */
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_37remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_37remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint8_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint8_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_39remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_39remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint16_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint16_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_41remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_41remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint32_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint32_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_43remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_43remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint64_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_uint64_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_45remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_45remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int8_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int8_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_47remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_47remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int16_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int16_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_49remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_49remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int32_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int32_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_51remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_51remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int64_t, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_int64_t, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_7remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_7 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_7remap_from_array_kv, 0, __pyx_n_s_remap_from_array_kv, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_empty_tuple);
   ((__pyx_FusedFunctionObject *) __pyx_t_7)->__signatures__ = __pyx_t_6;
   __Pyx_GIVEREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_remap_from_array_kv, __pyx_t_7) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_remap_from_array_kv, __pyx_t_7) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
   /* "fastremap.pyx":1

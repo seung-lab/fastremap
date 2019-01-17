@@ -183,6 +183,9 @@ def remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False):
 
 @cython.boundscheck(False)
 def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+  """
+  remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
+  """
   cdef UINT[:] valview = vals
   cdef UINT[:] arrview = arr
 
@@ -202,6 +205,9 @@ def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
 
 @cython.boundscheck(False)
 def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+  """
+  remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
+  """
   cdef ALLINT[:] keyview = keys
   cdef ALLINT[:] valview = vals
   cdef ALLINT[:] arrview = arr
