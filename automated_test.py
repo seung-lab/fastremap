@@ -80,44 +80,68 @@ def test_2d_renumber():
     ])
 
 def test_3d_renumber():
-  big = 9999999999
-  data = np.array([
-    [
-      [big, 0],
-      [2, big],
-    ],
-    [
-      [big*2, big-1],
-      [big*3, big-3],
-    ],
-  ], dtype=np.uint64)
+  for dtype in DTYPES:
+    bits = np.dtype(dtype).itemsize * 8
+    big = (2 ** (bits - 1)) - 1 # cover ints and uints
+    data = np.array([
+      [
+        [big, 0],
+        [2, big],
+      ],
+      [
+        [big-5, big-1],
+        [big-7, big-3],
+      ],
+    ], dtype=dtype)
 
-  data2 = np.copy(data, order='C')
-  data2, remapdict = fastremap.renumber(data2, preserve_zero=True)
+    data2 = np.copy(data, order='C')
+    data2, remapdict = fastremap.renumber(data2, preserve_zero=False)
 
-  assert np.all(data2 == [
-    [
-      [1, 0],
-      [2, 1]
-    ],
-    [ 
-      [3, 4],
-      [5, 6],
-    ],
-  ])
+    assert np.all(data2 == [
+      [
+        [1, 2],
+        [3, 1]
+      ],
+      [ 
+        [4, 5],
+        [6, 7],
+      ],
+    ])
 
-  data2 = np.copy(data, order='F')
-  data2, remapdict = fastremap.renumber(data2, preserve_zero=True)
+    data2 = np.copy(data, order='F')
+    data2, remapdict = fastremap.renumber(data2, preserve_zero=False)
 
-  assert np.all(data2 == [
-    [
-      [1, 0],
-      [3, 1]
-    ],
-    [ 
-      [2, 5],
-      [4, 6],
-    ],
-  ])
+    assert np.all(data2 == [
+      [
+        [1, 5],
+        [3, 1]
+      ],
+      [ 
+        [2, 6],
+        [4, 7],
+      ],
+    ])
 
 
+def test_remap_1d():
+  data = np.array([1, 2, 3, 4, 5])
+  remap = {
+    1: 10,
+    2: 30,
+    3: 15,
+    4: 0,
+    5: 5,
+  }
+
+  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
+  assert np.all(result == [10, 30, 15, 0, 5])
+
+  del remap[2]
+  try:
+    result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
+    assert False
+  except KeyError:
+    pass 
+
+  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
+  assert np.all(result == [10, 2, 15, 0, 5])
