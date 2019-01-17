@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/seung-lab/fastremap.svg?branch=master)](https://travis-ci.org/seung-lab/fastremap)  
 
 # fastremap
-Relabel integers in a numpy array based on dicts, arrays, and sequential renumbering from one.
+Relabel integers in a numpy array based on dicts, arrays, and sequential renumbering from one. This module seems trivial, but it's necessary. Python loops are slow, so often numpy is used to perform remapping on large arrays (hundreds of megabytes or gigabytes). However, in order to efficiently remap an array in numpy you need a key-value array where the index is the key and the value is the contents of that index. If there are 32 or 64 bit labels in the array, this becomes impractical despite the triviality of the operation. It's conceivable to use numba for this, but having a cython library as an option can be convenient.
 
 Available functions:  
 - renumber: Relabel array from 1 to N which can enable using smaller datatypes.
