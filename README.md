@@ -16,8 +16,8 @@ import numpy as np
 arr = np.array(..., dtype=np.int64) # array contains 500 unique labels
 
 # Renumber labels from 1 to 501 and preserve 0
-arr = fastremap.renumber(arr, preserve_zero=True) # Returns uint16 array (smallest possible)
-arr = fastremap.renumber(arr, preserve_zero=False) # Returns uint16 array, contains [1,502]
+arr, remapping = fastremap.renumber(arr, preserve_zero=True) # Returns uint16 array (smallest possible)
+arr, remapping = fastremap.renumber(arr, preserve_zero=False) # Returns uint16 array, contains [1,502]
 
 mappings = {
   1: 100,
