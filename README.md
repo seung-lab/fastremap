@@ -51,7 +51,7 @@ result = fastremap.remap_from_array_kv(arr, keys, vals)
 
 ## `pip` Installation
 
-*If binaries are available for your system.*
+*If binaries are available for your system. Numpy 1.16.0+ required for these binaries (except for python 3.4 which uses 1.15.4 as 1.16.0 dropped binaries for python 3.4).*
 
 ```bash
 pip install fastremap
