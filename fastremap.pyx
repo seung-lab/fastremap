@@ -12,8 +12,12 @@ Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
 Date: August 2018 - January 2019
 """
+
 cimport cython
-from libc.stdint cimport *
+from libc.stdint cimport (  
+  uint8_t, uint16_t, uint32_t, uint64_t,
+  int8_t, int16_t, int32_t, int64_t
+)
 from libcpp.unordered_map cimport unordered_map
 
 import numpy as np
@@ -156,7 +160,7 @@ def renumber(arr, uint64_t start=1, preserve_zero=True):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)          
-def remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False):
+cpdef cnp.ndarray[ALLINT] remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False):
   """
   remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False)
 

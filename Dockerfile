@@ -16,7 +16,7 @@ RUN /opt/python/cp36-cp36m/bin/pip3.6 install pip --upgrade
 RUN /opt/python/cp37-cp37m/bin/pip3.7 install pip --upgrade
 
 RUN /opt/python/cp27-cp27m/bin/pip2.7 install numpy pytest
-RUN /opt/python/cp34-cp34m/bin/pip3.4 install numpy pytest
+RUN /opt/python/cp34-cp34m/bin/pip3.4 install numpy==1.15.4 pytest
 RUN /opt/python/cp35-cp35m/bin/pip3.5 install numpy pytest
 RUN /opt/python/cp36-cp36m/bin/pip3.6 install numpy pytest
 RUN /opt/python/cp37-cp37m/bin/pip3.7 install numpy pytest
