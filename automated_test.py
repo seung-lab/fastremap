@@ -124,24 +124,26 @@ def test_3d_renumber():
 
 
 def test_remap_1d():
-  data = np.array([1, 2, 3, 4, 5])
-  remap = {
-    1: 10,
-    2: 30,
-    3: 15,
-    4: 0,
-    5: 5,
-  }
+  for dtype in DTYPES:
+    print(dtype)
+    data = np.array([1, 2, 3, 4, 5], dtype=dtype)
+    remap = {
+      1: 10,
+      2: 30,
+      3: 15,
+      4: 0,
+      5: 5,
+    }
 
-  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-  assert np.all(result == [10, 30, 15, 0, 5])
-
-  del remap[2]
-  try:
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-    assert False
-  except KeyError:
-    pass 
+    assert np.all(result == [10, 30, 15, 0, 5])
 
-  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
-  assert np.all(result == [10, 2, 15, 0, 5])
+    del remap[2]
+    try:
+      result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
+      assert False
+    except KeyError:
+      pass 
+
+    result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
+    assert np.all(result == [10, 2, 15, 0, 5])
