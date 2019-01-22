@@ -61,7 +61,7 @@ pip install fastremap
 
 ```bash
 pip install numpy
-pip install fastremap
+pip install fastremap --no-binary :all:
 ```
 
 ## Manual Installation
