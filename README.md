@@ -8,6 +8,8 @@ Available functions:
 - remap: Custom relabeling of values in an array from a dictionary.
 - remap_from_array: Same as remap, but the map is an array where the key is the array index and the value is the value.
 - remap_from_array_kv: Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
+- asfortranarray: Perform an in-place matrix transposition for square and cubic arrays, standard numpy algorithm otherwise.
+- ascontiguousarray: Perform an in-place matrix transposition for square and cubic arrays, standard numpy algorithm otherwise.
 
 ```python
 import fastremap
@@ -29,6 +31,9 @@ arr = np.array([5, 1, 2, -5, -3, 10, 6])
 # Custom remapping of -3, 5, and 6 leaving the rest alone
 arr = fastremap.remap(arr, mappings, preserve_missing_labels=True) 
 # result: [ 5, 100, 200, -5, 7, 10, 6 ]
+
+arr = fastremap.asfortranarray(arr) # in-place if arr is mxm or mxmxm
+arr = fastremap.ascontiguousarray(arr) # in-place if arr is mxm or mxmxm
 
 try:
   arr = fastremap.remap(arr, mappings, preserve_missing_labels=False) 
