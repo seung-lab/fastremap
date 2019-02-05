@@ -255,6 +255,10 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
   return arr
 
 def asfortranarray(arr):
+  """
+  For square and cubic matrices, perform in-place transposition. 
+  Otherwise default to the out-of-place implementation numpy uses.
+  """
   if arr.flags['F_CONTIGUOUS']:
     return arr
   elif arr.ndim == 1:
@@ -276,6 +280,10 @@ def asfortranarray(arr):
     return np.asfortranarray(arr)
 
 def ascontiguousarray(arr):
+  """
+  For square and cubic matrices, perform in-place transposition. 
+  Otherwise default to the out-of-place implementation numpy uses.
+  """
   if arr.flags['C_CONTIGUOUS']:
     return arr
   elif arr.ndim == 1:
