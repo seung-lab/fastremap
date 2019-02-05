@@ -147,3 +147,48 @@ def test_remap_1d():
 
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
     assert np.all(result == [10, 2, 15, 0, 5])
+
+def test_asfortranarray():
+  dtypes = list(DTYPES) + [ np.float32, np.float64 ]
+  for dtype in dtypes:
+    for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
+      x = np.arange(dim**1).reshape((dim)).astype(dtype)
+      y = np.copy(x)
+      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+
+      x = np.arange(dim**2).reshape((dim,dim)).astype(dtype)
+      y = np.copy(x)
+      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+
+      x = np.arange(dim**3).reshape((dim,dim,dim)).astype(dtype)
+      y = np.copy(x)
+      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+
+      x = np.arange(dim**2+dim).reshape((dim,dim+1)).astype(dtype)
+      y = np.copy(x)
+      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+
+      x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim)).astype(dtype)
+      y = np.copy(x)
+      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+
+
+def test_ascontiguousarray():
+  dtypes = list(DTYPES) + [ np.float32, np.float64 ]
+  for dtype in dtypes:
+    for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
+      x = np.arange(dim**2).reshape((dim,dim), order='F').astype(dtype)
+      y = np.copy(x, order='F')
+      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+
+      x = np.arange(dim**3).reshape((dim,dim,dim), order='F').astype(dtype)
+      y = np.copy(x, order='F')
+      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+
+      x = np.arange(dim**2+dim).reshape((dim,dim+1), order='F').astype(dtype)
+      y = np.copy(x, order='F')
+      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+
+      x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim), order='F').astype(dtype)
+      y = np.copy(x, order='F')
+      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
