@@ -35,6 +35,18 @@ ctypedef fused ALLINT:
   int32_t
   int64_t
 
+ctypedef fused NUMBER:
+  uint8_t
+  uint16_t
+  uint32_t
+  uint64_t
+  int8_t
+  int16_t
+  int32_t
+  int64_t
+  float
+  double
+
 ctypedef fused UINT:
   uint8_t
   uint16_t
@@ -239,6 +251,85 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
         continue
       else:
           arrview[i] = remap_dict[elem]
+
+  return arr
+
+def asfortranarray(arr):
+  if arr.flags['F_CONTIGUOUS']:
+    return arr
+  elif arr.ndim == 1:
+    return arr 
+
+  if arr.ndim == 2:
+    sx, sy = arr.shape
+    if sx != sy:
+      return np.asfortranarray(arr)
+    arr = symmetric_in_place_transpose_2d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx), strides=arr.strides[::-1])
+  elif arr.ndim == 3:
+    sx, sy, sz = arr.shape
+    if sx != sy or sy != sz:
+      return np.asfortranarray(arr)
+    arr = symmetric_in_place_transpose_3d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx, sx), strides=arr.strides[::-1])
+  else:
+    return np.asfortranarray(arr)
+
+def ascontiguousarray(arr):
+  if arr.flags['C_CONTIGUOUS']:
+    return arr
+  elif arr.ndim == 1:
+    return arr 
+
+  if arr.ndim == 2:
+    sx, sy = arr.shape
+    if sx != sy:
+      return np.ascontiguousarray(arr)
+    arr = symmetric_in_place_transpose_2d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx), strides=arr.strides[::-1])
+  elif arr.ndim == 3:
+    sx, sy, sz = arr.shape
+    if sx != sy or sy != sz:
+      return np.ascontiguousarray(arr)
+    arr = symmetric_in_place_transpose_3d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx, sx), strides=arr.strides[::-1])
+  else:
+    return np.ascontiguousarray(arr)
+
+def symmetric_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
+  cdef int n = arr.shape[0]
+  cdef int m = arr.shape[1]
+
+  cdef int i = 0
+  cdef int j = 0
+
+  cdef NUMBER tmp = 0
+
+  for i in range(m):
+    for j in range(i, n):
+      tmp = arr[j,i]
+      arr[j,i] = arr[i,j]
+      arr[i,j] = tmp
+
+  return arr
+
+def symmetric_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
+  cdef int n = arr.shape[0]
+  cdef int m = arr.shape[1]
+  cdef int o = arr.shape[2]
+
+  cdef int i = 0
+  cdef int j = 0
+  cdef int k = 0
+
+  cdef NUMBER tmp = 0
+  
+  for i in range(m):
+    for j in range(n):
+      for k in range(i, o):
+        tmp = arr[k,j,i]
+        arr[k,j,i] = arr[i,j,k]
+        arr[i,j,k] = tmp
 
   return arr
 
