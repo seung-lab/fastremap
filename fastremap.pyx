@@ -301,7 +301,8 @@ def ascontiguousarray(arr):
     sx, sy = arr.shape
     if sx != sy:
       arr = rectangular_in_place_transpose_2d(arr)
-      return arr.reshape((sx,sy), order='C')
+      n_bytes = np.dtype(arr.dtype).itemsize
+      return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=(n_bytes, sx * n_bytes))
     else:
       arr = square_in_place_transpose_2d(arr)
       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
@@ -348,9 +349,6 @@ def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr
       tmp1 = tmp2
       visited[k] = True
       k = next_k
-
-    if visited.all():
-      break
 
   return np.frombuffer(arr_view, dtype=arr.dtype)
 

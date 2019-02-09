@@ -2633,7 +2633,6 @@ static const char __pyx_k_sx[] = "sx";
 static const char __pyx_k_sy[] = "sy";
 static const char __pyx_k_sz[] = "sz";
 static const char __pyx_k__15[] = "";
-static const char __pyx_k_all[] = "all";
 static const char __pyx_k_arr[] = "arr";
 static const char __pyx_k_lib[] = "lib";
 static const char __pyx_k_new[] = "__new__";
@@ -2707,6 +2706,7 @@ static const char __pyx_k_int32_t[] = "int32_t";
 static const char __pyx_k_int64_t[] = "int64_t";
 static const char __pyx_k_keyview[] = "keyview";
 static const char __pyx_k_memview[] = "memview";
+static const char __pyx_k_n_bytes[] = "n_bytes";
 static const char __pyx_k_reshape[] = "reshape";
 static const char __pyx_k_strides[] = "strides";
 static const char __pyx_k_uint8_t[] = "uint8_t";
@@ -2860,7 +2860,6 @@ static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_kp_s__15;
 static PyObject *__pyx_kp_s__2;
 static PyObject *__pyx_kp_s__3;
-static PyObject *__pyx_n_s_all;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_args;
 static PyObject *__pyx_n_s_arr;
@@ -2932,6 +2931,7 @@ static PyObject *__pyx_n_s_maxkey;
 static PyObject *__pyx_n_s_memview;
 static PyObject *__pyx_n_s_mode;
 static PyObject *__pyx_n_s_n;
+static PyObject *__pyx_n_s_n_bytes;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_name_2;
 static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
@@ -16079,6 +16079,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
   PyObject *__pyx_v_strides = NULL;
   PyObject *__pyx_v_sx = NULL;
   PyObject *__pyx_v_sy = NULL;
+  PyObject *__pyx_v_n_bytes = NULL;
   PyObject *__pyx_v_sz = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -16260,7 +16261,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     sx, sy = arr.shape
  *     if sx != sy:             # <<<<<<<<<<<<<<
  *       arr = rectangular_in_place_transpose_2d(arr)
- *       return arr.reshape((sx,sy), order='C')
+ *       n_bytes = np.dtype(arr.dtype).itemsize
  */
     __pyx_t_2 = PyObject_RichCompare(__pyx_v_sx, __pyx_v_sy, Py_NE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
     __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 302, __pyx_L1_error)
@@ -16271,8 +16272,8 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     sx, sy = arr.shape
  *     if sx != sy:
  *       arr = rectangular_in_place_transpose_2d(arr)             # <<<<<<<<<<<<<<
- *       return arr.reshape((sx,sy), order='C')
- *     else:
+ *       n_bytes = np.dtype(arr.dtype).itemsize
+ *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=(n_bytes, sx * n_bytes))
  */
       __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_rectangular_in_place_transpose_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 303, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
@@ -16297,36 +16298,94 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
       /* "fastremap.pyx":304
  *     if sx != sy:
  *       arr = rectangular_in_place_transpose_2d(arr)
- *       return arr.reshape((sx,sy), order='C')             # <<<<<<<<<<<<<<
+ *       n_bytes = np.dtype(arr.dtype).itemsize             # <<<<<<<<<<<<<<
+ *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=(n_bytes, sx * n_bytes))
+ *     else:
+ */
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_dtype); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_5 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
+        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
+        if (likely(__pyx_t_5)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_1, function);
+        }
+      }
+      __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4);
+      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_v_n_bytes = __pyx_t_1;
+      __pyx_t_1 = 0;
+
+      /* "fastremap.pyx":305
+ *       arr = rectangular_in_place_transpose_2d(arr)
+ *       n_bytes = np.dtype(arr.dtype).itemsize
+ *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=(n_bytes, sx * n_bytes))             # <<<<<<<<<<<<<<
  *     else:
  *       arr = square_in_place_transpose_2d(arr)
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_reshape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_lib); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_stride_tricks); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_as_strided); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_INCREF(__pyx_v_arr);
+      __Pyx_GIVEREF(__pyx_v_arr);
+      PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_arr);
+      __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 305, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
       __Pyx_INCREF(__pyx_v_sx);
       __Pyx_GIVEREF(__pyx_v_sx);
-      PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_sx);
+      PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_sx);
       __Pyx_INCREF(__pyx_v_sy);
       __Pyx_GIVEREF(__pyx_v_sy);
-      PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_sy);
-      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 304, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_GIVEREF(__pyx_t_4);
-      PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4);
-      __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 304, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_order, __pyx_n_u_C) < 0) __PYX_ERR(0, 304, __pyx_L1_error)
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 304, __pyx_L1_error)
+      PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_sy);
+      if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_shape, __pyx_t_5) < 0) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = PyNumber_Multiply(__pyx_v_sx, __pyx_v_n_bytes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 305, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __Pyx_INCREF(__pyx_v_n_bytes);
+      __Pyx_GIVEREF(__pyx_v_n_bytes);
+      PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_n_bytes);
+      __Pyx_GIVEREF(__pyx_t_5);
+      PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_5);
+      __pyx_t_5 = 0;
+      if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_strides, __pyx_t_7) < 0) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_r = __pyx_t_5;
-      __pyx_t_5 = 0;
+      __pyx_r = __pyx_t_7;
+      __pyx_t_7 = 0;
       goto __pyx_L0;
 
       /* "fastremap.pyx":302
@@ -16334,19 +16393,19 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     sx, sy = arr.shape
  *     if sx != sy:             # <<<<<<<<<<<<<<
  *       arr = rectangular_in_place_transpose_2d(arr)
- *       return arr.reshape((sx,sy), order='C')
+ *       n_bytes = np.dtype(arr.dtype).itemsize
  */
     }
 
-    /* "fastremap.pyx":306
- *       return arr.reshape((sx,sy), order='C')
+    /* "fastremap.pyx":307
+ *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=(n_bytes, sx * n_bytes))
  *     else:
  *       arr = square_in_place_transpose_2d(arr)             # <<<<<<<<<<<<<<
  *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
  *   elif arr.ndim == 3:
  */
     /*else*/ {
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_square_in_place_transpose_2d); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 306, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_square_in_place_transpose_2d); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 307, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_1 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -16358,15 +16417,15 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
           __Pyx_DECREF_SET(__pyx_t_4, function);
         }
       }
-      __pyx_t_5 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_1, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_arr);
+      __pyx_t_7 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_1, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_arr);
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 306, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF_SET(__pyx_v_arr, __pyx_t_5);
-      __pyx_t_5 = 0;
+      __Pyx_DECREF_SET(__pyx_v_arr, __pyx_t_7);
+      __pyx_t_7 = 0;
 
-      /* "fastremap.pyx":307
+      /* "fastremap.pyx":308
  *     else:
  *       arr = square_in_place_transpose_2d(arr)
  *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])             # <<<<<<<<<<<<<<
@@ -16374,25 +16433,25 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     sx, sy, sz = arr.shape
  */
       __Pyx_XDECREF(__pyx_r);
-      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 307, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_lib); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 308, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_lib); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_stride_tricks); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 307, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_stride_tricks); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 308, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_as_strided); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_as_strided); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 307, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 308, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
       __Pyx_INCREF(__pyx_v_arr);
       __Pyx_GIVEREF(__pyx_v_arr);
-      PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_arr);
-      __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
+      PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_arr);
+      __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_INCREF(__pyx_v_sx);
       __Pyx_GIVEREF(__pyx_v_sx);
@@ -16400,16 +16459,16 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
       __Pyx_INCREF(__pyx_v_sy);
       __Pyx_GIVEREF(__pyx_v_sy);
       PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_sy);
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_shape, __pyx_t_2) < 0) __PYX_ERR(0, 307, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_shape, __pyx_t_2) < 0) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_strides, __pyx_slice__14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_strides, __pyx_slice__14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_strides, __pyx_t_2) < 0) __PYX_ERR(0, 307, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_strides, __pyx_t_2) < 0) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_r = __pyx_t_2;
       __pyx_t_2 = 0;
@@ -16425,30 +16484,30 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  */
   }
 
-  /* "fastremap.pyx":308
+  /* "fastremap.pyx":309
  *       arr = square_in_place_transpose_2d(arr)
  *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
  *   elif arr.ndim == 3:             # <<<<<<<<<<<<<<
  *     sx, sy, sz = arr.shape
  *     if sx != sy or sy != sz:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_ndim); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_ndim); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_3) {
 
-    /* "fastremap.pyx":309
+    /* "fastremap.pyx":310
  *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
  *   elif arr.ndim == 3:
  *     sx, sy, sz = arr.shape             # <<<<<<<<<<<<<<
  *     if sx != sy or sy != sz:
  *       return np.ascontiguousarray(arr)
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
       PyObject* sequence = __pyx_t_1;
@@ -16456,83 +16515,83 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 309, __pyx_L1_error)
+        __PYX_ERR(0, 310, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
         __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
-        __pyx_t_5 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_7 = PyTuple_GET_ITEM(sequence, 1); 
         __pyx_t_4 = PyTuple_GET_ITEM(sequence, 2); 
       } else {
         __pyx_t_2 = PyList_GET_ITEM(sequence, 0); 
-        __pyx_t_5 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_7 = PyList_GET_ITEM(sequence, 1); 
         __pyx_t_4 = PyList_GET_ITEM(sequence, 2); 
       }
       __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_7);
       __Pyx_INCREF(__pyx_t_4);
       #else
-      __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 309, __pyx_L1_error)
+      __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_5 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 309, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 309, __pyx_L1_error)
+      __pyx_t_7 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 310, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 310, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_7 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 309, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_6 = Py_TYPE(__pyx_t_7)->tp_iternext;
-      index = 0; __pyx_t_2 = __pyx_t_6(__pyx_t_7); if (unlikely(!__pyx_t_2)) goto __pyx_L8_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_2);
-      index = 1; __pyx_t_5 = __pyx_t_6(__pyx_t_7); if (unlikely(!__pyx_t_5)) goto __pyx_L8_unpacking_failed;
+      __pyx_t_5 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 310, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      index = 2; __pyx_t_4 = __pyx_t_6(__pyx_t_7); if (unlikely(!__pyx_t_4)) goto __pyx_L8_unpacking_failed;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_6 = Py_TYPE(__pyx_t_5)->tp_iternext;
+      index = 0; __pyx_t_2 = __pyx_t_6(__pyx_t_5); if (unlikely(!__pyx_t_2)) goto __pyx_L8_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_2);
+      index = 1; __pyx_t_7 = __pyx_t_6(__pyx_t_5); if (unlikely(!__pyx_t_7)) goto __pyx_L8_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_7);
+      index = 2; __pyx_t_4 = __pyx_t_6(__pyx_t_5); if (unlikely(!__pyx_t_4)) goto __pyx_L8_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_4);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_7), 3) < 0) __PYX_ERR(0, 309, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 3) < 0) __PYX_ERR(0, 310, __pyx_L1_error)
       __pyx_t_6 = NULL;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L9_unpacking_done;
       __pyx_L8_unpacking_failed:;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_6 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 309, __pyx_L1_error)
+      __PYX_ERR(0, 310, __pyx_L1_error)
       __pyx_L9_unpacking_done:;
     }
     __pyx_v_sx = __pyx_t_2;
     __pyx_t_2 = 0;
-    __pyx_v_sy = __pyx_t_5;
-    __pyx_t_5 = 0;
+    __pyx_v_sy = __pyx_t_7;
+    __pyx_t_7 = 0;
     __pyx_v_sz = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "fastremap.pyx":310
+    /* "fastremap.pyx":311
  *   elif arr.ndim == 3:
  *     sx, sy, sz = arr.shape
  *     if sx != sy or sy != sz:             # <<<<<<<<<<<<<<
  *       return np.ascontiguousarray(arr)
  *     arr = square_in_place_transpose_3d(arr)
  */
-    __pyx_t_1 = PyObject_RichCompare(__pyx_v_sx, __pyx_v_sy, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 310, __pyx_L1_error)
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_sx, __pyx_v_sy, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 311, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (!__pyx_t_8) {
     } else {
       __pyx_t_3 = __pyx_t_8;
       goto __pyx_L11_bool_binop_done;
     }
-    __pyx_t_1 = PyObject_RichCompare(__pyx_v_sy, __pyx_v_sz, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 310, __pyx_L1_error)
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_sy, __pyx_v_sz, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 311, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_3 = __pyx_t_8;
     __pyx_L11_bool_binop_done:;
     if (__pyx_t_3) {
 
-      /* "fastremap.pyx":311
+      /* "fastremap.pyx":312
  *     sx, sy, sz = arr.shape
  *     if sx != sy or sy != sz:
  *       return np.ascontiguousarray(arr)             # <<<<<<<<<<<<<<
@@ -16540,31 +16599,31 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     return np.lib.stride_tricks.as_strided(arr, shape=(sz, sy, sx), strides=strides[::-1])
  */
       __Pyx_XDECREF(__pyx_r);
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 312, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ascontiguousarray); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 311, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ascontiguousarray); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 312, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_4 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
-        __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_5);
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
+        __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_7);
         if (likely(__pyx_t_4)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
           __Pyx_INCREF(__pyx_t_4);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_5, function);
+          __Pyx_DECREF_SET(__pyx_t_7, function);
         }
       }
-      __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_4, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_arr);
+      __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_4, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_arr);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_r = __pyx_t_1;
       __pyx_t_1 = 0;
       goto __pyx_L0;
 
-      /* "fastremap.pyx":310
+      /* "fastremap.pyx":311
  *   elif arr.ndim == 3:
  *     sx, sy, sz = arr.shape
  *     if sx != sy or sy != sz:             # <<<<<<<<<<<<<<
@@ -16573,34 +16632,34 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  */
     }
 
-    /* "fastremap.pyx":312
+    /* "fastremap.pyx":313
  *     if sx != sy or sy != sz:
  *       return np.ascontiguousarray(arr)
  *     arr = square_in_place_transpose_3d(arr)             # <<<<<<<<<<<<<<
  *     return np.lib.stride_tricks.as_strided(arr, shape=(sz, sy, sx), strides=strides[::-1])
  *   else:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_square_in_place_transpose_3d); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 312, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_square_in_place_transpose_3d); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_4 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_5);
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_7);
       if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
         __Pyx_INCREF(__pyx_t_4);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
+        __Pyx_DECREF_SET(__pyx_t_7, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_4, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_arr);
+    __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_4, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_arr);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF_SET(__pyx_v_arr, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "fastremap.pyx":313
+    /* "fastremap.pyx":314
  *       return np.ascontiguousarray(arr)
  *     arr = square_in_place_transpose_3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=(sz, sy, sx), strides=strides[::-1])             # <<<<<<<<<<<<<<
@@ -16608,25 +16667,25 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     return np.ascontiguousarray(arr)
  */
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_lib); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 313, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_lib); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_stride_tricks); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_stride_tricks); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_as_strided); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 313, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_as_strided); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_arr);
     __Pyx_GIVEREF(__pyx_v_arr);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_arr);
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v_sz);
     __Pyx_GIVEREF(__pyx_v_sz);
@@ -16637,22 +16696,22 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     __Pyx_INCREF(__pyx_v_sx);
     __Pyx_GIVEREF(__pyx_v_sx);
     PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_sx);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_shape, __pyx_t_2) < 0) __PYX_ERR(0, 313, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_shape, __pyx_t_2) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_strides, __pyx_slice__14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_strides, __pyx_slice__14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_strides, __pyx_t_2) < 0) __PYX_ERR(0, 313, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_strides, __pyx_t_2) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "fastremap.pyx":308
+    /* "fastremap.pyx":309
  *       arr = square_in_place_transpose_2d(arr)
  *       return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
  *   elif arr.ndim == 3:             # <<<<<<<<<<<<<<
@@ -16661,7 +16720,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  */
   }
 
-  /* "fastremap.pyx":315
+  /* "fastremap.pyx":316
  *     return np.lib.stride_tricks.as_strided(arr, shape=(sz, sy, sx), strides=strides[::-1])
  *   else:
  *     return np.ascontiguousarray(arr)             # <<<<<<<<<<<<<<
@@ -16670,9 +16729,9 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 315, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ascontiguousarray); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 315, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ascontiguousarray); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = NULL;
@@ -16687,7 +16746,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     }
     __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_4, __pyx_v_arr) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_arr);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_r = __pyx_t_2;
@@ -16716,6 +16775,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
   __Pyx_XDECREF(__pyx_v_strides);
   __Pyx_XDECREF(__pyx_v_sx);
   __Pyx_XDECREF(__pyx_v_sy);
+  __Pyx_XDECREF(__pyx_v_n_bytes);
   __Pyx_XDECREF(__pyx_v_sz);
   __Pyx_XDECREF(__pyx_v_arr);
   __Pyx_XGIVEREF(__pyx_r);
@@ -16723,7 +16783,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "fastremap.pyx":317
+/* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -16769,23 +16829,23 @@ static PyObject *__pyx_pw_9fastremap_13rectangular_in_place_transpose_2d(PyObjec
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 317, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 318, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kwargs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 317, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 318, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_defaults)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 317, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 318, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 317, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 318, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -16802,7 +16862,7 @@ static PyObject *__pyx_pw_9fastremap_13rectangular_in_place_transpose_2d(PyObjec
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 317, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 318, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -16861,7 +16921,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
   int __pyx_t_18;
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d", 0);
   __Pyx_INCREF(__pyx_v_kwargs);
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
@@ -16875,7 +16935,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
     __pyx_t_2 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
@@ -16883,7 +16943,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
     __Pyx_INCREF(Py_None);
     __Pyx_DECREF_SET(__pyx_v_kwargs, Py_None);
   }
-  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_ndarray = ((PyTypeObject*)__pyx_t_1);
   __pyx_t_1 = 0;
@@ -16898,16 +16958,16 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
   __pyx_v____pyx_int64_t_is_signed = (!((((int64_t)-1L) > 0) != 0));
   if (unlikely(__pyx_v_args == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 317, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
-  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_t_2 = ((0 < __pyx_t_5) != 0);
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 317, __pyx_L1_error)
+      __PYX_ERR(0, 318, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_GetItemInt_Tuple(((PyObject*)__pyx_v_args), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_Tuple(((PyObject*)__pyx_v_args), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -16922,18 +16982,18 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
   }
   if (unlikely(__pyx_v_kwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 317, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
-  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_4 != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_kwargs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 317, __pyx_L1_error)
+      __PYX_ERR(0, 318, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -16942,12 +17002,12 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
   /*else*/ {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 317, __pyx_L1_error)
+      __PYX_ERR(0, 318, __pyx_L1_error)
     }
-    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 317, __pyx_L1_error)
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 318, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_GIVEREF(__pyx_int_1);
@@ -16958,15 +17018,15 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 317, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_L6:;
   while (1) {
@@ -16976,7 +17036,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg, __pyx_v_ndarray); 
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_dtype = __pyx_t_6;
         __pyx_t_6 = 0;
@@ -16985,14 +17045,14 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_2 = __pyx_memoryview_check(__pyx_v_arg); 
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_arg_base = __pyx_t_6;
         __pyx_t_6 = 0;
         __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg_base, __pyx_v_ndarray); 
         __pyx_t_2 = (__pyx_t_3 != 0);
         if (__pyx_t_2) {
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_v_dtype = __pyx_t_6;
           __pyx_t_6 = 0;
@@ -17014,14 +17074,14 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_2 = (__pyx_v_dtype != Py_None);
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_itemsize = __pyx_t_5;
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_kind = __pyx_t_7;
         __pyx_v_dtype_signed = (__pyx_v_kind == 'i');
@@ -17034,9 +17094,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L16_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17048,7 +17108,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L16_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint16_t)) == __pyx_v_itemsize) != 0);
@@ -17057,9 +17117,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L20_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17071,7 +17131,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L20_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint32_t)) == __pyx_v_itemsize) != 0);
@@ -17080,9 +17140,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L24_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17094,7 +17154,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L24_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint64_t)) == __pyx_v_itemsize) != 0);
@@ -17103,9 +17163,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L28_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17117,7 +17177,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L28_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int8_t)) == __pyx_v_itemsize) != 0);
@@ -17126,9 +17186,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L32_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17140,7 +17200,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L32_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int16_t)) == __pyx_v_itemsize) != 0);
@@ -17149,9 +17209,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L36_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17163,7 +17223,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L36_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int32_t)) == __pyx_v_itemsize) != 0);
@@ -17172,9 +17232,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L40_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17186,7 +17246,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L40_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int64_t)) == __pyx_v_itemsize) != 0);
@@ -17195,9 +17255,9 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L44_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -17209,7 +17269,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
           __pyx_t_3 = __pyx_t_2;
           __pyx_L44_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -17220,15 +17280,15 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L48_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           __pyx_t_3 = __pyx_t_2;
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(double)) == __pyx_v_itemsize) != 0);
@@ -17237,15 +17297,15 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L51_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           __pyx_t_3 = __pyx_t_2;
           __pyx_L51_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -17272,7 +17332,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17294,7 +17354,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17316,7 +17376,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17338,7 +17398,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17360,7 +17420,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17382,7 +17442,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17404,7 +17464,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17426,7 +17486,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17448,7 +17508,7 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -17470,27 +17530,27 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
         PyErr_Clear(); 
       }
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
     goto __pyx_L10_break;
   }
   __pyx_L10_break:;
-  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_candidates = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
   __pyx_t_5 = 0;
   if (unlikely(__pyx_v_signatures == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 317, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_6);
   __pyx_t_6 = __pyx_t_1;
@@ -17498,12 +17558,12 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
   while (1) {
     __pyx_t_11 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_9, &__pyx_t_5, &__pyx_t_1, NULL, NULL, __pyx_t_10);
     if (unlikely(__pyx_t_11 == 0)) break;
-    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_sig, __pyx_t_1);
     __pyx_t_1 = 0;
     __pyx_v_match_found = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __pyx_t_14 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
@@ -17517,10 +17577,10 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
     }
     __pyx_t_12 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_14, __pyx_kp_s__2) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__2);
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_t_12 = NULL;
@@ -17535,27 +17595,27 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
     }
     __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_12, __pyx_kp_s__3) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__3);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_XDECREF_SET(__pyx_v_src_sig, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 318, __pyx_L1_error)
     __pyx_t_16 = __pyx_t_15;
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_i = __pyx_t_17;
-      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_XDECREF_SET(__pyx_v_dst_type, __pyx_t_1);
       __pyx_t_1 = 0;
       __pyx_t_3 = (__pyx_v_dst_type != Py_None);
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         if (__pyx_t_2) {
           __pyx_v_match_found = 1;
@@ -17571,37 +17631,37 @@ static PyObject *__pyx_pf_9fastremap_12rectangular_in_place_transpose_2d(CYTHON_
     __pyx_L96_break:;
     __pyx_t_2 = (__pyx_v_match_found != 0);
     if (__pyx_t_2) {
-      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 317, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 318, __pyx_L1_error)
     }
   }
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = (PyList_GET_SIZE(__pyx_v_candidates) != 0);
   __pyx_t_3 = ((!__pyx_t_2) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 317, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
-  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_t_3 = ((__pyx_t_9 > 1) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 317, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_signatures == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 317, __pyx_L1_error)
+      __PYX_ERR(0, 318, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_candidates, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_candidates, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_13 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 317, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_r = __pyx_t_13;
@@ -17641,7 +17701,7 @@ static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_65rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -17690,11 +17750,11 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -17703,7 +17763,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -17712,7 +17772,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -17721,19 +17781,19 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -17748,31 +17808,31 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -17780,16 +17840,16 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -17803,16 +17863,16 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint8_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -17821,7 +17881,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -17830,7 +17890,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -17842,20 +17902,20 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -17864,7 +17924,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -17873,7 +17933,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -17882,7 +17942,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -17897,11 +17957,11 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((uint8_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -17909,14 +17969,14 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -17926,11 +17986,11 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -17945,11 +18005,11 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((uint8_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -17964,11 +18024,11 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((uint8_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -17977,101 +18037,54 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint8_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint8_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint8_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint8_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -18080,7 +18093,7 @@ static PyObject *__pyx_pf_9fastremap_64rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -18121,7 +18134,7 @@ static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_67rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -18170,11 +18183,11 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -18183,7 +18196,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -18192,7 +18205,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -18201,19 +18214,19 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -18228,31 +18241,31 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -18260,16 +18273,16 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -18283,16 +18296,16 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint16_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -18301,7 +18314,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -18310,7 +18323,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -18322,20 +18335,20 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -18344,7 +18357,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -18353,7 +18366,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -18362,7 +18375,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -18377,11 +18390,11 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((uint16_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -18389,14 +18402,14 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -18406,11 +18419,11 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -18425,11 +18438,11 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((uint16_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -18444,11 +18457,11 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((uint16_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -18457,101 +18470,54 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint16_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint16_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint16_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint16_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -18560,7 +18526,7 @@ static PyObject *__pyx_pf_9fastremap_66rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -18601,7 +18567,7 @@ static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_69rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -18650,11 +18616,11 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -18663,7 +18629,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -18672,7 +18638,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -18681,19 +18647,19 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -18708,31 +18674,31 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -18740,16 +18706,16 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -18763,16 +18729,16 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -18781,7 +18747,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -18790,7 +18756,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -18802,20 +18768,20 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -18824,7 +18790,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -18833,7 +18799,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -18842,7 +18808,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -18857,11 +18823,11 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((uint32_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -18869,14 +18835,14 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -18886,11 +18852,11 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -18905,11 +18871,11 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((uint32_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -18924,11 +18890,11 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((uint32_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -18937,101 +18903,54 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -19040,7 +18959,7 @@ static PyObject *__pyx_pf_9fastremap_68rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -19081,7 +19000,7 @@ static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_71rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -19130,11 +19049,11 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -19143,7 +19062,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -19152,7 +19071,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -19161,19 +19080,19 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -19188,31 +19107,31 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -19220,16 +19139,16 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -19243,16 +19162,16 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -19261,7 +19180,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -19270,7 +19189,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -19282,20 +19201,20 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -19304,7 +19223,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -19313,7 +19232,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -19322,7 +19241,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -19337,11 +19256,11 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((uint64_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -19349,14 +19268,14 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -19366,11 +19285,11 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -19385,11 +19304,11 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((uint64_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -19404,11 +19323,11 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((uint64_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -19417,101 +19336,54 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint64_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint64_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -19520,7 +19392,7 @@ static PyObject *__pyx_pf_9fastremap_70rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -19561,7 +19433,7 @@ static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_73rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -19610,11 +19482,11 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -19623,7 +19495,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -19632,7 +19504,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -19641,19 +19513,19 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -19668,31 +19540,31 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -19700,16 +19572,16 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -19723,16 +19595,16 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int8_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -19741,7 +19613,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -19750,7 +19622,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -19762,20 +19634,20 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -19784,7 +19656,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -19793,7 +19665,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -19802,7 +19674,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -19817,11 +19689,11 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((int8_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -19829,14 +19701,14 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -19846,11 +19718,11 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -19865,11 +19737,11 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((int8_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -19884,11 +19756,11 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((int8_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -19897,101 +19769,54 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int8_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int8_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int8_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int8_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -20000,7 +19825,7 @@ static PyObject *__pyx_pf_9fastremap_72rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -20041,7 +19866,7 @@ static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_75rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -20090,11 +19915,11 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -20103,7 +19928,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -20112,7 +19937,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -20121,19 +19946,19 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -20148,31 +19973,31 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -20180,16 +20005,16 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -20203,16 +20028,16 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int16_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -20221,7 +20046,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -20230,7 +20055,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -20242,20 +20067,20 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -20264,7 +20089,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -20273,7 +20098,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -20282,7 +20107,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -20297,11 +20122,11 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((int16_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -20309,14 +20134,14 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -20326,11 +20151,11 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -20345,11 +20170,11 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((int16_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -20364,11 +20189,11 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((int16_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -20377,101 +20202,54 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int16_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int16_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int16_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int16_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -20480,7 +20258,7 @@ static PyObject *__pyx_pf_9fastremap_74rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -20521,7 +20299,7 @@ static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_77rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -20570,11 +20348,11 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -20583,7 +20361,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -20592,7 +20370,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -20601,19 +20379,19 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -20628,31 +20406,31 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -20660,16 +20438,16 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -20683,16 +20461,16 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int32_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -20701,7 +20479,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -20710,7 +20488,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -20722,20 +20500,20 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -20744,7 +20522,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -20753,7 +20531,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -20762,7 +20540,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -20777,11 +20555,11 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((int32_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -20789,14 +20567,14 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -20806,11 +20584,11 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -20825,11 +20603,11 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((int32_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -20844,11 +20622,11 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((int32_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -20857,101 +20635,54 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int32_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int32_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -20960,7 +20691,7 @@ static PyObject *__pyx_pf_9fastremap_76rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -21001,7 +20732,7 @@ static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_79rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -21050,11 +20781,11 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -21063,7 +20794,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -21072,7 +20803,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -21081,19 +20812,19 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -21108,31 +20839,31 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -21140,16 +20871,16 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -21163,16 +20894,16 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_int64_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -21181,7 +20912,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -21190,7 +20921,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -21202,20 +20933,20 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -21224,7 +20955,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -21233,7 +20964,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -21242,7 +20973,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -21257,11 +20988,11 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((int64_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -21269,14 +21000,14 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -21286,11 +21017,11 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -21305,11 +21036,11 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((int64_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -21324,11 +21055,11 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((int64_t *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -21337,101 +21068,54 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int64_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int64_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -21440,7 +21124,7 @@ static PyObject *__pyx_pf_9fastremap_78rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -21481,7 +21165,7 @@ static PyObject *__pyx_fuse_8__pyx_pw_9fastremap_81rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -21530,11 +21214,11 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -21543,7 +21227,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -21552,7 +21236,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -21561,19 +21245,19 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -21588,31 +21272,31 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -21620,16 +21304,16 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -21643,16 +21327,16 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_float(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_float(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -21661,7 +21345,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -21670,7 +21354,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0.0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -21682,20 +21366,20 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -21704,7 +21388,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -21713,7 +21397,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -21722,7 +21406,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -21737,11 +21421,11 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((float *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -21749,14 +21433,14 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -21766,11 +21450,11 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -21785,11 +21469,11 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((float *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -21804,11 +21488,11 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((float *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -21817,101 +21501,54 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_float, (int (*)(char *, PyObject *)) __pyx_memview_set_float, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_float, (int (*)(char *, PyObject *)) __pyx_memview_set_float, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -21920,7 +21557,7 @@ static PyObject *__pyx_pf_9fastremap_80rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -21961,7 +21598,7 @@ static PyObject *__pyx_fuse_9__pyx_pw_9fastremap_83rectangular_in_place_transpos
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rectangular_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -22010,11 +21647,11 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 317, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 318, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":318
+  /* "fastremap.pyx":319
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -22023,7 +21660,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":319
+  /* "fastremap.pyx":320
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -22032,7 +21669,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":321
+  /* "fastremap.pyx":322
  *   cdef int n = arr.shape[1]
  * 
  *   cdef int N = m * n             # <<<<<<<<<<<<<<
@@ -22041,19 +21678,19 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_N = (__pyx_v_m * __pyx_v_n);
 
-  /* "fastremap.pyx":323
+  /* "fastremap.pyx":324
  *   cdef int N = m * n
  * 
  *   visited = bitarray.bitarray(N)             # <<<<<<<<<<<<<<
  *   visited[:] = False
  *   visited[0] = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_bitarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -22068,31 +21705,31 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_visited = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_PyObject_SetSlice(__pyx_v_visited, Py_False, 0, 0, NULL, NULL, &__pyx_slice__16, 0, 0, 1) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
 
-  /* "fastremap.pyx":325
+  /* "fastremap.pyx":326
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False
  *   visited[0] = True             # <<<<<<<<<<<<<<
  *   visited[N-1] = True
  * 
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, 0, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
 
-  /* "fastremap.pyx":326
+  /* "fastremap.pyx":327
  *   visited[:] = False
  *   visited[0] = True
  *   visited[N-1] = True             # <<<<<<<<<<<<<<
@@ -22100,16 +21737,16 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  *   cdef NUMBER[:] arr_view = arr.flatten()
  */
   __pyx_t_5 = (__pyx_v_N - 1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_t_5, Py_True, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0)) __PYX_ERR(0, 327, __pyx_L1_error)
 
-  /* "fastremap.pyx":328
+  /* "fastremap.pyx":329
  *   visited[N-1] = True
  * 
  *   cdef NUMBER[:] arr_view = arr.flatten()             # <<<<<<<<<<<<<<
  * 
  *   # Forward permutation equation:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_flatten); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -22123,16 +21760,16 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_arr_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastremap.pyx":333
+  /* "fastremap.pyx":334
  *   # P(k) = mk mod (N - 1)
  * 
  *   cdef int q = N - 1             # <<<<<<<<<<<<<<
@@ -22141,7 +21778,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_q = (__pyx_v_N - 1);
 
-  /* "fastremap.pyx":336
+  /* "fastremap.pyx":337
  *   cdef int i, k, next_k
  *   cdef NUMBER tmp1, tmp2
  *   tmp2 = 0             # <<<<<<<<<<<<<<
@@ -22150,7 +21787,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
   __pyx_v_tmp2 = 0.0;
 
-  /* "fastremap.pyx":338
+  /* "fastremap.pyx":339
  *   tmp2 = 0
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):             # <<<<<<<<<<<<<<
@@ -22162,20 +21799,20 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
   for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "fastremap.pyx":339
+    /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
  *       continue
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_9) {
 
-      /* "fastremap.pyx":340
+      /* "fastremap.pyx":341
  *   for i in range(1, N - 1):
  *     if visited[i]:
  *       continue             # <<<<<<<<<<<<<<
@@ -22184,7 +21821,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
       goto __pyx_L3_continue;
 
-      /* "fastremap.pyx":339
+      /* "fastremap.pyx":340
  *   # 0 and N-1 have an identity permutation
  *   for i in range(1, N - 1):
  *     if visited[i]:             # <<<<<<<<<<<<<<
@@ -22193,7 +21830,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
     }
 
-    /* "fastremap.pyx":342
+    /* "fastremap.pyx":343
  *       continue
  * 
  *     k = i             # <<<<<<<<<<<<<<
@@ -22202,7 +21839,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
     __pyx_v_k = __pyx_v_i;
 
-    /* "fastremap.pyx":343
+    /* "fastremap.pyx":344
  * 
  *     k = i
  *     tmp1 = arr_view[k]             # <<<<<<<<<<<<<<
@@ -22217,11 +21854,11 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
     } else if (unlikely(__pyx_t_10 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
     if (unlikely(__pyx_t_11 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_11);
-      __PYX_ERR(0, 343, __pyx_L1_error)
+      __PYX_ERR(0, 344, __pyx_L1_error)
     }
     __pyx_v_tmp1 = (*((double *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_10 * __pyx_v_arr_view.strides[0]) )));
 
-    /* "fastremap.pyx":344
+    /* "fastremap.pyx":345
  *     k = i
  *     tmp1 = arr_view[k]
  *     while not visited[k]:             # <<<<<<<<<<<<<<
@@ -22229,14 +21866,14 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  *       tmp2 = arr_view[next_k]
  */
     while (1) {
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_visited, __pyx_v_k, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_12 = ((!__pyx_t_9) != 0);
       if (!__pyx_t_12) break;
 
-      /* "fastremap.pyx":345
+      /* "fastremap.pyx":346
  *     tmp1 = arr_view[k]
  *     while not visited[k]:
  *       next_k = m * k % q             # <<<<<<<<<<<<<<
@@ -22246,11 +21883,11 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
       __pyx_t_11 = (__pyx_v_m * __pyx_v_k);
       if (unlikely(__pyx_v_q == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __pyx_v_next_k = __Pyx_mod_int(__pyx_t_11, __pyx_v_q);
 
-      /* "fastremap.pyx":346
+      /* "fastremap.pyx":347
  *     while not visited[k]:
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]             # <<<<<<<<<<<<<<
@@ -22265,11 +21902,11 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_13 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 346, __pyx_L1_error)
+        __PYX_ERR(0, 347, __pyx_L1_error)
       }
       __pyx_v_tmp2 = (*((double *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_13 * __pyx_v_arr_view.strides[0]) )));
 
-      /* "fastremap.pyx":347
+      /* "fastremap.pyx":348
  *       next_k = m * k % q
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1             # <<<<<<<<<<<<<<
@@ -22284,11 +21921,11 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
       } else if (unlikely(__pyx_t_14 >= __pyx_v_arr_view.shape[0])) __pyx_t_11 = 0;
       if (unlikely(__pyx_t_11 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_11);
-        __PYX_ERR(0, 347, __pyx_L1_error)
+        __PYX_ERR(0, 348, __pyx_L1_error)
       }
       *((double *) ( /* dim=0 */ (__pyx_v_arr_view.data + __pyx_t_14 * __pyx_v_arr_view.strides[0]) )) = __pyx_v_tmp1;
 
-      /* "fastremap.pyx":348
+      /* "fastremap.pyx":349
  *       tmp2 = arr_view[next_k]
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2             # <<<<<<<<<<<<<<
@@ -22297,101 +21934,54 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
  */
       __pyx_v_tmp1 = __pyx_v_tmp2;
 
-      /* "fastremap.pyx":349
+      /* "fastremap.pyx":350
  *       arr_view[next_k] = tmp1
  *       tmp1 = tmp2
  *       visited[k] = True             # <<<<<<<<<<<<<<
  *       k = next_k
  * 
  */
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 349, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_visited, __pyx_v_k, Py_True, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
 
-      /* "fastremap.pyx":350
+      /* "fastremap.pyx":351
  *       tmp1 = tmp2
  *       visited[k] = True
  *       k = next_k             # <<<<<<<<<<<<<<
  * 
- *     if visited.all():
+ *   return np.frombuffer(arr_view, dtype=arr.dtype)
  */
       __pyx_v_k = __pyx_v_next_k;
     }
-
-    /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_visited, __pyx_n_s_all); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_12) {
-
-      /* "fastremap.pyx":353
- * 
- *     if visited.all():
- *       break             # <<<<<<<<<<<<<<
- * 
- *   return np.frombuffer(arr_view, dtype=arr.dtype)
- */
-      goto __pyx_L4_break;
-
-      /* "fastremap.pyx":352
- *       k = next_k
- * 
- *     if visited.all():             # <<<<<<<<<<<<<<
- *       break
- * 
- */
-    }
     __pyx_L3_continue:;
   }
-  __pyx_L4_break:;
 
-  /* "fastremap.pyx":355
- *       break
+  /* "fastremap.pyx":353
+ *       k = next_k
  * 
  *   return np.frombuffer(arr_view, dtype=arr.dtype)             # <<<<<<<<<<<<<<
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_arr_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -22400,7 +21990,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -22434,7 +22024,7 @@ static PyObject *__pyx_pf_9fastremap_82rectangular_in_place_transpose_2d(CYTHON_
   return __pyx_r;
 }
 
-/* "fastremap.pyx":357
+/* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -22480,23 +22070,23 @@ static PyObject *__pyx_pw_9fastremap_15square_in_place_transpose_2d(PyObject *__
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 357, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 355, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kwargs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 357, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 355, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_defaults)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 357, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 355, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 357, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 355, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -22513,7 +22103,7 @@ static PyObject *__pyx_pw_9fastremap_15square_in_place_transpose_2d(PyObject *__
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 357, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 355, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -22572,7 +22162,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
   int __pyx_t_18;
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d", 0);
   __Pyx_INCREF(__pyx_v_kwargs);
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
@@ -22586,7 +22176,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
     __pyx_t_2 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
@@ -22594,7 +22184,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
     __Pyx_INCREF(Py_None);
     __Pyx_DECREF_SET(__pyx_v_kwargs, Py_None);
   }
-  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_ndarray = ((PyTypeObject*)__pyx_t_1);
   __pyx_t_1 = 0;
@@ -22609,16 +22199,16 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_v____pyx_int64_t_is_signed = (!((((int64_t)-1L) > 0) != 0));
   if (unlikely(__pyx_v_args == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 357, __pyx_L1_error)
+    __PYX_ERR(0, 355, __pyx_L1_error)
   }
-  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_t_2 = ((0 < __pyx_t_5) != 0);
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 357, __pyx_L1_error)
+      __PYX_ERR(0, 355, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_GetItemInt_Tuple(((PyObject*)__pyx_v_args), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_Tuple(((PyObject*)__pyx_v_args), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -22633,18 +22223,18 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
   }
   if (unlikely(__pyx_v_kwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 357, __pyx_L1_error)
+    __PYX_ERR(0, 355, __pyx_L1_error)
   }
-  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_4 != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_kwargs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 357, __pyx_L1_error)
+      __PYX_ERR(0, 355, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -22653,12 +22243,12 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
   /*else*/ {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 357, __pyx_L1_error)
+      __PYX_ERR(0, 355, __pyx_L1_error)
     }
-    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 355, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_GIVEREF(__pyx_int_1);
@@ -22669,15 +22259,15 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 357, __pyx_L1_error)
+    __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_L6:;
   while (1) {
@@ -22687,7 +22277,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg, __pyx_v_ndarray); 
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_dtype = __pyx_t_6;
         __pyx_t_6 = 0;
@@ -22696,14 +22286,14 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_2 = __pyx_memoryview_check(__pyx_v_arg); 
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_arg_base = __pyx_t_6;
         __pyx_t_6 = 0;
         __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg_base, __pyx_v_ndarray); 
         __pyx_t_2 = (__pyx_t_3 != 0);
         if (__pyx_t_2) {
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_v_dtype = __pyx_t_6;
           __pyx_t_6 = 0;
@@ -22725,14 +22315,14 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_2 = (__pyx_v_dtype != Py_None);
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_itemsize = __pyx_t_5;
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_kind = __pyx_t_7;
         __pyx_v_dtype_signed = (__pyx_v_kind == 'i');
@@ -22745,9 +22335,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L16_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22759,7 +22349,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L16_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint16_t)) == __pyx_v_itemsize) != 0);
@@ -22768,9 +22358,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L20_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22782,7 +22372,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L20_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint32_t)) == __pyx_v_itemsize) != 0);
@@ -22791,9 +22381,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L24_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22805,7 +22395,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L24_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint64_t)) == __pyx_v_itemsize) != 0);
@@ -22814,9 +22404,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L28_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22828,7 +22418,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L28_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int8_t)) == __pyx_v_itemsize) != 0);
@@ -22837,9 +22427,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L32_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22851,7 +22441,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L32_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int16_t)) == __pyx_v_itemsize) != 0);
@@ -22860,9 +22450,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L36_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22874,7 +22464,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L36_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int32_t)) == __pyx_v_itemsize) != 0);
@@ -22883,9 +22473,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L40_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22897,7 +22487,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L40_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int64_t)) == __pyx_v_itemsize) != 0);
@@ -22906,9 +22496,9 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L44_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           if (__pyx_t_2) {
@@ -22920,7 +22510,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L44_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -22931,15 +22521,15 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L48_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           __pyx_t_3 = __pyx_t_2;
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(double)) == __pyx_v_itemsize) != 0);
@@ -22948,15 +22538,15 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L51_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 2) != 0);
           __pyx_t_3 = __pyx_t_2;
           __pyx_L51_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -22983,7 +22573,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23005,7 +22595,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23027,7 +22617,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23049,7 +22639,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23071,7 +22661,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23093,7 +22683,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23115,7 +22705,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23137,7 +22727,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23159,7 +22749,7 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -23181,27 +22771,27 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
         PyErr_Clear(); 
       }
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
     goto __pyx_L10_break;
   }
   __pyx_L10_break:;
-  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_candidates = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
   __pyx_t_5 = 0;
   if (unlikely(__pyx_v_signatures == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 357, __pyx_L1_error)
+    __PYX_ERR(0, 355, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_6);
   __pyx_t_6 = __pyx_t_1;
@@ -23209,12 +22799,12 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
   while (1) {
     __pyx_t_11 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_9, &__pyx_t_5, &__pyx_t_1, NULL, NULL, __pyx_t_10);
     if (unlikely(__pyx_t_11 == 0)) break;
-    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_sig, __pyx_t_1);
     __pyx_t_1 = 0;
     __pyx_v_match_found = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __pyx_t_14 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
@@ -23228,10 +22818,10 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
     }
     __pyx_t_12 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_14, __pyx_kp_s__2) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__2);
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_t_12 = NULL;
@@ -23246,27 +22836,27 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
     }
     __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_12, __pyx_kp_s__3) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__3);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_XDECREF_SET(__pyx_v_src_sig, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 355, __pyx_L1_error)
     __pyx_t_16 = __pyx_t_15;
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_i = __pyx_t_17;
-      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_XDECREF_SET(__pyx_v_dst_type, __pyx_t_1);
       __pyx_t_1 = 0;
       __pyx_t_3 = (__pyx_v_dst_type != Py_None);
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         if (__pyx_t_2) {
           __pyx_v_match_found = 1;
@@ -23282,37 +22872,37 @@ static PyObject *__pyx_pf_9fastremap_14square_in_place_transpose_2d(CYTHON_UNUSE
     __pyx_L96_break:;
     __pyx_t_2 = (__pyx_v_match_found != 0);
     if (__pyx_t_2) {
-      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 355, __pyx_L1_error)
     }
   }
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = (PyList_GET_SIZE(__pyx_v_candidates) != 0);
   __pyx_t_3 = ((!__pyx_t_2) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 357, __pyx_L1_error)
+    __PYX_ERR(0, 355, __pyx_L1_error)
   }
-  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_t_3 = ((__pyx_t_9 > 1) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 357, __pyx_L1_error)
+    __PYX_ERR(0, 355, __pyx_L1_error)
   }
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_signatures == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 357, __pyx_L1_error)
+      __PYX_ERR(0, 355, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_candidates, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_candidates, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_13 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 357, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_r = __pyx_t_13;
@@ -23352,7 +22942,7 @@ static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_87square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_86square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -23396,11 +22986,11 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -23409,7 +22999,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -23418,7 +23008,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -23427,7 +23017,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -23436,7 +23026,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -23445,7 +23035,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -23457,7 +23047,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -23469,7 +23059,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -23489,11 +23079,11 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -23513,7 +23103,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -23528,11 +23118,11 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -23552,13 +23142,13 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -23570,7 +23160,7 @@ static PyObject *__pyx_pf_9fastremap_86square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -23604,7 +23194,7 @@ static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_89square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_88square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -23648,11 +23238,11 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -23661,7 +23251,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -23670,7 +23260,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -23679,7 +23269,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -23688,7 +23278,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -23697,7 +23287,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -23709,7 +23299,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -23721,7 +23311,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -23741,11 +23331,11 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -23765,7 +23355,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -23780,11 +23370,11 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -23804,13 +23394,13 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -23822,7 +23412,7 @@ static PyObject *__pyx_pf_9fastremap_88square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -23856,7 +23446,7 @@ static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_91square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_90square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -23900,11 +23490,11 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -23913,7 +23503,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -23922,7 +23512,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -23931,7 +23521,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -23940,7 +23530,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -23949,7 +23539,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -23961,7 +23551,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -23973,7 +23563,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -23993,11 +23583,11 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -24017,7 +23607,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -24032,11 +23622,11 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -24056,13 +23646,13 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -24074,7 +23664,7 @@ static PyObject *__pyx_pf_9fastremap_90square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -24108,7 +23698,7 @@ static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_93square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_92square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -24152,11 +23742,11 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -24165,7 +23755,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -24174,7 +23764,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -24183,7 +23773,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -24192,7 +23782,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -24201,7 +23791,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -24213,7 +23803,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -24225,7 +23815,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -24245,11 +23835,11 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -24269,7 +23859,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -24284,11 +23874,11 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -24308,13 +23898,13 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -24326,7 +23916,7 @@ static PyObject *__pyx_pf_9fastremap_92square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -24360,7 +23950,7 @@ static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_95square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_94square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -24404,11 +23994,11 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -24417,7 +24007,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -24426,7 +24016,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -24435,7 +24025,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -24444,7 +24034,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -24453,7 +24043,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -24465,7 +24055,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -24477,7 +24067,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -24497,11 +24087,11 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -24521,7 +24111,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -24536,11 +24126,11 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -24560,13 +24150,13 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -24578,7 +24168,7 @@ static PyObject *__pyx_pf_9fastremap_94square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -24612,7 +24202,7 @@ static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_97square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_96square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -24656,11 +24246,11 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -24669,7 +24259,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -24678,7 +24268,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -24687,7 +24277,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -24696,7 +24286,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -24705,7 +24295,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -24717,7 +24307,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -24729,7 +24319,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -24749,11 +24339,11 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -24773,7 +24363,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -24788,11 +24378,11 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -24812,13 +24402,13 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -24830,7 +24420,7 @@ static PyObject *__pyx_pf_9fastremap_96square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -24864,7 +24454,7 @@ static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_99square_in_place_transpose_2d(
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_98square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -24908,11 +24498,11 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -24921,7 +24511,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -24930,7 +24520,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -24939,7 +24529,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -24948,7 +24538,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -24957,7 +24547,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -24969,7 +24559,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -24981,7 +24571,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -25001,11 +24591,11 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -25025,7 +24615,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -25040,11 +24630,11 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -25064,13 +24654,13 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -25082,7 +24672,7 @@ static PyObject *__pyx_pf_9fastremap_98square_in_place_transpose_2d(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -25116,7 +24706,7 @@ static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_101square_in_place_transpose_2d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_100square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -25160,11 +24750,11 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -25173,7 +24763,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -25182,7 +24772,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -25191,7 +24781,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -25200,7 +24790,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -25209,7 +24799,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -25221,7 +24811,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -25233,7 +24823,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -25253,11 +24843,11 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -25277,7 +24867,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -25292,11 +24882,11 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -25316,13 +24906,13 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -25334,7 +24924,7 @@ static PyObject *__pyx_pf_9fastremap_100square_in_place_transpose_2d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -25368,7 +24958,7 @@ static PyObject *__pyx_fuse_8__pyx_pw_9fastremap_103square_in_place_transpose_2d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_102square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -25412,11 +25002,11 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -25425,7 +25015,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -25434,7 +25024,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -25443,7 +25033,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -25452,7 +25042,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -25461,7 +25051,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0.0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -25473,7 +25063,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -25485,7 +25075,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -25505,11 +25095,11 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -25529,7 +25119,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -25544,11 +25134,11 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -25568,13 +25158,13 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -25586,7 +25176,7 @@ static PyObject *__pyx_pf_9fastremap_102square_in_place_transpose_2d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -25620,7 +25210,7 @@ static PyObject *__pyx_fuse_9__pyx_pw_9fastremap_105square_in_place_transpose_2d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_2d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 355, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_104square_in_place_transpose_2d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -25664,11 +25254,11 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 357, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 1, __pyx_stack) == -1)) __PYX_ERR(0, 355, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1];
 
-  /* "fastremap.pyx":358
+  /* "fastremap.pyx":356
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -25677,7 +25267,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":359
+  /* "fastremap.pyx":357
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -25686,7 +25276,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":361
+  /* "fastremap.pyx":359
  *   cdef int m = arr.shape[1]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -25695,7 +25285,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":362
+  /* "fastremap.pyx":360
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -25704,7 +25294,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":364
+  /* "fastremap.pyx":362
  *   cdef int j = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -25713,7 +25303,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0.0;
 
-  /* "fastremap.pyx":366
+  /* "fastremap.pyx":364
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -25725,7 +25315,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":367
+    /* "fastremap.pyx":365
  * 
  *   for i in range(m):
  *     for j in range(i, n):             # <<<<<<<<<<<<<<
@@ -25737,7 +25327,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
     for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":368
+      /* "fastremap.pyx":366
  *   for i in range(m):
  *     for j in range(i, n):
  *       tmp = arr[j,i]             # <<<<<<<<<<<<<<
@@ -25757,11 +25347,11 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_8 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 368, __pyx_L1_error)
+        __PYX_ERR(0, 366, __pyx_L1_error)
       }
       __pyx_v_tmp = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":369
+      /* "fastremap.pyx":367
  *     for j in range(i, n):
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]             # <<<<<<<<<<<<<<
@@ -25781,7 +25371,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       __pyx_t_12 = __pyx_v_j;
       __pyx_t_13 = __pyx_v_i;
@@ -25796,11 +25386,11 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 369, __pyx_L1_error)
+        __PYX_ERR(0, 367, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_arr.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides));
 
-      /* "fastremap.pyx":370
+      /* "fastremap.pyx":368
  *       tmp = arr[j,i]
  *       arr[j,i] = arr[i,j]
  *       arr[i,j] = tmp             # <<<<<<<<<<<<<<
@@ -25820,13 +25410,13 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
       } else if (unlikely(__pyx_t_15 >= __pyx_pybuffernd_arr.diminfo[1].shape)) __pyx_t_9 = 1;
       if (unlikely(__pyx_t_9 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_9);
-        __PYX_ERR(0, 370, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides) = __pyx_v_tmp;
     }
   }
 
-  /* "fastremap.pyx":372
+  /* "fastremap.pyx":370
  *       arr[i,j] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -25838,7 +25428,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
@@ -25865,7 +25455,7 @@ static PyObject *__pyx_pf_9fastremap_104square_in_place_transpose_2d(CYTHON_UNUS
   return __pyx_r;
 }
 
-/* "fastremap.pyx":374
+/* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -25911,23 +25501,23 @@ static PyObject *__pyx_pw_9fastremap_17square_in_place_transpose_3d(PyObject *__
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 374, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); __PYX_ERR(0, 372, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kwargs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 374, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); __PYX_ERR(0, 372, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_defaults)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 374, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); __PYX_ERR(0, 372, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 374, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) __PYX_ERR(0, 372, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -25944,7 +25534,7 @@ static PyObject *__pyx_pw_9fastremap_17square_in_place_transpose_3d(PyObject *__
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 374, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 372, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastremap.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -26003,7 +25593,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
   int __pyx_t_18;
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d", 0);
   __Pyx_INCREF(__pyx_v_kwargs);
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
@@ -26017,7 +25607,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
     __pyx_t_2 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_kwargs); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
@@ -26025,7 +25615,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
     __Pyx_INCREF(Py_None);
     __Pyx_DECREF_SET(__pyx_v_kwargs, Py_None);
   }
-  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__Pyx_ImportNumPyArrayTypeIfAvailable()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_ndarray = ((PyTypeObject*)__pyx_t_1);
   __pyx_t_1 = 0;
@@ -26040,16 +25630,16 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
   __pyx_v____pyx_int64_t_is_signed = (!((((int64_t)-1L) > 0) != 0));
   if (unlikely(__pyx_v_args == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 374, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
   }
-  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_t_2 = ((0 < __pyx_t_5) != 0);
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 374, __pyx_L1_error)
+      __PYX_ERR(0, 372, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_GetItemInt_Tuple(((PyObject*)__pyx_v_args), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_Tuple(((PyObject*)__pyx_v_args), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -26064,18 +25654,18 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
   }
   if (unlikely(__pyx_v_kwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 374, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
   }
-  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_4 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_arr, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_4 != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_kwargs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 374, __pyx_L1_error)
+      __PYX_ERR(0, 372, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_arr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_arg = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -26084,12 +25674,12 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
   /*else*/ {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 374, __pyx_L1_error)
+      __PYX_ERR(0, 372, __pyx_L1_error)
     }
-    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_GIVEREF(__pyx_int_1);
@@ -26100,15 +25690,15 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_argument_s_g, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 374, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_L6:;
   while (1) {
@@ -26118,7 +25708,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg, __pyx_v_ndarray); 
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_dtype = __pyx_t_6;
         __pyx_t_6 = 0;
@@ -26127,14 +25717,14 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_2 = __pyx_memoryview_check(__pyx_v_arg); 
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_v_arg_base = __pyx_t_6;
         __pyx_t_6 = 0;
         __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg_base, __pyx_v_ndarray); 
         __pyx_t_2 = (__pyx_t_3 != 0);
         if (__pyx_t_2) {
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_v_dtype = __pyx_t_6;
           __pyx_t_6 = 0;
@@ -26156,14 +25746,14 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_2 = (__pyx_v_dtype != Py_None);
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_itemsize = __pyx_t_5;
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_t_6); if (unlikely(__pyx_t_7 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_v_kind = __pyx_t_7;
         __pyx_v_dtype_signed = (__pyx_v_kind == 'i');
@@ -26176,9 +25766,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L16_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26190,7 +25780,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L16_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint16_t)) == __pyx_v_itemsize) != 0);
@@ -26199,9 +25789,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L20_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26213,7 +25803,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L20_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint32_t)) == __pyx_v_itemsize) != 0);
@@ -26222,9 +25812,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L24_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26236,7 +25826,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L24_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(uint64_t)) == __pyx_v_itemsize) != 0);
@@ -26245,9 +25835,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L28_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26259,7 +25849,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L28_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int8_t)) == __pyx_v_itemsize) != 0);
@@ -26268,9 +25858,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L32_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26282,7 +25872,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L32_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int16_t)) == __pyx_v_itemsize) != 0);
@@ -26291,9 +25881,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L36_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26305,7 +25895,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L36_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int32_t)) == __pyx_v_itemsize) != 0);
@@ -26314,9 +25904,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L40_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26328,7 +25918,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L40_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(int64_t)) == __pyx_v_itemsize) != 0);
@@ -26337,9 +25927,9 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L44_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           if (__pyx_t_2) {
@@ -26351,7 +25941,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
           __pyx_t_3 = __pyx_t_2;
           __pyx_L44_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -26362,15 +25952,15 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L48_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           __pyx_t_3 = __pyx_t_2;
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           __pyx_t_2 = (((sizeof(double)) == __pyx_v_itemsize) != 0);
@@ -26379,15 +25969,15 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
             __pyx_t_3 = __pyx_t_2;
             goto __pyx_L51_bool_binop_done;
           }
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 372, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_2 = ((((Py_ssize_t)__pyx_t_5) == 3) != 0);
           __pyx_t_3 = __pyx_t_2;
           __pyx_L51_bool_binop_done:;
           if (__pyx_t_3) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
             goto __pyx_L10_break;
           }
           break;
@@ -26414,7 +26004,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26436,7 +26026,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26458,7 +26048,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26480,7 +26070,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_uint64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26502,7 +26092,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int8_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26524,7 +26114,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int16_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26546,7 +26136,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26568,7 +26158,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_int64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26590,7 +26180,7 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
@@ -26612,27 +26202,27 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
       __pyx_t_3 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_3) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1); 
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_double, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         goto __pyx_L10_break;
       }
       /*else*/ {
         PyErr_Clear(); 
       }
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
     goto __pyx_L10_break;
   }
   __pyx_L10_break:;
-  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_candidates = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
   __pyx_t_5 = 0;
   if (unlikely(__pyx_v_signatures == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 374, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_10)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_6);
   __pyx_t_6 = __pyx_t_1;
@@ -26640,12 +26230,12 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
   while (1) {
     __pyx_t_11 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_9, &__pyx_t_5, &__pyx_t_1, NULL, NULL, __pyx_t_10);
     if (unlikely(__pyx_t_11 == 0)) break;
-    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_sig, __pyx_t_1);
     __pyx_t_1 = 0;
     __pyx_v_match_found = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __pyx_t_14 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
@@ -26659,10 +26249,10 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
     }
     __pyx_t_12 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_14, __pyx_kp_s__2) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__2);
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_split); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_t_12 = NULL;
@@ -26677,27 +26267,27 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
     }
     __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_12, __pyx_kp_s__3) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_kp_s__3);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_XDECREF_SET(__pyx_v_src_sig, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_15 = PyList_GET_SIZE(__pyx_v_dest_sig); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
     __pyx_t_16 = __pyx_t_15;
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_i = __pyx_t_17;
-      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_dest_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_XDECREF_SET(__pyx_v_dst_type, __pyx_t_1);
       __pyx_t_1 = 0;
       __pyx_t_3 = (__pyx_v_dst_type != Py_None);
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_src_sig, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_13 = PyObject_RichCompare(__pyx_t_1, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 374, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         if (__pyx_t_2) {
           __pyx_v_match_found = 1;
@@ -26713,37 +26303,37 @@ static PyObject *__pyx_pf_9fastremap_16square_in_place_transpose_3d(CYTHON_UNUSE
     __pyx_L96_break:;
     __pyx_t_2 = (__pyx_v_match_found != 0);
     if (__pyx_t_2) {
-      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
     }
   }
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_2 = (PyList_GET_SIZE(__pyx_v_candidates) != 0);
   __pyx_t_3 = ((!__pyx_t_2) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 374, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
   }
-  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_t_3 = ((__pyx_t_9 > 1) != 0);
   if (__pyx_t_3) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 374, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
   }
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_signatures == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 374, __pyx_L1_error)
+      __PYX_ERR(0, 372, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_candidates, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_candidates, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_13 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_r = __pyx_t_13;
@@ -26783,7 +26373,7 @@ static PyObject *__pyx_fuse_0__pyx_pw_9fastremap_109square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_108square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -26836,11 +26426,11 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -26849,7 +26439,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -26858,7 +26448,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -26867,7 +26457,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -26876,7 +26466,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -26885,7 +26475,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -26894,7 +26484,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -26903,7 +26493,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -26915,7 +26505,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -26927,7 +26517,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -26939,7 +26529,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -26964,11 +26554,11 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -26993,7 +26583,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -27013,11 +26603,11 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -27042,14 +26632,14 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -27061,7 +26651,7 @@ static PyObject *__pyx_pf_9fastremap_108square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -27095,7 +26685,7 @@ static PyObject *__pyx_fuse_1__pyx_pw_9fastremap_111square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_110square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -27148,11 +26738,11 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -27161,7 +26751,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -27170,7 +26760,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -27179,7 +26769,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -27188,7 +26778,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -27197,7 +26787,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -27206,7 +26796,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -27215,7 +26805,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -27227,7 +26817,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -27239,7 +26829,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -27251,7 +26841,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -27276,11 +26866,11 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -27305,7 +26895,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -27325,11 +26915,11 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -27354,14 +26944,14 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -27373,7 +26963,7 @@ static PyObject *__pyx_pf_9fastremap_110square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -27407,7 +26997,7 @@ static PyObject *__pyx_fuse_2__pyx_pw_9fastremap_113square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_112square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -27460,11 +27050,11 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -27473,7 +27063,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -27482,7 +27072,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -27491,7 +27081,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -27500,7 +27090,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -27509,7 +27099,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -27518,7 +27108,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -27527,7 +27117,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -27539,7 +27129,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -27551,7 +27141,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -27563,7 +27153,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -27588,11 +27178,11 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -27617,7 +27207,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -27637,11 +27227,11 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -27666,14 +27256,14 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -27685,7 +27275,7 @@ static PyObject *__pyx_pf_9fastremap_112square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -27719,7 +27309,7 @@ static PyObject *__pyx_fuse_3__pyx_pw_9fastremap_115square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_114square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -27772,11 +27362,11 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -27785,7 +27375,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -27794,7 +27384,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -27803,7 +27393,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -27812,7 +27402,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -27821,7 +27411,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -27830,7 +27420,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -27839,7 +27429,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -27851,7 +27441,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -27863,7 +27453,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -27875,7 +27465,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -27900,11 +27490,11 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -27929,7 +27519,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -27949,11 +27539,11 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -27978,14 +27568,14 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -27997,7 +27587,7 @@ static PyObject *__pyx_pf_9fastremap_114square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -28031,7 +27621,7 @@ static PyObject *__pyx_fuse_4__pyx_pw_9fastremap_117square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_116square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -28084,11 +27674,11 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int8_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -28097,7 +27687,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -28106,7 +27696,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -28115,7 +27705,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -28124,7 +27714,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -28133,7 +27723,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -28142,7 +27732,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -28151,7 +27741,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -28163,7 +27753,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -28175,7 +27765,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -28187,7 +27777,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -28212,11 +27802,11 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -28241,7 +27831,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -28261,11 +27851,11 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -28290,14 +27880,14 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int8_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -28309,7 +27899,7 @@ static PyObject *__pyx_pf_9fastremap_116square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -28343,7 +27933,7 @@ static PyObject *__pyx_fuse_5__pyx_pw_9fastremap_119square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_118square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -28396,11 +27986,11 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int16_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -28409,7 +27999,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -28418,7 +28008,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -28427,7 +28017,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -28436,7 +28026,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -28445,7 +28035,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -28454,7 +28044,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -28463,7 +28053,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -28475,7 +28065,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -28487,7 +28077,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -28499,7 +28089,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -28524,11 +28114,11 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -28553,7 +28143,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -28573,11 +28163,11 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -28602,14 +28192,14 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int16_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -28621,7 +28211,7 @@ static PyObject *__pyx_pf_9fastremap_118square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -28655,7 +28245,7 @@ static PyObject *__pyx_fuse_6__pyx_pw_9fastremap_121square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_120square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -28708,11 +28298,11 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int32_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -28721,7 +28311,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -28730,7 +28320,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -28739,7 +28329,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -28748,7 +28338,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -28757,7 +28347,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -28766,7 +28356,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -28775,7 +28365,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -28787,7 +28377,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -28799,7 +28389,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -28811,7 +28401,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -28836,11 +28426,11 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -28865,7 +28455,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -28885,11 +28475,11 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -28914,14 +28504,14 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -28933,7 +28523,7 @@ static PyObject *__pyx_pf_9fastremap_120square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -28967,7 +28557,7 @@ static PyObject *__pyx_fuse_7__pyx_pw_9fastremap_123square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_122square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -29020,11 +28610,11 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn_int64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -29033,7 +28623,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -29042,7 +28632,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -29051,7 +28641,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -29060,7 +28650,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -29069,7 +28659,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -29078,7 +28668,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -29087,7 +28677,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -29099,7 +28689,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -29111,7 +28701,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -29123,7 +28713,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -29148,11 +28738,11 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -29177,7 +28767,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -29197,11 +28787,11 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -29226,14 +28816,14 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(int64_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -29245,7 +28835,7 @@ static PyObject *__pyx_pf_9fastremap_122square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -29279,7 +28869,7 @@ static PyObject *__pyx_fuse_8__pyx_pw_9fastremap_125square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_124square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -29332,11 +28922,11 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -29345,7 +28935,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -29354,7 +28944,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -29363,7 +28953,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -29372,7 +28962,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -29381,7 +28971,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -29390,7 +28980,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -29399,7 +28989,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0.0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -29411,7 +29001,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -29423,7 +29013,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -29435,7 +29025,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -29460,11 +29050,11 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -29489,7 +29079,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -29509,11 +29099,11 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -29538,14 +29128,14 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(float *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -29557,7 +29147,7 @@ static PyObject *__pyx_pf_9fastremap_124square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -29591,7 +29181,7 @@ static PyObject *__pyx_fuse_9__pyx_pw_9fastremap_127square_in_place_transpose_3d
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("square_in_place_transpose_3d (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(0, 372, __pyx_L1_error)
   __pyx_r = __pyx_pf_9fastremap_126square_in_place_transpose_3d(__pyx_self, ((PyArrayObject *)__pyx_v_arr));
 
   /* function exit code */
@@ -29644,11 +29234,11 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 374, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 3, 1, __pyx_stack) == -1)) __PYX_ERR(0, 372, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_arr.diminfo[1].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_arr.diminfo[1].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_arr.diminfo[2].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_arr.diminfo[2].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[2];
 
-  /* "fastremap.pyx":375
+  /* "fastremap.pyx":373
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]             # <<<<<<<<<<<<<<
@@ -29657,7 +29247,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_n = (__pyx_v_arr->dimensions[0]);
 
-  /* "fastremap.pyx":376
+  /* "fastremap.pyx":374
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]             # <<<<<<<<<<<<<<
@@ -29666,7 +29256,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_m = (__pyx_v_arr->dimensions[1]);
 
-  /* "fastremap.pyx":377
+  /* "fastremap.pyx":375
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  *   cdef int o = arr.shape[2]             # <<<<<<<<<<<<<<
@@ -29675,7 +29265,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_o = (__pyx_v_arr->dimensions[2]);
 
-  /* "fastremap.pyx":379
+  /* "fastremap.pyx":377
  *   cdef int o = arr.shape[2]
  * 
  *   cdef int i = 0             # <<<<<<<<<<<<<<
@@ -29684,7 +29274,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_i = 0;
 
-  /* "fastremap.pyx":380
+  /* "fastremap.pyx":378
  * 
  *   cdef int i = 0
  *   cdef int j = 0             # <<<<<<<<<<<<<<
@@ -29693,7 +29283,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_j = 0;
 
-  /* "fastremap.pyx":381
+  /* "fastremap.pyx":379
  *   cdef int i = 0
  *   cdef int j = 0
  *   cdef int k = 0             # <<<<<<<<<<<<<<
@@ -29702,7 +29292,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_k = 0;
 
-  /* "fastremap.pyx":383
+  /* "fastremap.pyx":381
  *   cdef int k = 0
  * 
  *   cdef NUMBER tmp = 0             # <<<<<<<<<<<<<<
@@ -29711,7 +29301,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
  */
   __pyx_v_tmp = 0.0;
 
-  /* "fastremap.pyx":385
+  /* "fastremap.pyx":383
  *   cdef NUMBER tmp = 0
  * 
  *   for i in range(m):             # <<<<<<<<<<<<<<
@@ -29723,7 +29313,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "fastremap.pyx":386
+    /* "fastremap.pyx":384
  * 
  *   for i in range(m):
  *     for j in range(n):             # <<<<<<<<<<<<<<
@@ -29735,7 +29325,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "fastremap.pyx":387
+      /* "fastremap.pyx":385
  *   for i in range(m):
  *     for j in range(n):
  *       for k in range(i, o):             # <<<<<<<<<<<<<<
@@ -29747,7 +29337,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
       for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_k = __pyx_t_9;
 
-        /* "fastremap.pyx":388
+        /* "fastremap.pyx":386
  *     for j in range(n):
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]             # <<<<<<<<<<<<<<
@@ -29772,11 +29362,11 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 388, __pyx_L1_error)
+          __PYX_ERR(0, 386, __pyx_L1_error)
         }
         __pyx_v_tmp = (*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":389
+        /* "fastremap.pyx":387
  *       for k in range(i, o):
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]             # <<<<<<<<<<<<<<
@@ -29801,7 +29391,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_16 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         __pyx_t_17 = __pyx_v_k;
         __pyx_t_18 = __pyx_v_j;
@@ -29821,11 +29411,11 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 389, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_19, __pyx_pybuffernd_arr.diminfo[2].strides) = (*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_16, __pyx_pybuffernd_arr.diminfo[2].strides));
 
-        /* "fastremap.pyx":390
+        /* "fastremap.pyx":388
  *         tmp = arr[k,j,i]
  *         arr[k,j,i] = arr[i,j,k]
  *         arr[i,j,k] = tmp             # <<<<<<<<<<<<<<
@@ -29850,14 +29440,14 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
         } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_arr.diminfo[2].shape)) __pyx_t_13 = 2;
         if (unlikely(__pyx_t_13 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_13);
-          __PYX_ERR(0, 390, __pyx_L1_error)
+          __PYX_ERR(0, 388, __pyx_L1_error)
         }
         *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_arr.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_arr.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_arr.diminfo[2].strides) = __pyx_v_tmp;
       }
     }
   }
 
-  /* "fastremap.pyx":392
+  /* "fastremap.pyx":390
  *         arr[i,j,k] = tmp
  * 
  *   return arr             # <<<<<<<<<<<<<<
@@ -29869,7 +29459,7 @@ static PyObject *__pyx_pf_9fastremap_126square_in_place_transpose_3d(CYTHON_UNUS
   __pyx_r = ((PyObject *)__pyx_v_arr);
   goto __pyx_L0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
@@ -45846,7 +45436,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s__15, __pyx_k__15, sizeof(__pyx_k__15), 0, 0, 1, 0},
   {&__pyx_kp_s__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 1, 0},
   {&__pyx_kp_s__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 0, 1, 0},
-  {&__pyx_n_s_all, __pyx_k_all, sizeof(__pyx_k_all), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_args, __pyx_k_args, sizeof(__pyx_k_args), 0, 0, 1, 1},
   {&__pyx_n_s_arr, __pyx_k_arr, sizeof(__pyx_k_arr), 0, 0, 1, 1},
@@ -45918,6 +45507,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
   {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
   {&__pyx_n_s_n, __pyx_k_n, sizeof(__pyx_k_n), 0, 0, 1, 1},
+  {&__pyx_n_s_n_bytes, __pyx_k_n_bytes, sizeof(__pyx_k_n_bytes), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_name_2, __pyx_k_name_2, sizeof(__pyx_k_name_2), 0, 0, 1, 1},
   {&__pyx_kp_u_ndarray_is_not_C_contiguous, __pyx_k_ndarray_is_not_C_contiguous, sizeof(__pyx_k_ndarray_is_not_C_contiguous), 0, 1, 0, 0},
@@ -46061,14 +45651,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__14);
   __Pyx_GIVEREF(__pyx_slice__14);
 
-  /* "fastremap.pyx":324
+  /* "fastremap.pyx":325
  * 
  *   visited = bitarray.bitarray(N)
  *   visited[:] = False             # <<<<<<<<<<<<<<
  *   visited[0] = True
  *   visited[N-1] = True
  */
-  __pyx_slice__16 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__16)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_slice__16 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__16)) __PYX_ERR(0, 325, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice__16);
   __Pyx_GIVEREF(__pyx_slice__16);
 
@@ -46397,46 +45987,46 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *   """
  *   For square and cubic matrices, perform in-place transposition.
  */
-  __pyx_tuple__51 = PyTuple_Pack(5, __pyx_n_s_arr, __pyx_n_s_strides, __pyx_n_s_sx, __pyx_n_s_sy, __pyx_n_s_sz); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_tuple__51 = PyTuple_Pack(6, __pyx_n_s_arr, __pyx_n_s_strides, __pyx_n_s_sx, __pyx_n_s_sy, __pyx_n_s_n_bytes, __pyx_n_s_sz); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__51);
   __Pyx_GIVEREF(__pyx_tuple__51);
-  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(1, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_ascontiguousarray, 288, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(1, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_ascontiguousarray, 288, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 288, __pyx_L1_error)
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]
  */
-  __pyx_tuple__53 = PyTuple_Pack(12, __pyx_n_s_arr, __pyx_n_s_m, __pyx_n_s_n, __pyx_n_s_N, __pyx_n_s_visited, __pyx_n_s_arr_view, __pyx_n_s_q, __pyx_n_s_i, __pyx_n_s_k, __pyx_n_s_next_k, __pyx_n_s_tmp1, __pyx_n_s_tmp2); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_tuple__53 = PyTuple_Pack(12, __pyx_n_s_arr, __pyx_n_s_m, __pyx_n_s_n, __pyx_n_s_N, __pyx_n_s_visited, __pyx_n_s_arr_view, __pyx_n_s_q, __pyx_n_s_i, __pyx_n_s_k, __pyx_n_s_next_k, __pyx_n_s_tmp1, __pyx_n_s_tmp2); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__53);
   __Pyx_GIVEREF(__pyx_tuple__53);
-  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(1, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_rectangular_in_place_transpose_2, 317, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(1, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_rectangular_in_place_transpose_2, 318, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 318, __pyx_L1_error)
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  */
-  __pyx_tuple__55 = PyTuple_Pack(6, __pyx_n_s_arr, __pyx_n_s_n, __pyx_n_s_m, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_tuple__55 = PyTuple_Pack(6, __pyx_n_s_arr, __pyx_n_s_n, __pyx_n_s_m, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__55);
   __Pyx_GIVEREF(__pyx_tuple__55);
-  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(1, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_square_in_place_transpose_2d, 357, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(1, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_square_in_place_transpose_2d, 355, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 355, __pyx_L1_error)
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  */
-  __pyx_tuple__57 = PyTuple_Pack(8, __pyx_n_s_arr, __pyx_n_s_n, __pyx_n_s_m, __pyx_n_s_o, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_tuple__57 = PyTuple_Pack(8, __pyx_n_s_arr, __pyx_n_s_n, __pyx_n_s_m, __pyx_n_s_o, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__57);
   __Pyx_GIVEREF(__pyx_tuple__57);
-  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(1, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_square_in_place_transpose_3d, 374, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(1, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_fastremap_pyx, __pyx_n_s_square_in_place_transpose_3d, 372, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 372, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -47194,205 +46784,205 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_ascontiguousarray, __pyx_t_8) < 0) __PYX_ERR(0, 288, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-  /* "fastremap.pyx":317
+  /* "fastremap.pyx":318
  *     return np.ascontiguousarray(arr)
  * 
  * def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
  *   cdef int m = arr.shape[0]
  *   cdef int n = arr.shape[1]
  */
-  __pyx_t_8 = __Pyx_PyDict_NewPresized(10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyDict_NewPresized(10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_65rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_65rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint8_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint8_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_67rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_67rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint16_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint16_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_69rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_69rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint32_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint32_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_71rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_71rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint64_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_uint64_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_73rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_73rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int8_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int8_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_75rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_75rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int16_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int16_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_77rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_77rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int32_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int32_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_79rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_79rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int64_t, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_int64_t, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_8__pyx_mdef_9fastremap_81rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_8__pyx_mdef_9fastremap_81rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_float, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_float, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_9__pyx_mdef_9fastremap_83rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_fuse_9__pyx_mdef_9fastremap_83rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_double, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_double, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_13rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_9 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_13rectangular_in_place_transpose_2d, 0, __pyx_n_s_rectangular_in_place_transpose_2, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_9, __pyx_empty_tuple);
   ((__pyx_FusedFunctionObject *) __pyx_t_9)->__signatures__ = __pyx_t_8;
   __Pyx_GIVEREF(__pyx_t_8);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_rectangular_in_place_transpose_2, __pyx_t_9) < 0) __PYX_ERR(0, 317, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_rectangular_in_place_transpose_2, __pyx_t_9) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "fastremap.pyx":357
+  /* "fastremap.pyx":355
  *   return np.frombuffer(arr_view, dtype=arr.dtype)
  * 
  * def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):             # <<<<<<<<<<<<<<
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  */
-  __pyx_t_10 = __Pyx_PyDict_NewPresized(10); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyDict_NewPresized(10); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_87square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_87square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint8_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint8_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_89square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_89square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint16_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint16_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_91square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_91square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint32_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint32_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_93square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_93square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint64_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_uint64_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_95square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_95square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int8_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int8_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_97square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_97square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int16_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int16_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_99square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_99square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int32_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int32_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_101square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_101square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int64_t, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_int64_t, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_8__pyx_mdef_9fastremap_103square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_8__pyx_mdef_9fastremap_103square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_float, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_float, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_9__pyx_mdef_9fastremap_105square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_fuse_9__pyx_mdef_9fastremap_105square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_double, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_double, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_15square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_11 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_15square_in_place_transpose_2d, 0, __pyx_n_s_square_in_place_transpose_2d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_11, __pyx_empty_tuple);
   ((__pyx_FusedFunctionObject *) __pyx_t_11)->__signatures__ = __pyx_t_10;
   __Pyx_GIVEREF(__pyx_t_10);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_square_in_place_transpose_2d, __pyx_t_11) < 0) __PYX_ERR(0, 357, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_square_in_place_transpose_2d, __pyx_t_11) < 0) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-  /* "fastremap.pyx":374
+  /* "fastremap.pyx":372
  *   return arr
  * 
  * def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):             # <<<<<<<<<<<<<<
  *   cdef int n = arr.shape[0]
  *   cdef int m = arr.shape[1]
  */
-  __pyx_t_12 = __Pyx_PyDict_NewPresized(10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyDict_NewPresized(10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_109square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_9fastremap_109square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint8_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint8_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_111square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_9fastremap_111square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint16_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint16_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_113square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_2__pyx_mdef_9fastremap_113square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint32_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint32_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_115square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_3__pyx_mdef_9fastremap_115square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint64_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_uint64_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_117square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_4__pyx_mdef_9fastremap_117square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int8_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int8_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_119square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_5__pyx_mdef_9fastremap_119square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int16_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int16_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_121square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_6__pyx_mdef_9fastremap_121square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int32_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int32_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_123square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_7__pyx_mdef_9fastremap_123square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int64_t, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_int64_t, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_8__pyx_mdef_9fastremap_125square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_8__pyx_mdef_9fastremap_125square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_float, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_float, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_9__pyx_mdef_9fastremap_127square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_fuse_9__pyx_mdef_9fastremap_127square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_double, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_double, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_17square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __pyx_FusedFunction_NewEx(&__pyx_mdef_9fastremap_17square_in_place_transpose_3d, 0, __pyx_n_s_square_in_place_transpose_3d, NULL, __pyx_n_s_fastremap, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_13, __pyx_empty_tuple);
   ((__pyx_FusedFunctionObject *) __pyx_t_13)->__signatures__ = __pyx_t_12;
   __Pyx_GIVEREF(__pyx_t_12);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_square_in_place_transpose_3d, __pyx_t_13) < 0) __PYX_ERR(0, 374, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_square_in_place_transpose_3d, __pyx_t_13) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
   /* "fastremap.pyx":1
