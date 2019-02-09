@@ -23,6 +23,8 @@ from libcpp.unordered_map cimport unordered_map
 import numpy as np
 cimport numpy as cnp
 
+import bitarray
+
 __version__ = '1.0.1'
 
 ctypedef fused ALLINT:
@@ -264,18 +266,22 @@ def asfortranarray(arr):
   elif arr.ndim == 1:
     return arr 
 
+  strides = arr.strides
+
   if arr.ndim == 2:
     sx, sy = arr.shape
     if sx != sy:
-      return np.asfortranarray(arr)
-    arr = symmetric_in_place_transpose_2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx), strides=arr.strides[::-1])
+      arr = rectangular_in_place_transpose_2d(arr)
+      return arr.reshape((sx,sy), order='F')
+    else:
+      arr = square_in_place_transpose_2d(arr)
+      return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
   elif arr.ndim == 3:
     sx, sy, sz = arr.shape
     if sx != sy or sy != sz:
       return np.asfortranarray(arr)
-    arr = symmetric_in_place_transpose_3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx, sx), strides=arr.strides[::-1])
+    arr = square_in_place_transpose_3d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy, sz), strides=strides[::-1])
   else:
     return np.asfortranarray(arr)
 
@@ -289,22 +295,66 @@ def ascontiguousarray(arr):
   elif arr.ndim == 1:
     return arr 
 
+  strides = arr.strides
+
   if arr.ndim == 2:
     sx, sy = arr.shape
     if sx != sy:
-      return np.ascontiguousarray(arr)
-    arr = symmetric_in_place_transpose_2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx), strides=arr.strides[::-1])
+      arr = rectangular_in_place_transpose_2d(arr)
+      return arr.reshape((sx,sy), order='C')
+    else:
+      arr = square_in_place_transpose_2d(arr)
+      return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
   elif arr.ndim == 3:
     sx, sy, sz = arr.shape
     if sx != sy or sy != sz:
       return np.ascontiguousarray(arr)
-    arr = symmetric_in_place_transpose_3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx, sx), strides=arr.strides[::-1])
+    arr = square_in_place_transpose_3d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=(sz, sy, sx), strides=strides[::-1])
   else:
     return np.ascontiguousarray(arr)
 
-def symmetric_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
+def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
+  cdef int m = arr.shape[0]
+  cdef int n = arr.shape[1]
+
+  cdef int N = m * n
+
+  visited = bitarray.bitarray(N)
+  visited[:] = False
+  visited[0] = True
+  visited[N-1] = True
+
+  cdef NUMBER[:] arr_view = arr.flatten()
+
+  # Forward permutation equation:
+  # P(k) = mk mod (N - 1)
+
+  cdef int q = N - 1
+  cdef int i, k, next_k
+  cdef NUMBER tmp1, tmp2
+  tmp2 = 0
+  # 0 and N-1 have an identity permutation 
+  for i in range(1, N - 1):
+    if visited[i]:
+      continue
+
+    k = i
+    tmp1 = arr_view[k]
+    while not visited[k]:
+      next_k = m * k % q 
+      tmp2 = arr_view[next_k]
+      arr_view[next_k] = tmp1
+      tmp1 = tmp2
+      visited[k] = True
+      k = next_k
+
+    if visited.all():
+      break
+
+  return np.frombuffer(arr_view, dtype=arr.dtype)
+
+def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
   cdef int n = arr.shape[0]
   cdef int m = arr.shape[1]
 
@@ -321,7 +371,7 @@ def symmetric_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
 
   return arr
 
-def symmetric_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
+def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
   cdef int n = arr.shape[0]
   cdef int m = arr.shape[1]
   cdef int o = arr.shape[2]

@@ -1,0 +1,31 @@
+CHANGES
+=======
+
+1.0.1
+-----
+
+* chore: bump version to 1.0.1
+* test: test multiple data types for remap
+* fix: segmentation fault when calling "help(fastremap)"
+* Update README.md
+* docs: discuss numpy version compatibility with binaries
+* docs: showed that renumber returns a tuple
+* docs: added PyPI badge
+
+1.0.0
+-----
+
+* feat: added \_\_version\_\_ to pyx file
+* docs: more love
+* docs: added function description to remap\_from\_array\_kv and remap\_from\_array
+* docs: grammar fix
+* docs: described the problem that fastremap solves
+* fix: needed to install pytest for Travis CI
+* docs: installation and usage
+* refactor: move fastremap.remap higher in the file
+* test: Travis CI automated testing
+* test: cover more datatypes, add remap 1d test
+* test: 2d and 3d renumber
+* test: add 1d renumber tests w/ dtype support
+* wip: creating fastremap library
+* Initial commit
