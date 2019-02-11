@@ -23,8 +23,6 @@ from libcpp.unordered_map cimport unordered_map
 import numpy as np
 cimport numpy as cnp
 
-import bitarray
-
 __version__ = '1.0.1'
 
 ctypedef fused ALLINT:
@@ -54,6 +52,15 @@ ctypedef fused UINT:
   uint16_t
   uint32_t
   uint64_t
+
+cdef extern from "ipt.hpp" namespace "pyipt":
+  cdef void _ipt2d[T](T* arr, int sx, int sy)
+  cdef void _ipt3d[T](
+    T* arr, int sx, int sy, int sz
+  )
+  cdef void _ipt4d[T](
+    T* arr, int sx, int sy, int sz, int sw
+  )
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
@@ -263,25 +270,23 @@ def asfortranarray(arr):
   """
   if arr.flags['F_CONTIGUOUS']:
     return arr
+  elif not arr.flags['C_CONTIGUOUS']:
+    return np.asfortranarray(arr)
   elif arr.ndim == 1:
     return arr 
 
+  shape = arr.shape
   strides = arr.strides
 
   if arr.ndim == 2:
-    sx, sy = arr.shape
-    if sx != sy:
-      arr = rectangular_in_place_transpose_2d(arr)
-      return arr.reshape((sx,sy), order='F')
-    else:
-      arr = square_in_place_transpose_2d(arr)
-      return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
+    arr = ipt2d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides[::-1])
   elif arr.ndim == 3:
-    sx, sy, sz = arr.shape
-    if sx != sy or sy != sz:
-      return np.asfortranarray(arr)
-    arr = square_in_place_transpose_3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy, sz), strides=strides[::-1])
+    arr = ipt3d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides[::-1])
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides[::-1])
   else:
     return np.asfortranarray(arr)
 
@@ -292,6 +297,8 @@ def ascontiguousarray(arr):
   """
   if arr.flags['C_CONTIGUOUS']:
     return arr
+  elif not arr.flags['F_CONTIGUOUS']:
+    return np.ascontiguousarray(arr)
   elif arr.ndim == 1:
     return arr 
 
@@ -315,78 +322,72 @@ def ascontiguousarray(arr):
   else:
     return np.ascontiguousarray(arr)
 
-def rectangular_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
-  cdef int m = arr.shape[0]
-  cdef int n = arr.shape[1]
+def ipt2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
+  NUMBER[:,:] arrview = arr
 
-  cdef int N = m * n
+  cdef int sx
+  cdef int sy
 
-  visited = bitarray.bitarray(N)
-  visited[:] = False
-  visited[0] = True
-  visited[N-1] = True
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+  else:
+    sx = arr.shape[1]
+    sy = arr.shape[0]
 
-  cdef NUMBER[:] arr_view = arr.flatten()
-
-  # Forward permutation equation:
-  # P(k) = mk mod (N - 1)
-
-  cdef int q = N - 1
-  cdef int i, k, next_k
-  cdef NUMBER tmp1, tmp2
-  tmp2 = 0
-  # 0 and N-1 have an identity permutation 
-  for i in range(1, N - 1):
-    if visited[i]:
-      continue
-
-    k = i
-    tmp1 = arr_view[k]
-    while not visited[k]:
-      next_k = m * k % q 
-      tmp2 = arr_view[next_k]
-      arr_view[next_k] = tmp1
-      tmp1 = tmp2
-      visited[k] = True
-      k = next_k
-
-  return np.frombuffer(arr_view, dtype=arr.dtype)
-
-def square_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
-  cdef int n = arr.shape[0]
-  cdef int m = arr.shape[1]
-
-  cdef int i = 0
-  cdef int j = 0
-
-  cdef NUMBER tmp = 0
-
-  for i in range(m):
-    for j in range(i, n):
-      tmp = arr[j,i]
-      arr[j,i] = arr[i,j]
-      arr[i,j] = tmp
+  _ipt2d[NUMBER](
+    <NUMBER*>&arrview[0,0],
+    sx, sy
+  )
 
   return arr
 
-def square_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
-  cdef int n = arr.shape[0]
-  cdef int m = arr.shape[1]
-  cdef int o = arr.shape[2]
+def ipt3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
+  NUMBER[:,:,:] arrview = arr
 
-  cdef int i = 0
-  cdef int j = 0
-  cdef int k = 0
+  cdef int sx
+  cdef int sy
+  cdef int sz
 
-  cdef NUMBER tmp = 0
-  
-  for i in range(m):
-    for j in range(n):
-      for k in range(i, o):
-        tmp = arr[k,j,i]
-        arr[k,j,i] = arr[i,j,k]
-        arr[i,j,k] = tmp
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+    sz = arr.shape[2]
+  else:
+    sx = arr.shape[2]
+    sy = arr.shape[1]
+    sz = arr.shape[0]
+
+  _ipt3d[NUMBER](
+    <NUMBER*>&arrview[0,0,0],
+    sx, sy, sz
+  )
 
   return arr
 
+def ipt4d(cnp.ndarray[NUMBER, cast=True, ndim=4] arr):
+  NUMBER[:,:,:] arrview = arr
+
+  cdef int sx
+  cdef int sy
+  cdef int sz
+  cdef int sw
+
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+    sz = arr.shape[2]
+    sw = arr.shape[3]
+  else:
+    sx = arr.shape[3]
+    sy = arr.shape[2]
+    sz = arr.shape[1]
+    sw = arr.shape[0]
+
+  _ipt4d[NUMBER](
+    <NUMBER*>&arrview[0,0,0,0],
+    sx, sy, sz, sw
+  )
+
+  return arr
 

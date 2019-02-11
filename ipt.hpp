@@ -24,7 +24,6 @@
 #include <cmath>
 #include <cstdint>
 #include <stdio.h>
-#include <iostream>
 #include <vector>
 
 #include "libdivide.h"
@@ -33,10 +32,63 @@
 #define IN_PLACE_TRANSPOSE_H
 
 // ipt = in-place transpose
+// call as:
+// 2d: ipt::ipt<T>(arr, sx, sy);
+// 3d: ipt::ipt<T>(arr, sx, sy, sz);
+// 4d: ipt::ipt<T>(arr, sx, sy, sz, sw);
+
 namespace ipt {
 
 template <typename T>
-void square_ipt_2d(T* arr, const int sx, const int sy) {
+void ipt(T* arr, const int sx) {
+  return;
+}
+
+template <typename T>
+void ipt(T* arr, const int sx, const int sy) {
+  if (sx * sy == 0) {
+    return;
+  }
+
+  if (sx == sy) {
+    square_ipt(arr, sx, sy);
+  }
+  else {
+    rect_ipt(arr, sx, sy);
+  }
+}
+
+template <typename T>
+void ipt(T* arr, const int sx, const int sy, const int sz) {
+  if (sx * sy * sz == 0) {
+    return;
+  }
+
+  if (sx == sy && sy == sz) {
+    square_ipt(arr, sx, sy, sz);
+  }
+  else {
+    rect_ipt(arr, sx, sy, sz);
+  }
+}
+
+template <typename T>
+void ipt(
+  T* arr, 
+  const int sx, const int sy, 
+  const int sz, const int sw
+) {
+  if (sx * sy * sz * sw == 0) {
+    return;
+  }
+
+  rect_ipt(arr, sx, sy, sz, sw);
+}
+
+// Implementation below
+
+template <typename T>
+void square_ipt(T* arr, const int sx, const int sy) {
   T tmp = 0;
 
   int k = 0;
@@ -110,7 +162,7 @@ void square_ipt_2d(T* arr, const int sx, const int sy) {
   * sans-bit vector algorithms are O(nm log nm).
   */
 template <typename T>
-void rect_ipt_2d(T* arr, const int sx, const int sy) {
+void rect_ipt(T* arr, const int sx, const int sy) {
   const int sxy = sx * sy;
 
   std::vector<bool> visited;
@@ -145,8 +197,9 @@ void rect_ipt_2d(T* arr, const int sx, const int sy) {
 }
 
 // note: sx == sy == sz... find better convention?
+// still good for mutliple-dispatch.
 template <typename T>
-void square_ipt_3d(
+void square_ipt(
     T* arr, 
     const int sx, const int sy, const int sz
   ) {
@@ -174,59 +227,22 @@ void square_ipt_3d(
   }
 }
 
-/* See explaination of rect_ipt_2d,
- * however the 3D version requires its
- * own mapping function.
- *
- * k = C(x,y,z) = x + sx y + sx sy z
- *     F(x,y,z) = z + sz y + sz sy x
- * 
- * P(C(x,y,z)) = ???
- * 
- * Due to the number of variables, this is
- * going to be slightly less elegant than 2d.
- *
- * x = k % sx
- * t = sz (k - x) / sx % (sz sy - 1)
- * P(k) = t + sz sy x
- *
- * Where did that come from?
- *
- * k = x + sx y + sx sy z 
- * x = k % sx
- * let a = k - x = sx y + sx sy z
- * 
- * Want to exchange sx y + sx sy z for 
- *                  sz y + z
- *
- * Try multiplying by sz / sx:
- *
- * sz a / sx = sz y + sz sy z
- *
- * This looks a lot like the 2D problem.
- *
- * t = sz a / sx % (sy sz - 1)
- *
- * t = sz y + z
- *
- * P(k) = t + sz sy x
- *      = z + sz y + sz sy x
- *      = F(x,y,z)
- * 
- * Why did we bother doing that when there
- * are perfectly good algorithms to extract
- * x,y,z then plug them into F(x,y,z)? 
- *
- * If you are careful, 7 operations per map
- * versus 11 and 3 divisions versus 4. This
- * is a weird but accelerated synthesis route.
- *
- * If we were working in floating point, it would
- * be 6 ops and 2 divisions but I digress.
- *
- */
+// Tried something fancy, but it was hard to
+// get the math working. Here's some easy math.
+inline int P_3d(
+    const int k, 
+    const int sx, const int sy, const int sz
+  ) {
+  const int sxy = sx * sy;
+
+  int z = k / sxy;
+  int y = (k - (z * sxy)) / sx;
+  int x = k - sx * (y + z * sy);
+  return z + sz * (y + sy * x);
+}
+
 template <typename T>
-void rect_ipt_3d(
+void rect_ipt(
     T* arr, 
     const int sx, const int sy, const int sz
   ) {
@@ -240,12 +256,8 @@ void rect_ipt_3d(
   visited[0] = true;
   visited[N - 1] = true;
 
-  const int q = syz - 1;
-  const libdivide::divider<int> fast_sx(sx);
-  int i, k;
-  T tmp1, tmp2;
-  
-  int next_k, x, t;
+  int k, next_k;
+  T tmp1 = 0, tmp2 = 0;
 
   for (int i = 1; i < (N - 1); i++) {
     if (visited[i]) {
@@ -254,29 +266,93 @@ void rect_ipt_3d(
 
     k = i;
     tmp1 = arr[k];
-
-    // IMPORTANT NOTE:
-    // Order matters a lot here.
-    // (sz * (k - x)) / sx
-    // causes integer overflows easily!
-    x = k % sx;
-    t = (sz * ((k - x) / fast_sx)) % q;
-    next_k = t + syz * x; // P(k)
-
+    next_k = P_3d(k, sx, sy, sz);
     while (!visited[next_k]) {
       tmp2 = arr[next_k];
       arr[next_k] = tmp1;
       tmp1 = tmp2;
       visited[next_k] = true;
       k = next_k;
-      
-      x = k % sx;
-      t = (sz * ((k - x) / fast_sx)) % q;
-      next_k = t + syz * x; // P(k)
+      next_k = P_3d(k, sx, sy, sz);
     }
   }
 }
 
+inline int P_4d(
+    const int k, 
+    const int sx, const int sy, const int sz, const int sw
+  ) {
+  const int sxy = sx * sy;
+  const int sxyz = sxy * sz;
+
+  int w = k / sxyz;
+  int z = (k - w * sxyz) / sxy;
+  int y = (k - (w * sxyz) - (z * sxy)) / sx;
+  int x = k - (w * sxyz) - (z * sxy) - y * sy;
+  return w + sw * (z + sz * (y + sy * x));
+}
+
+template <typename T>
+void rect_ipt(
+    T* arr, 
+    const int sx, const int sy, const int sz, const int sw
+  ) {
+
+  const int sxy = sx * sy;
+  const int syz = sy * sz;
+  const int N = sxy * sz;
+
+  std::vector<bool> visited;
+  visited.resize(N);
+
+  visited[0] = true;
+  visited[N - 1] = true;
+
+  int k, next_k;
+  T tmp1 = 0, tmp2 = 0;
+
+  for (int i = 1; i < (N - 1); i++) {
+    if (visited[i]) {
+      continue;
+    }
+
+    k = i;
+    tmp1 = arr[k];
+    next_k = P_4d(k, sx, sy, sz, sw);
+    while (!visited[next_k]) {
+      tmp2 = arr[next_k];
+      arr[next_k] = tmp1;
+      tmp1 = tmp2;
+      visited[next_k] = true;
+      k = next_k;
+      next_k = P_4d(k, sx, sy, sz, sw);
+    }
+  }
+}
+
+};
+
+namespace pyipt {
+
+template <typename T>
+void _ipt2d(T* arr, const int sx, const int sy) {
+  ipt::ipt(arr, sx, sy);
+}
+
+template <typename T>
+void _ipt3d(T* arr, const int sx, const int sy, const int sz) {
+  ipt::ipt(arr, sx, sy, sz);
+}
+
+template <typename T>
+void _ipt4d(
+    T* arr, 
+    const int sx, const int sy, 
+    const int sz, const int sw
+  ) {
+
+  ipt::ipt(arr, sx, sy, sz, sw);
+}
 
 };
 
