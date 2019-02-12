@@ -53,12 +53,10 @@ ctypedef fused UINT:
   uint32_t
   uint64_t
 
-@cython.boundscheck(False)
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
-@cython.nonecheck(False)
-def renumber(arr, uint64_t start=1, preserve_zero=True):
+
+def renumber(arr, start=1, preserve_zero=True):
   """
-  renumber(arr, uint64_t start=1, preserve_zero=True)
+  renumber(arr, start=1, preserve_zero=True)
 
   Given an array of integers, renumber all the unique values starting
   from 1. This can allow us to reduce the size of the data width required
@@ -70,71 +68,58 @@ def renumber(arr, uint64_t start=1, preserve_zero=True):
 
   Return: a renumbered array, dict with remapping of oldval => newval
   """
-  shape = arr.shape
+  if arr.size == 0:
+    return arr, {}
 
-  cdef uint64_t[:] arrview64 
-  cdef uint32_t[:] arrview32
-  cdef uint16_t[:] arrview16
-  cdef uint8_t[:] arrview8
-
-  dtype_bytes = np.dtype(arr.dtype).itemsize
-  order = 'F' if arr.flags['F_CONTIGUOUS'] else 'C'
-
-  if dtype_bytes == 8:
-    arrview64 = arr.astype(np.uint64).flatten(order)
-  elif dtype_bytes == 4:
-    arrview32 = arr.astype(np.uint32).flatten(order)
-  elif dtype_bytes == 2:
-    arrview16 = arr.astype(np.uint16).flatten(order)
+  if arr.dtype == np.bool and preserve_zero:
+    return arr, { 0: 0, 1: start }
   else:
-    arrview8 = arr.astype(np.uint8).flatten(order)
+    arr = arr.astype(np.uint8)
 
+  shape = arr.shape
+  order = 'F' if arr.flags['F_CONTIGUOUS'] else 'C'
+  arr = arr.flatten(order)
+  arr, remap_dict = _renumber(arr, <int64_t>start, preserve_zero)
+  arr = arr.reshape(shape, order=order)
+  return arr, remap_dict
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, preserve_zero=True):
+  """
+  renumber(arr, int64_t start=1, preserve_zero=True)
+
+  Given an array of integers, renumber all the unique values starting
+  from 1. This can allow us to reduce the size of the data width required
+  to represent it.
+
+  arr: A numpy array
+  start (default: 1): Start renumbering from this value
+  preserve_zero (default ): 
+
+  Return: a renumbered array, dict with remapping of oldval => newval
+  """
   cdef dict remap_dict = {}
-
   if preserve_zero:
     remap_dict[0] = 0
-  
-  cdef uint64_t remap_id = start
+
+  cdef NUMBER[:] arrview = arr
+
+  cdef NUMBER remap_id = start
+  cdef NUMBER elem
+
+  cdef int size = arr.size
   cdef int i = 0
 
-  cdef uint64_t elem
-  cdef int size = arr.size
-  if dtype_bytes == 8:
-    for i in range(size):
-      elem = arrview64[i]
-      if elem in remap_dict:
-        arrview64[i] = remap_dict[elem]
-      else:
-        arrview64[i] = remap_id
-        remap_dict[elem] = remap_id
-        remap_id += 1
-  elif dtype_bytes == 4:
-    for i in range(size):
-      elem = arrview32[i]
-      if elem in remap_dict:
-        arrview32[i] = remap_dict[elem]
-      else:
-        arrview32[i] = remap_id
-        remap_dict[elem] = remap_id
-        remap_id += 1
-  elif dtype_bytes == 2:
-    for i in range(size):
-      elem = arrview16[i]
-      if elem in remap_dict:
-        arrview16[i] = remap_dict[elem]
-      else:
-        arrview16[i] = remap_id
-        remap_dict[elem] = remap_id
-        remap_id += 1
-  else:
-    for i in range(size):
-      elem = arrview8[i]
-      if elem in remap_dict:
-        arrview8[i] = remap_dict[elem]
-      else:
-        arrview8[i] = remap_id
-        remap_dict[elem] = remap_id
-        remap_id += 1
+  for i in range(size):
+    elem = arrview[i]
+    if elem in remap_dict:
+      arrview[i] = remap_dict[elem]
+    else:
+      arrview[i] = remap_id
+      remap_dict[elem] = remap_id
+      remap_id += 1
 
   if start < 0:
     types = [ np.int8, np.int16, np.int32, np.int64 ]
@@ -152,21 +137,8 @@ def renumber(arr, uint64_t start=1, preserve_zero=True):
   else:
     final_type = types[3]
 
-  if dtype_bytes == 8:
-    output = bytearray(arrview64)
-    intermediate_dtype = np.uint64
-  elif dtype_bytes == 4:
-    output = bytearray(arrview32)
-    intermediate_dtype = np.uint32
-  elif dtype_bytes == 2:
-    output = bytearray(arrview16)
-    intermediate_dtype = np.uint16
-  else:
-    output = bytearray(arrview8)
-    intermediate_dtype = np.uint8
-
-  output = np.frombuffer(output, dtype=intermediate_dtype).astype(final_type)
-  output = output.reshape( arr.shape, order=order)
+  output = bytearray(arrview)
+  output = np.frombuffer(output, dtype=arr.dtype).astype(final_type)
   return output, remap_dict
 
 @cython.boundscheck(False)

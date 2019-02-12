@@ -19,6 +19,7 @@ def test_empty_renumber():
 
 def test_1d_renumber():
   for dtype in DTYPES:
+    print(dtype)
     data = np.arange(8).astype(dtype)
     data = np.flip(data)
 
