@@ -8,9 +8,14 @@ For some operations, we can save memory and improve performance
 by performing operations on a remapped volume and remembering the
 mapping back to the original value.
 
+This module also constains the facilities for performing
+and in-place matrix transposition for up to 4D arrays. This is 
+helpful for converting between C and Fortran order in memory
+constrained environments when format shifting.
+
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - January 2019
+Date: August 2018 - February 2019
 """
 
 cimport cython
@@ -236,10 +241,14 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
 def asfortranarray(arr):
   """
+  asfortranarray(arr)
+
   For up to four dimensional matrices, perform in-place transposition. 
   Square matrices up to three dimensions are faster than numpy's out-of-place
   algorithm. Default to the out-of-place implementation numpy uses for cases
   that aren't specially handled.
+
+  Returns: transposed numpy array
   """
   if arr.flags['F_CONTIGUOUS']:
     return arr
@@ -273,10 +282,14 @@ def asfortranarray(arr):
 
 def ascontiguousarray(arr):
   """
+  ascontiguousarray(arr)
+
   For up to four dimensional matrices, perform in-place transposition. 
   Square matrices up to three dimensions are faster than numpy's out-of-place
   algorithm. Default to the out-of-place implementation numpy uses for cases
   that aren't specially handled.
+
+  Returns: transposed numpy array
   """
   if arr.flags['C_CONTIGUOUS']:
     return arr

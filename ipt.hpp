@@ -26,8 +26,6 @@
 #include <stdio.h>
 #include <vector>
 
-#include "libdivide.h"
-
 #ifndef IN_PLACE_TRANSPOSE_H
 #define IN_PLACE_TRANSPOSE_H
 
@@ -126,7 +124,7 @@ void rect_ipt(T* arr, const int sx, const int sy) {
   visited[sxy - 1] = true;
 
   const int q = sxy - 1;
-  const libdivide::divider<int> fast_sx(sx);
+
   int k, next_k;
   T tmp1, tmp2;
   
@@ -137,7 +135,7 @@ void rect_ipt(T* arr, const int sx, const int sy) {
 
     k = i;
     tmp1 = arr[k];
-    next_k = sy * k - q * (k / fast_sx); // P(k)
+    next_k = sy * k - q * (k / sx); // P(k)
 
     while (!visited[next_k]) {
       tmp2 = arr[next_k];
@@ -145,7 +143,7 @@ void rect_ipt(T* arr, const int sx, const int sy) {
       tmp1 = tmp2;
       visited[next_k] = true;
       k = next_k;
-      next_k = sy * k - q * (k / fast_sx); // P(k)
+      next_k = sy * k - q * (k / sx); // P(k)
     }
   }
 }
