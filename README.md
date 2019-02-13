@@ -32,8 +32,8 @@ arr = np.array([5, 1, 2, -5, -3, 10, 6])
 arr = fastremap.remap(arr, mappings, preserve_missing_labels=True) 
 # result: [ 5, 100, 200, -5, 7, 10, 6 ]
 
-arr = fastremap.asfortranarray(arr) # in-place if arr is mxm or mxmxm
-arr = fastremap.ascontiguousarray(arr) # in-place if arr is mxm or mxmxm
+arr = fastremap.asfortranarray(arr) # in-place if arr is up to 4D
+arr = fastremap.ascontiguousarray(arr) # in-place if arr is up to 4D
 
 try:
   arr = fastremap.remap(arr, mappings, preserve_missing_labels=False) 

@@ -4,6 +4,7 @@ CHANGES
 1.2.0
 -----
 
+* chore: drop py34 support
 * chore: version 1.2.0
 * refactor: use fused types to reduce code duplication (#4)
 
