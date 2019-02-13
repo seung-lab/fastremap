@@ -1,6 +1,13 @@
 CHANGES
 =======
 
+1.1.0
+-----
+
+* docs: add authors, changelog
+* chore: bump version to 1.1.0
+* feat: faster in place transpose for symmetric 2d and 3d matricies. (#2)
+
 1.0.1
 -----
 
