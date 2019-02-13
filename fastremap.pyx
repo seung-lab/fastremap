@@ -28,7 +28,7 @@ from libcpp.unordered_map cimport unordered_map
 import numpy as np
 cimport numpy as cnp
 
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 ctypedef fused ALLINT:
   uint8_t
