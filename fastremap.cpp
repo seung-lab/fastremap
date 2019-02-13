@@ -16693,7 +16693,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  * 
  *   if arr.ndim == 2:             # <<<<<<<<<<<<<<
  *     arr = ipt2d(arr)
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
  */
   __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_ndim); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
@@ -16708,7 +16708,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  * 
  *   if arr.ndim == 2:
  *     arr = ipt2d(arr)             # <<<<<<<<<<<<<<
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
  *   elif arr.ndim == 3:
  */
     __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_ipt2d); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 319, __pyx_L1_error)
@@ -16762,7 +16762,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     /* "fastremap.pyx":320
  *   if arr.ndim == 2:
  *     arr = ipt2d(arr)
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))             # <<<<<<<<<<<<<<
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))             # <<<<<<<<<<<<<<
  *   elif arr.ndim == 3:
  *     arr = ipt3d(arr)
  */
@@ -16786,7 +16786,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_shape, __pyx_v_shape) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_GetItemInt(__pyx_v_shape, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 320, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_GetItemInt(__pyx_v_shape, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_nbytes); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -16820,13 +16820,13 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  * 
  *   if arr.ndim == 2:             # <<<<<<<<<<<<<<
  *     arr = ipt2d(arr)
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
  */
   }
 
   /* "fastremap.pyx":321
  *     arr = ipt2d(arr)
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
  *   elif arr.ndim == 3:             # <<<<<<<<<<<<<<
  *     arr = ipt3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
@@ -16841,11 +16841,11 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
   if (__pyx_t_4) {
 
     /* "fastremap.pyx":322
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
  *   elif arr.ndim == 3:
  *     arr = ipt3d(arr)             # <<<<<<<<<<<<<<
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
- *         shape[0] * shape[1] * nbytes,
+ *         shape[2] * shape[1] * nbytes,
  */
     __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_ipt3d); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
@@ -16899,8 +16899,8 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *   elif arr.ndim == 3:
  *     arr = ipt3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(             # <<<<<<<<<<<<<<
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,
+ *         shape[2] * shape[1] * nbytes,
+ *         shape[2] * nbytes,
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
@@ -16926,11 +16926,11 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     /* "fastremap.pyx":324
  *     arr = ipt3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
- *         shape[0] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
- *         shape[0] * nbytes,
+ *         shape[2] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[2] * nbytes,
  *         nbytes,
  */
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_shape, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_shape, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_shape, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -16947,12 +16947,12 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
 
     /* "fastremap.pyx":325
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[2] * shape[1] * nbytes,
+ *         shape[2] * nbytes,             # <<<<<<<<<<<<<<
  *         nbytes,
  *       ))
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_shape, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_shape, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_nbytes); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 325, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
@@ -16962,8 +16962,8 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
     /* "fastremap.pyx":326
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,
+ *         shape[2] * shape[1] * nbytes,
+ *         shape[2] * nbytes,
  *         nbytes,             # <<<<<<<<<<<<<<
  *       ))
  *   elif arr.ndim == 4:
@@ -16974,8 +16974,8 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     /* "fastremap.pyx":324
  *     arr = ipt3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
- *         shape[0] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
- *         shape[0] * nbytes,
+ *         shape[2] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[2] * nbytes,
  *         nbytes,
  */
     __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
@@ -16996,8 +16996,8 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *   elif arr.ndim == 3:
  *     arr = ipt3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(             # <<<<<<<<<<<<<<
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,
+ *         shape[2] * shape[1] * nbytes,
+ *         shape[2] * nbytes,
  */
     __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -17010,7 +17010,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
 
     /* "fastremap.pyx":321
  *     arr = ipt2d(arr)
- *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+ *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
  *   elif arr.ndim == 3:             # <<<<<<<<<<<<<<
  *     arr = ipt3d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
@@ -17093,7 +17093,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     arr = ipt4d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape,             # <<<<<<<<<<<<<<
  *       strides=(
- *         shape[0] * shape[1] * shape[2] * nbytes,
+ *         shape[3] * shape[2] * shape[1] * nbytes,
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 330, __pyx_L1_error)
@@ -17119,19 +17119,19 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     /* "fastremap.pyx":332
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape,
  *       strides=(
- *         shape[0] * shape[1] * shape[2] * nbytes,             # <<<<<<<<<<<<<<
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,
+ *         shape[3] * shape[2] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[3] * shape[2] * nbytes,
+ *         shape[3] * nbytes,
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_shape, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_shape, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_shape, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 332, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_shape, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_t_10 = PyNumber_Multiply(__pyx_t_1, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_shape, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 332, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_shape, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_t_1 = PyNumber_Multiply(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -17146,14 +17146,14 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
 
     /* "fastremap.pyx":333
  *       strides=(
- *         shape[0] * shape[1] * shape[2] * nbytes,
- *         shape[0] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
- *         shape[0] * nbytes,
+ *         shape[3] * shape[2] * shape[1] * nbytes,
+ *         shape[3] * shape[2] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[3] * nbytes,
  *         nbytes,
  */
-    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_shape, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 333, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_shape, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_shape, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_shape, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = PyNumber_Multiply(__pyx_t_9, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
@@ -17167,13 +17167,13 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "fastremap.pyx":334
- *         shape[0] * shape[1] * shape[2] * nbytes,
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[3] * shape[2] * shape[1] * nbytes,
+ *         shape[3] * shape[2] * nbytes,
+ *         shape[3] * nbytes,             # <<<<<<<<<<<<<<
  *         nbytes,
  *       ))
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_shape, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_shape, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_nbytes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
@@ -17183,8 +17183,8 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
     /* "fastremap.pyx":335
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,
+ *         shape[3] * shape[2] * nbytes,
+ *         shape[3] * nbytes,
  *         nbytes,             # <<<<<<<<<<<<<<
  *       ))
  *   else:
@@ -17195,9 +17195,9 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
     /* "fastremap.pyx":332
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape,
  *       strides=(
- *         shape[0] * shape[1] * shape[2] * nbytes,             # <<<<<<<<<<<<<<
- *         shape[0] * shape[1] * nbytes,
- *         shape[0] * nbytes,
+ *         shape[3] * shape[2] * shape[1] * nbytes,             # <<<<<<<<<<<<<<
+ *         shape[3] * shape[2] * nbytes,
+ *         shape[3] * nbytes,
  */
     __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -17221,7 +17221,7 @@ static PyObject *__pyx_pf_9fastremap_10ascontiguousarray(CYTHON_UNUSED PyObject 
  *     arr = ipt4d(arr)
  *     return np.lib.stride_tricks.as_strided(arr, shape=shape,             # <<<<<<<<<<<<<<
  *       strides=(
- *         shape[0] * shape[1] * shape[2] * nbytes,
+ *         shape[3] * shape[2] * shape[1] * nbytes,
  */
     __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);

@@ -317,21 +317,21 @@ def ascontiguousarray(arr):
 
   if arr.ndim == 2:
     arr = ipt2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
   elif arr.ndim == 3:
     arr = ipt3d(arr)
     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
-        shape[0] * shape[1] * nbytes, 
-        shape[0] * nbytes, 
+        shape[2] * shape[1] * nbytes, 
+        shape[2] * nbytes, 
         nbytes,
       ))
   elif arr.ndim == 4:
     arr = ipt4d(arr)
     return np.lib.stride_tricks.as_strided(arr, shape=shape, 
       strides=(
-        shape[0] * shape[1] * shape[2] * nbytes,
-        shape[0] * shape[1] * nbytes, 
-        shape[0] * nbytes, 
+        shape[3] * shape[2] * shape[1] * nbytes,
+        shape[3] * shape[2] * nbytes, 
+        shape[3] * nbytes, 
         nbytes, 
       ))
   else:

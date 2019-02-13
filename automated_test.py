@@ -189,9 +189,6 @@ def test_ascontiguousarray():
   for dtype in dtypes:
     for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
       x = np.arange(dim**2).reshape((dim,dim), order='F').astype(dtype)
-      print(x)
-      y = np.copy(x, order='F')
-      print(fastremap.ascontiguousarray(y))
       y = np.copy(x, order='F')
       assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
@@ -200,16 +197,10 @@ def test_ascontiguousarray():
       assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
       x = np.arange(dim**2+dim).reshape((dim,dim+1), order='F').astype(dtype)
-      print(x)
-      y = np.copy(x, order='F')
-      print(fastremap.ascontiguousarray(y))
       y = np.copy(x, order='F')
       assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
       x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim), order='F').astype(dtype)
-      print(x)
-      y = np.copy(x, order='F')
-      print(fastremap.ascontiguousarray(y))
       y = np.copy(x, order='F')
       assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 

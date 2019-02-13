@@ -243,7 +243,7 @@ inline int P_4d(
   int w = k / sxyz;
   int z = (k - w * sxyz) / sxy;
   int y = (k - (w * sxyz) - (z * sxy)) / sx;
-  int x = k - (w * sxyz) - (z * sxy) - y * sy;
+  int x = k - (w * sxyz) - (z * sxy) - y * sx;
 
   return w + sw * (z + sz * (y + sy * x));
 }
