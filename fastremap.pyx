@@ -265,8 +265,10 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
 def asfortranarray(arr):
   """
-  For square and cubic matrices, perform in-place transposition. 
-  Otherwise default to the out-of-place implementation numpy uses.
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
   """
   if arr.flags['F_CONTIGUOUS']:
     return arr
@@ -300,8 +302,10 @@ def asfortranarray(arr):
 
 def ascontiguousarray(arr):
   """
-  For square and cubic matrices, perform in-place transposition. 
-  Otherwise default to the out-of-place implementation numpy uses.
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
   """
   if arr.flags['C_CONTIGUOUS']:
     return arr
