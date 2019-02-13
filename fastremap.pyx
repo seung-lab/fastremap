@@ -278,15 +278,23 @@ def asfortranarray(arr):
   shape = arr.shape
   strides = arr.strides
 
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
   if arr.ndim == 2:
     arr = ipt2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides[::-1])
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
   elif arr.ndim == 3:
     arr = ipt3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides[::-1])
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
   elif arr.ndim == 4:
     arr = ipt4d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides[::-1])
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, 
+      strides=(
+        nbytes, 
+        shape[0] * nbytes, 
+        shape[0] * shape[1] * nbytes, 
+        shape[0] * shape[1] * shape[2] * nbytes
+      ))
   else:
     return np.asfortranarray(arr)
 
@@ -302,28 +310,35 @@ def ascontiguousarray(arr):
   elif arr.ndim == 1:
     return arr 
 
+  shape = arr.shape
   strides = arr.strides
 
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
   if arr.ndim == 2:
-    sx, sy = arr.shape
-    if sx != sy:
-      arr = rectangular_in_place_transpose_2d(arr)
-      n_bytes = np.dtype(arr.dtype).itemsize
-      return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=(n_bytes, sx * n_bytes))
-    else:
-      arr = square_in_place_transpose_2d(arr)
-      return np.lib.stride_tricks.as_strided(arr, shape=(sx, sy), strides=strides[::-1])
+    arr = ipt2d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[0] * nbytes, nbytes))
   elif arr.ndim == 3:
-    sx, sy, sz = arr.shape
-    if sx != sy or sy != sz:
-      return np.ascontiguousarray(arr)
-    arr = square_in_place_transpose_3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sz, sy, sx), strides=strides[::-1])
+    arr = ipt3d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
+        shape[0] * shape[1] * nbytes, 
+        shape[0] * nbytes, 
+        nbytes,
+      ))
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, 
+      strides=(
+        shape[0] * shape[1] * shape[2] * nbytes,
+        shape[0] * shape[1] * nbytes, 
+        shape[0] * nbytes, 
+        nbytes, 
+      ))
   else:
     return np.ascontiguousarray(arr)
 
 def ipt2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
-  NUMBER[:,:] arrview = arr
+  cdef NUMBER[:,:] arrview = arr
 
   cdef int sx
   cdef int sy
@@ -335,15 +350,36 @@ def ipt2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
     sx = arr.shape[1]
     sy = arr.shape[0]
 
-  _ipt2d[NUMBER](
-    <NUMBER*>&arrview[0,0],
-    sx, sy
-  )
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt2d[uint8_t](
+      <uint8_t*>&arrview[0,0],
+      sx, sy
+    )
+  elif nbytes == 2:
+    _ipt2d[uint16_t](
+      <uint16_t*>&arrview[0,0],
+      sx, sy
+    )
+  elif nbytes == 4:
+    _ipt2d[uint32_t](
+      <uint32_t*>&arrview[0,0],
+      sx, sy
+    )
+  else:
+    _ipt2d[uint64_t](
+      <uint64_t*>&arrview[0,0],
+      sx, sy
+    )
 
   return arr
 
 def ipt3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
-  NUMBER[:,:,:] arrview = arr
+  cdef NUMBER[:,:,:] arrview = arr
 
   cdef int sx
   cdef int sy
@@ -358,15 +394,36 @@ def ipt3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
     sy = arr.shape[1]
     sz = arr.shape[0]
 
-  _ipt3d[NUMBER](
-    <NUMBER*>&arrview[0,0,0],
-    sx, sy, sz
-  )
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt3d[uint8_t](
+      <uint8_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  elif nbytes == 2:
+    _ipt3d[uint16_t](
+      <uint16_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  elif nbytes == 4:
+    _ipt3d[uint32_t](
+      <uint32_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  else:
+    _ipt3d[uint64_t](
+      <uint64_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )    
 
   return arr
 
 def ipt4d(cnp.ndarray[NUMBER, cast=True, ndim=4] arr):
-  NUMBER[:,:,:] arrview = arr
+  cdef NUMBER[:,:,:,:] arrview = arr
 
   cdef int sx
   cdef int sy
@@ -384,10 +441,31 @@ def ipt4d(cnp.ndarray[NUMBER, cast=True, ndim=4] arr):
     sz = arr.shape[1]
     sw = arr.shape[0]
 
-  _ipt4d[NUMBER](
-    <NUMBER*>&arrview[0,0,0,0],
-    sx, sy, sz, sw
-  )
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt4d[uint8_t](
+      <uint8_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  elif nbytes == 2:
+    _ipt4d[uint16_t](
+      <uint16_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  elif nbytes == 4:
+    _ipt4d[uint32_t](
+      <uint32_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  else:
+    _ipt4d[uint64_t](
+      <uint64_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
 
   return arr
 

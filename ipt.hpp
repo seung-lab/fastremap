@@ -40,68 +40,22 @@
 namespace ipt {
 
 template <typename T>
-void ipt(T* arr, const int sx) {
-  return;
-}
-
-template <typename T>
-void ipt(T* arr, const int sx, const int sy) {
-  if (sx * sy == 0) {
-    return;
-  }
-
-  if (sx == sy) {
-    square_ipt(arr, sx, sy);
-  }
-  else {
-    rect_ipt(arr, sx, sy);
-  }
-}
-
-template <typename T>
-void ipt(T* arr, const int sx, const int sy, const int sz) {
-  if (sx * sy * sz == 0) {
-    return;
-  }
-
-  if (sx == sy && sy == sz) {
-    square_ipt(arr, sx, sy, sz);
-  }
-  else {
-    rect_ipt(arr, sx, sy, sz);
-  }
-}
-
-template <typename T>
-void ipt(
-  T* arr, 
-  const int sx, const int sy, 
-  const int sz, const int sw
-) {
-  if (sx * sy * sz * sw == 0) {
-    return;
-  }
-
-  rect_ipt(arr, sx, sy, sz, sw);
-}
-
-// Implementation below
-
-template <typename T>
 void square_ipt(T* arr, const int sx, const int sy) {
   T tmp = 0;
 
   int k = 0;
-  int kprime = 0;
-  for (int y = 0; y < sy; y++) {
-    k = sx * y;
-    kprime = y;
-    for (int x = y; x < sx; x++) {
-      k += x;
-      kprime += sy * x;
+  int next_k = 0;
 
-      tmp = arr[kprime];
-      arr[kprime] = arr[k];
+  int base_k = 0; // just for going faster
+
+  for (int y = 0; y < sy; y++) {
+    base_k = sx * y;
+    for (int x = y; x < sx; x++) {
+      k = x + base_k;
+      next_k = y + sy * x;
+
+      tmp = arr[next_k];
+      arr[next_k] = arr[k];
       arr[k] = tmp;
     }
   }
@@ -173,7 +127,7 @@ void rect_ipt(T* arr, const int sx, const int sy) {
 
   const int q = sxy - 1;
   const libdivide::divider<int> fast_sx(sx);
-  int i, k, next_k;
+  int k, next_k;
   T tmp1, tmp2;
   
   for (int i = 1; i < q; i++) {
@@ -210,30 +164,30 @@ void square_ipt(
   const int syz = sy * sz;
 
   int k = 0;
-  int kprime = 0;
+  int next_k = 0;
+  int base_k = 0;
   for (int z = 0; z < sz; z++) {
     for (int y = 0; y < sy; y++) {
-      k = sx * y + sxy * z;
-      kprime = z + sz * y;
+      base_k = sx * y + sxy * z;
       for (int x = z; x < sx; x++) {
-        k += x;
-        kprime += syz * x;
+        k = x + base_k;
+        next_k = z + sz * y + syz * x;
 
-        tmp = arr[kprime];
-        arr[kprime] = arr[k];
+        tmp = arr[next_k];
+        arr[next_k] = arr[k];
         arr[k] = tmp;
       }
     }
   }
 }
 
-// Tried something fancy, but it was hard to
-// get the math working. Here's some easy math.
 inline int P_3d(
     const int k, 
     const int sx, const int sy, const int sz
   ) {
   const int sxy = sx * sy;
+
+  // k = x + sx y + sx sy z 
 
   int z = k / sxy;
   int y = (k - (z * sxy)) / sx;
@@ -247,7 +201,6 @@ void rect_ipt(
     const int sx, const int sy, const int sz
   ) {
   const int sxy = sx * sy;
-  const int syz = sy * sz;
   const int N = sxy * sz;
 
   std::vector<bool> visited;
@@ -285,10 +238,13 @@ inline int P_4d(
   const int sxy = sx * sy;
   const int sxyz = sxy * sz;
 
+  // k = x + sx y + sx sy z + sx sy sz w
+
   int w = k / sxyz;
   int z = (k - w * sxyz) / sxy;
   int y = (k - (w * sxyz) - (z * sxy)) / sx;
   int x = k - (w * sxyz) - (z * sxy) - y * sy;
+
   return w + sw * (z + sz * (y + sy * x));
 }
 
@@ -298,9 +254,7 @@ void rect_ipt(
     const int sx, const int sy, const int sz, const int sw
   ) {
 
-  const int sxy = sx * sy;
-  const int syz = sy * sz;
-  const int N = sxy * sz;
+  const int N = sx * sy * sz * sw;
 
   std::vector<bool> visited;
   visited.resize(N);
@@ -328,6 +282,52 @@ void rect_ipt(
       next_k = P_4d(k, sx, sy, sz, sw);
     }
   }
+}
+
+template <typename T>
+void ipt(T* arr, const int sx) {
+  return;
+}
+
+template <typename T>
+void ipt(T* arr, const int sx, const int sy) {
+  if (sx * sy <= 1) {
+    return;
+  }
+
+  if (sx == sy) {
+    square_ipt(arr, sx, sy);
+  }
+  else {
+    rect_ipt(arr, sx, sy);
+  }
+}
+
+template <typename T>
+void ipt(T* arr, const int sx, const int sy, const int sz) {
+  if (sx * sy * sz <= 1) {
+    return;
+  }
+
+  if (sx == sy && sy == sz) {
+    square_ipt(arr, sx, sy, sz);
+  }
+  else {
+    rect_ipt(arr, sx, sy, sz);
+  }
+}
+
+template <typename T>
+void ipt(
+  T* arr, 
+  const int sx, const int sy, 
+  const int sz, const int sw
+) {
+  if (sx * sy * sz * sw <= 1) {
+    return;
+  }
+
+  rect_ipt(arr, sx, sy, sz, sw);
 }
 
 };
