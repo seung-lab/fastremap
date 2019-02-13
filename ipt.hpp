@@ -20,10 +20,7 @@
  */
 
 #include <algorithm>
-#include <bitset>
-#include <cmath>
 #include <cstdint>
-#include <stdio.h>
 #include <vector>
 
 #ifndef IN_PLACE_TRANSPOSE_H
