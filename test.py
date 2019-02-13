@@ -1,13 +1,13 @@
 import fastremap
 import numpy as np 
 
-x = np.ones((1024,1024,512), dtype=np.bool)
+x = np.ones((512,512,512), dtype=np.float32)
 x = fastremap.asfortranarray(x)
 print(x)
 print(x.flags)
 print(x.strides)
 
-
+print(x.dtype)
 
 
 

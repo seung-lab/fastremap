@@ -268,19 +268,22 @@ def asfortranarray(arr):
 
   if arr.ndim == 2:
     arr = ipt2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
+    return arr.view(dtype)
   elif arr.ndim == 3:
     arr = ipt3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
+    return arr.view(dtype)
   elif arr.ndim == 4:
     arr = ipt4d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, 
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
       strides=(
         nbytes, 
         shape[0] * nbytes, 
         shape[0] * shape[1] * nbytes, 
         shape[0] * shape[1] * shape[2] * nbytes
       ))
+    return arr.view(dtype)
   else:
     return np.asfortranarray(arr)
 
@@ -313,23 +316,26 @@ def ascontiguousarray(arr):
 
   if arr.ndim == 2:
     arr = ipt2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
+    return arr.view(dtype)
   elif arr.ndim == 3:
     arr = ipt3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
         shape[2] * shape[1] * nbytes, 
         shape[2] * nbytes, 
         nbytes,
       ))
+    return arr.view(dtype)
   elif arr.ndim == 4:
     arr = ipt4d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=shape, 
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
       strides=(
         shape[3] * shape[2] * shape[1] * nbytes,
         shape[3] * shape[2] * nbytes, 
         shape[3] * nbytes, 
         nbytes, 
       ))
+    return arr.view(dtype)
   else:
     return np.ascontiguousarray(arr)
 
