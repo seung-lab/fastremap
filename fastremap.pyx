@@ -262,6 +262,10 @@ def asfortranarray(arr):
 
   cdef int nbytes = np.dtype(arr.dtype).itemsize
 
+  dtype = arr.dtype
+  if arr.dtype == np.bool:
+    arr = arr.view(np.uint8)
+
   if arr.ndim == 2:
     arr = ipt2d(arr)
     return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
@@ -302,6 +306,10 @@ def ascontiguousarray(arr):
   strides = arr.strides
 
   cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  dtype = arr.dtype
+  if arr.dtype == np.bool:
+    arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
     arr = ipt2d(arr)

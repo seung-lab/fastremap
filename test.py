@@ -1,11 +1,7 @@
 import fastremap
 import numpy as np 
 
-x = np.arange(12).reshape((3,4)) + 1
-print(x)
-print(x.flags)
-print(x.strides)
-
+x = np.ones((1024,1024,512), dtype=np.bool)
 x = fastremap.asfortranarray(x)
 print(x)
 print(x.flags)
