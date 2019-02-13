@@ -8,9 +8,14 @@ For some operations, we can save memory and improve performance
 by performing operations on a remapped volume and remembering the
 mapping back to the original value.
 
+This module also constains the facilities for performing
+and in-place matrix transposition for up to 4D arrays. This is 
+helpful for converting between C and Fortran order in memory
+constrained environments when format shifting.
+
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - January 2019
+Date: August 2018 - February 2019
 """
 
 cimport cython
@@ -53,6 +58,14 @@ ctypedef fused UINT:
   uint32_t
   uint64_t
 
+cdef extern from "ipt.hpp" namespace "pyipt":
+  cdef void _ipt2d[T](T* arr, int sx, int sy)
+  cdef void _ipt3d[T](
+    T* arr, int sx, int sy, int sz
+  )
+  cdef void _ipt4d[T](
+    T* arr, int sx, int sy, int sz, int sw
+  )
 
 def renumber(arr, start=1, preserve_zero=True):
   """
@@ -228,89 +241,233 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
 def asfortranarray(arr):
   """
-  For square and cubic matrices, perform in-place transposition. 
-  Otherwise default to the out-of-place implementation numpy uses.
+  asfortranarray(arr)
+
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
+
+  Returns: transposed numpy array
   """
   if arr.flags['F_CONTIGUOUS']:
     return arr
+  elif not arr.flags['C_CONTIGUOUS']:
+    return np.asfortranarray(arr)
   elif arr.ndim == 1:
     return arr 
 
+  shape = arr.shape
+  strides = arr.strides
+
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  dtype = arr.dtype
+  if arr.dtype == np.bool:
+    arr = arr.view(np.uint8)
+
   if arr.ndim == 2:
-    sx, sy = arr.shape
-    if sx != sy:
-      return np.asfortranarray(arr)
-    arr = symmetric_in_place_transpose_2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx), strides=arr.strides[::-1])
+    arr = ipt2d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
+    return arr.view(dtype)
   elif arr.ndim == 3:
-    sx, sy, sz = arr.shape
-    if sx != sy or sy != sz:
-      return np.asfortranarray(arr)
-    arr = symmetric_in_place_transpose_3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx, sx), strides=arr.strides[::-1])
+    arr = ipt3d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
+    return arr.view(dtype)
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
+      strides=(
+        nbytes, 
+        shape[0] * nbytes, 
+        shape[0] * shape[1] * nbytes, 
+        shape[0] * shape[1] * shape[2] * nbytes
+      ))
+    return arr.view(dtype)
   else:
     return np.asfortranarray(arr)
 
 def ascontiguousarray(arr):
   """
-  For square and cubic matrices, perform in-place transposition. 
-  Otherwise default to the out-of-place implementation numpy uses.
+  ascontiguousarray(arr)
+
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
+
+  Returns: transposed numpy array
   """
   if arr.flags['C_CONTIGUOUS']:
     return arr
+  elif not arr.flags['F_CONTIGUOUS']:
+    return np.ascontiguousarray(arr)
   elif arr.ndim == 1:
     return arr 
 
+  shape = arr.shape
+  strides = arr.strides
+
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  dtype = arr.dtype
+  if arr.dtype == np.bool:
+    arr = arr.view(np.uint8)
+
   if arr.ndim == 2:
-    sx, sy = arr.shape
-    if sx != sy:
-      return np.ascontiguousarray(arr)
-    arr = symmetric_in_place_transpose_2d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx), strides=arr.strides[::-1])
+    arr = ipt2d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
+    return arr.view(dtype)
   elif arr.ndim == 3:
-    sx, sy, sz = arr.shape
-    if sx != sy or sy != sz:
-      return np.ascontiguousarray(arr)
-    arr = symmetric_in_place_transpose_3d(arr)
-    return np.lib.stride_tricks.as_strided(arr, shape=(sx, sx, sx), strides=arr.strides[::-1])
+    arr = ipt3d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
+        shape[2] * shape[1] * nbytes, 
+        shape[2] * nbytes, 
+        nbytes,
+      ))
+    return arr.view(dtype)
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
+      strides=(
+        shape[3] * shape[2] * shape[1] * nbytes,
+        shape[3] * shape[2] * nbytes, 
+        shape[3] * nbytes, 
+        nbytes, 
+      ))
+    return arr.view(dtype)
   else:
     return np.ascontiguousarray(arr)
 
-def symmetric_in_place_transpose_2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
-  cdef int n = arr.shape[0]
-  cdef int m = arr.shape[1]
+def ipt2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
+  cdef NUMBER[:,:] arrview = arr
 
-  cdef int i = 0
-  cdef int j = 0
+  cdef int sx
+  cdef int sy
 
-  cdef NUMBER tmp = 0
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+  else:
+    sx = arr.shape[1]
+    sy = arr.shape[0]
 
-  for i in range(m):
-    for j in range(i, n):
-      tmp = arr[j,i]
-      arr[j,i] = arr[i,j]
-      arr[i,j] = tmp
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt2d[uint8_t](
+      <uint8_t*>&arrview[0,0],
+      sx, sy
+    )
+  elif nbytes == 2:
+    _ipt2d[uint16_t](
+      <uint16_t*>&arrview[0,0],
+      sx, sy
+    )
+  elif nbytes == 4:
+    _ipt2d[uint32_t](
+      <uint32_t*>&arrview[0,0],
+      sx, sy
+    )
+  else:
+    _ipt2d[uint64_t](
+      <uint64_t*>&arrview[0,0],
+      sx, sy
+    )
 
   return arr
 
-def symmetric_in_place_transpose_3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
-  cdef int n = arr.shape[0]
-  cdef int m = arr.shape[1]
-  cdef int o = arr.shape[2]
+def ipt3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
+  cdef NUMBER[:,:,:] arrview = arr
 
-  cdef int i = 0
-  cdef int j = 0
-  cdef int k = 0
+  cdef int sx
+  cdef int sy
+  cdef int sz
 
-  cdef NUMBER tmp = 0
-  
-  for i in range(m):
-    for j in range(n):
-      for k in range(i, o):
-        tmp = arr[k,j,i]
-        arr[k,j,i] = arr[i,j,k]
-        arr[i,j,k] = tmp
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+    sz = arr.shape[2]
+  else:
+    sx = arr.shape[2]
+    sy = arr.shape[1]
+    sz = arr.shape[0]
+
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt3d[uint8_t](
+      <uint8_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  elif nbytes == 2:
+    _ipt3d[uint16_t](
+      <uint16_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  elif nbytes == 4:
+    _ipt3d[uint32_t](
+      <uint32_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  else:
+    _ipt3d[uint64_t](
+      <uint64_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )    
 
   return arr
 
+def ipt4d(cnp.ndarray[NUMBER, cast=True, ndim=4] arr):
+  cdef NUMBER[:,:,:,:] arrview = arr
+
+  cdef int sx
+  cdef int sy
+  cdef int sz
+  cdef int sw
+
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+    sz = arr.shape[2]
+    sw = arr.shape[3]
+  else:
+    sx = arr.shape[3]
+    sy = arr.shape[2]
+    sz = arr.shape[1]
+    sw = arr.shape[0]
+
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt4d[uint8_t](
+      <uint8_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  elif nbytes == 2:
+    _ipt4d[uint16_t](
+      <uint16_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  elif nbytes == 4:
+    _ipt4d[uint32_t](
+      <uint32_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  else:
+    _ipt4d[uint64_t](
+      <uint64_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+
+  return arr
 

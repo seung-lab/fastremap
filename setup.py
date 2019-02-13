@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-from __future__ import print_function
-import os
 import setuptools
-
 import numpy as np
 
 # NOTE: If fastremap.cpp does not exist, you must run
