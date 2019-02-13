@@ -83,6 +83,33 @@ python setup.py develop
 python setup.py install 
 ```
 
+## C++ Usage
+
+You can also use the in-place transposition function in C++ directly. 
+
+```cpp
+#include "ipt.hpp"
+
+int main() {
+
+  int sx = 128;
+  int sy = 124;
+  int sz = 103;
+  int sw = 3;
+
+  auto* arr = ....;
+
+  // All primitive number types supported
+  // The array will be modified in place, 
+  // so these functions are void type.
+  ipt::ipt<int>(arr, sx, sy);            // 2D
+  ipt::ipt<float>(arr, sx, sy, sz);      // 3D
+  ipt::ipt<double>(arr, sx, sy, sz, sw); // 4D
+
+  return 0;
+}
+```
+
 --  
 Made with <3
 
