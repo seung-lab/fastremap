@@ -62,9 +62,6 @@ cdef extern from "ipt.hpp" namespace "pyipt":
     T* arr, int sx, int sy, int sz, int sw
   )
 
-@cython.boundscheck(False)
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
-@cython.nonecheck(False)
 def renumber(arr, start=1, preserve_zero=True):
   """
   renumber(arr, start=1, preserve_zero=True)
