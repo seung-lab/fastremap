@@ -123,6 +123,11 @@ def test_3d_renumber():
       ],
     ])
 
+  big = np.random.randint(0, (2**64)-1, size=(512,512,100), dtype=np.uint64)
+  big, remapdict = fastremap.renumber(big, preserve_zero=True)
+  assert np.dtype(big.dtype).itemsize <= 4
+  assert np.dtype(big.dtype).itemsize > 1
+
 
 def test_remap_1d():
   for dtype in DTYPES:

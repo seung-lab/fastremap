@@ -1,11 +1,18 @@
 CHANGES
 =======
 
+1.2.1
+-----
+
+* chore: bump version to 1.2.1
+* docs: update in-place description in README example
+
 1.2.0
 -----
 
 * chore: drop py34 support
 * chore: version 1.2.0
+* feat: 2D, 3D, 4D rectangular in-place transposition (#3)
 * refactor: use fused types to reduce code duplication (#4)
 
 1.1.0

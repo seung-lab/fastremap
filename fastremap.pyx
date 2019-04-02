@@ -28,7 +28,7 @@ from libcpp.unordered_map cimport unordered_map
 import numpy as np
 cimport numpy as cnp
 
-__version__ = '1.2.1'
+__version__ = '1.2.2'
 
 ctypedef fused ALLINT:
   uint8_t
@@ -86,7 +86,7 @@ def renumber(arr, start=1, preserve_zero=True):
 
   if arr.dtype == np.bool and preserve_zero:
     return arr, { 0: 0, 1: start }
-  else:
+  elif arr.dtype == np.bool:
     arr = arr.astype(np.uint8)
 
   shape = arr.shape
@@ -122,8 +122,8 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   cdef NUMBER remap_id = start
   cdef NUMBER elem
 
-  cdef int size = arr.size
-  cdef int i = 0
+  cdef size_t size = arr.size
+  cdef size_t i = 0
 
   for i in range(size):
     elem = arrview[i]
@@ -168,9 +168,9 @@ cpdef cnp.ndarray[ALLINT] remap(cnp.ndarray[ALLINT] arr, dict table, preserve_mi
   Returns: remapped array
   """
   cdef ALLINT[:] arrview = arr
-  cdef int i = 0
+  cdef size_t i = 0
 
-  cdef int size = arr.size
+  cdef size_t size = arr.size
 
   for i in range(size):
     elem = arr[i]
