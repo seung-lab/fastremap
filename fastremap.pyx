@@ -25,6 +25,9 @@ from libc.stdint cimport (
 )
 from libcpp.unordered_map cimport unordered_map
 
+from functools import reduce
+import operator
+
 import numpy as np
 cimport numpy as cnp
 
@@ -89,12 +92,36 @@ def renumber(arr, start=1, preserve_zero=True):
   elif arr.dtype == np.bool:
     arr = arr.astype(np.uint8)
 
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
   shape = arr.shape
   order = 'F' if arr.flags['F_CONTIGUOUS'] else 'C'
-  arr = arr.flatten(order)
+
+  arr = np.lib.stride_tricks.as_strided(arr, shape=(arr.size,), strides=(nbytes,))
   arr, remap_dict = _renumber(arr, <int64_t>start, preserve_zero)
-  arr = arr.reshape(shape, order=order)
+  arr = reshape(arr, shape, order)
+
   return arr, remap_dict
+
+def reshape(arr, shape, order=None):
+  if order is None:
+    if arr.flags['F_CONTIGUOUS']:
+      order = 'F'
+    elif arr.flags['C_CONTIGUOUS']:
+      order = 'C'
+    else:
+      return arr.reshape(shape)
+
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  if order == 'C':
+    strides = [ reduce(operator.mul, shape[i:]) * nbytes for i in range(1, len(shape)) ]
+    strides += [ nbytes ]
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
+  else:
+    strides = [ reduce(operator.mul, shape[:i]) * nbytes for i in range(1, len(shape)) ]
+    strides = [ nbytes ] + strides
+    return np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function

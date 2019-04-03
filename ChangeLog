@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+1.2.2
+-----
+
+* fix: renumber was broken due to incomplete boolean logic
+* docs: updating documentation
+
 1.2.1
 -----
 
