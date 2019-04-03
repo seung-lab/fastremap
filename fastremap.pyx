@@ -31,6 +31,10 @@ import operator
 import numpy as np
 cimport numpy as cnp
 
+import sys
+
+PYTHON_2 = (sys.version_info < (3, 0))
+
 __version__ = '1.2.2'
 
 ctypedef fused ALLINT:
@@ -70,7 +74,7 @@ cdef extern from "ipt.hpp" namespace "pyipt":
     T* arr, int sx, int sy, int sz, int sw
   )
 
-def renumber(arr, start=1, preserve_zero=True):
+def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
   renumber(arr, start=1, preserve_zero=True)
 
@@ -80,7 +84,10 @@ def renumber(arr, start=1, preserve_zero=True):
 
   arr: A numpy array
   start (default: 1): Start renumbering from this value
-  preserve_zero (default ): 
+  preserve_zero (default: True): Don't renumber zero.
+  in_place (default: False): Perform the renumbering in-place to avoid
+    an extra copy. This option depends on a fortran or C contiguous
+    array. A copy will be made if the array is not contiguous.
 
   Return: a renumbered array, dict with remapping of oldval => newval
   """
@@ -96,6 +103,10 @@ def renumber(arr, start=1, preserve_zero=True):
 
   shape = arr.shape
   order = 'F' if arr.flags['F_CONTIGUOUS'] else 'C'
+  in_place = in_place and (arr.flags['F_CONTIGUOUS'] or arr.flags['C_CONTIGUOUS'])
+
+  if not in_place:
+    arr = np.copy(arr, order=order)
 
   arr = np.lib.stride_tricks.as_strided(arr, shape=(arr.size,), strides=(nbytes,))
   arr, remap_dict = _renumber(arr, <int64_t>start, preserve_zero)
@@ -177,9 +188,13 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   else:
     final_type = types[3]
 
-  output = bytearray(arrview)
-  output = np.frombuffer(output, dtype=arr.dtype).astype(final_type)
-  return output, remap_dict
+  if PYTHON_2:
+    output = bytearray(arrview)
+    output = np.frombuffer(output, dtype=arr.dtype)
+  else:
+    output = np.frombuffer(arrview, dtype=arr.dtype)
+
+  return output.astype(final_type), remap_dict
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
