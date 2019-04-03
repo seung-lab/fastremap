@@ -90,7 +90,7 @@ def renumber(arr, start=1, preserve_zero=True):
   if arr.dtype == np.bool and preserve_zero:
     return arr, { 0: 0, 1: start }
   elif arr.dtype == np.bool:
-    arr = arr.astype(np.uint8)
+    arr = arr.view(np.uint8)
 
   cdef int nbytes = np.dtype(arr.dtype).itemsize
 

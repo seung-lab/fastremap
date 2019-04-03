@@ -3556,7 +3556,7 @@ static PyObject *__pyx_pf_9fastremap_renumber(CYTHON_UNUSED PyObject *__pyx_self
  *   if arr.dtype == np.bool and preserve_zero:
  *     return arr, { 0: 0, 1: start }             # <<<<<<<<<<<<<<
  *   elif arr.dtype == np.bool:
- *     arr = arr.astype(np.uint8)
+ *     arr = arr.view(np.uint8)
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
@@ -3588,7 +3588,7 @@ static PyObject *__pyx_pf_9fastremap_renumber(CYTHON_UNUSED PyObject *__pyx_self
  *   if arr.dtype == np.bool and preserve_zero:
  *     return arr, { 0: 0, 1: start }
  *   elif arr.dtype == np.bool:             # <<<<<<<<<<<<<<
- *     arr = arr.astype(np.uint8)
+ *     arr = arr.view(np.uint8)
  * 
  */
   __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
@@ -3608,11 +3608,11 @@ static PyObject *__pyx_pf_9fastremap_renumber(CYTHON_UNUSED PyObject *__pyx_self
     /* "fastremap.pyx":93
  *     return arr, { 0: 0, 1: start }
  *   elif arr.dtype == np.bool:
- *     arr = arr.astype(np.uint8)             # <<<<<<<<<<<<<<
+ *     arr = arr.view(np.uint8)             # <<<<<<<<<<<<<<
  * 
  *   cdef int nbytes = np.dtype(arr.dtype).itemsize
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_astype); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_arr, __pyx_n_s_view); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 93, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -3642,13 +3642,13 @@ static PyObject *__pyx_pf_9fastremap_renumber(CYTHON_UNUSED PyObject *__pyx_self
  *   if arr.dtype == np.bool and preserve_zero:
  *     return arr, { 0: 0, 1: start }
  *   elif arr.dtype == np.bool:             # <<<<<<<<<<<<<<
- *     arr = arr.astype(np.uint8)
+ *     arr = arr.view(np.uint8)
  * 
  */
   }
 
   /* "fastremap.pyx":95
- *     arr = arr.astype(np.uint8)
+ *     arr = arr.view(np.uint8)
  * 
  *   cdef int nbytes = np.dtype(arr.dtype).itemsize             # <<<<<<<<<<<<<<
  * 
