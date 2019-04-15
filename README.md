@@ -2,7 +2,7 @@
 
 # fastremap
 
-Renumber and relabel Numpy arrays at C++ speed and physically convert Numpy arrays between C and Fortran order using an in-place transposition.   
+Renumber and relabel Numpy arrays at C++ speed and physically convert rectangular Numpy arrays between C and Fortran order using an in-place transposition.   
 
 ## `pip` Installation
 
@@ -88,7 +88,7 @@ arr, remapping = fastremap.renumber(arr, preserve_zero=False) # Returns uint8 ar
 
 When transitioning between different media, e.g. CPU to GPU, CPU to Network, CPU to disk, it's often necessary to physically transpose multi-dimensional arrays to reformat as C or Fortran order. Tranposing matrices is also a common action in linear algebra, but often you can get away with just changing the strides.
 
-An out-of-place transposition is easy to write, and often faster, but it will spike peak memory consumption. This library grants the user the option of performing an in-place transposition which trades CPU time for peak memory usage.
+An out-of-place transposition is easy to write, and often faster, but it will spike peak memory consumption. This library grants the user the option of performing an in-place transposition which trades CPU time for peak memory usage. In the special case of square or cubic arrays, the in-place transpisition is both lower memory and faster.
 
 - **fastremap.asfortranarray:** Same as np.asfortranarray but will perform the transposition in-place for 1, 2, 3, and 4D arrays. 2D and 3D square matrices are faster to process than with Numpy.
 - **fastremap.ascontiguousarray:** Same as np.ascontiguousarray but will perform the transposition in-place for 1, 2, 3, and 4D arrays. 2D and 3D square matrices are faster to process than with Numpy.
@@ -109,8 +109,8 @@ arr = fastremap.ascontiguousarray(x)
 - **remap:** Custom relabeling of values in an array from a dictionary.
 - **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
 - **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
-- **asfortranarray:** Perform an in-place matrix transposition for square and cubic arrays, standard numpy algorithm otherwise.
-- **ascontiguousarray:** Perform an in-place matrix transposition for square and cubic arrays, standard numpy algorithm otherwise.
+- **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.
+- **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy algorithm otherwise.
 
 ## C++ Usage
 
