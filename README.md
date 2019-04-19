@@ -82,6 +82,9 @@ arr, remapping = fastremap.renumber(arr, preserve_zero=False) # Returns uint8 ar
 >>> arr = [ 1, 2, 1, 3, 4 ]
 >>> remapping = { 0: 4, 283732875: 1, 439238823: 2, 182812404: 3 }
 
+arr, remapping = fastremap.renumber(arr, preserve_zero=False, in_place=True) # Mutate arr to use less memory
+>>> arr = [ 1, 2, 1, 3, 4 ]
+>>> remapping = { 0: 4, 283732875: 1, 439238823: 2, 182812404: 3 }
 ```
 
 ## The Problem of In-Place Transposition 
