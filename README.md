@@ -110,6 +110,7 @@ arr = fastremap.ascontiguousarray(x)
 ## All Available Functions:  
 - **renumber:** Relabel array from 1 to N which can often use smaller datatypes.
 - **remap:** Custom relabeling of values in an array from a dictionary.
+- **mask:** Zero out labels in an array specified by a given list.
 - **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
 - **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
 - **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.

@@ -209,9 +209,26 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   return output.astype(final_type), remap_dict
 
-def remap(arr, table, preserve_missing_labels=False):
+def mask(arr, labels, in_place=False):
   """
-  remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False)
+  mask(arr, labels, in_place=False)
+
+  Zero out designated labels in an array. 
+
+  arr: an N-dimensional numpy array
+  labels: an iterable list of integers
+  in_place: if True, modify the input array to reduce
+    memory consumption.
+
+  Returns: arr with `labels` masked out
+  """
+  labels = { lbl: 0 for lbl in labels }
+  return remap(arr, labels, preserve_missing_labels=True, in_place=in_place)
+
+def remap(arr, table, preserve_missing_labels=False, in_place=False):
+  """
+  remap(cnp.ndarray[ALLINT] arr, dict table, 
+    preserve_missing_labels=False, in_place=False)
 
   Remap an input numpy array in-place according to the values in the given 
   dictionary "table". Depending on the value of "preserve_missing_labels", 
@@ -225,6 +242,9 @@ def remap(arr, table, preserve_missing_labels=False):
     order = 'F'
   else:
     order = 'C'
+
+  if not in_place:
+    arr = np.copy(arr, order=order)
 
   arr = reshape(arr, (arr.size,))
   arr = _remap(arr, table, preserve_missing_labels)
