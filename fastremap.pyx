@@ -115,6 +115,19 @@ def renumber(arr, start=1, preserve_zero=True, in_place=False):
   return arr, remap_dict
 
 def reshape(arr, shape, order=None):
+  """
+  If the array is contiguous, attempt an in place reshape
+  rather than potentially making a copy.
+
+  Required:
+    arr: The input numpy array.
+    shape: The desired shape (must be the same size as arr)
+
+  Optional: 
+    order: 'C', 'F', or None (determine automatically)
+
+  Returns: reshaped array
+  """
   if order is None:
     if arr.flags['F_CONTIGUOUS']:
       order = 'F'
@@ -196,10 +209,7 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   return output.astype(final_type), remap_dict
 
-@cython.boundscheck(False)
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
-@cython.nonecheck(False)          
-cpdef cnp.ndarray[ALLINT] remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False):
+def remap(arr, table, preserve_missing_labels=False):
   """
   remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels=False)
 
@@ -209,6 +219,21 @@ cpdef cnp.ndarray[ALLINT] remap(cnp.ndarray[ALLINT] arr, dict table, preserve_mi
 
   Returns: remapped array
   """
+  shape = arr.shape 
+
+  if arr.flags['F_CONTIGUOUS']:
+    order = 'F'
+  else:
+    order = 'C'
+
+  arr = reshape(arr, (arr.size,))
+  arr = _remap(arr, table, preserve_missing_labels)
+  return reshape(arr, shape, order=order)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)          
+def _remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels):
   cdef ALLINT[:] arrview = arr
   cdef size_t i = 0
 
