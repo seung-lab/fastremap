@@ -253,21 +253,19 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)          
-def _remap(cnp.ndarray[ALLINT] arr, dict table, preserve_missing_labels):
+def _remap(cnp.ndarray[ALLINT] arr, dict table, uint8_t preserve_missing_labels):
   cdef ALLINT[:] arrview = arr
   cdef size_t i = 0
-
   cdef size_t size = arr.size
 
-  for i in range(size):
-    elem = arr[i]
-    try:
-      arrview[i] = table[elem]
-    except KeyError:
-      if preserve_missing_labels:
-        continue
-      else:
-        raise
+  if preserve_missing_labels:
+    for i in range(size):
+      elem = arrview[i]
+      arrview[i] = <ALLINT>table.get(elem, elem)
+  else:
+    for i in range(size):
+      elem = arrview[i]
+      arrview[i] = <ALLINT>table[elem]
 
   return arr
 
