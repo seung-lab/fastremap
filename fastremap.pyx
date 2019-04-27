@@ -35,7 +35,7 @@ import sys
 
 PYTHON_2 = (sys.version_info < (3, 0))
 
-__version__ = '1.5.0'
+__version__ = '1.5.1'
 
 ctypedef fused ALLINT:
   uint8_t
