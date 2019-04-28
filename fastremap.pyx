@@ -35,7 +35,7 @@ import sys
 
 PYTHON_2 = (sys.version_info < (3, 0))
 
-__version__ = '1.5.0'
+__version__ = '1.5.1'
 
 ctypedef fused ALLINT:
   uint8_t
@@ -209,20 +209,22 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   return output.astype(final_type), remap_dict
 
-def mask(arr, labels, in_place=False):
+def mask(arr, labels, in_place=False, value=0):
   """
-  mask(arr, labels, in_place=False)
+  mask(arr, labels, in_place=False, value=0)
 
-  Zero out designated labels in an array. 
+  Mask out designated labels in an array with the
+  given value. 
 
   arr: an N-dimensional numpy array
   labels: an iterable list of integers
   in_place: if True, modify the input array to reduce
     memory consumption.
+  value: mask value
 
   Returns: arr with `labels` masked out
   """
-  labels = { lbl: 0 for lbl in labels }
+  labels = { lbl: value for lbl in labels }
   return remap(arr, labels, preserve_missing_labels=True, in_place=in_place)
 
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
@@ -258,14 +260,22 @@ def _remap(cnp.ndarray[ALLINT] arr, dict table, uint8_t preserve_missing_labels)
   cdef size_t i = 0
   cdef size_t size = arr.size
 
+  cdef unordered_map[ALLINT, ALLINT] tbl 
+
   if preserve_missing_labels:
+    for k, v in table.items():
+      tbl[k] = v 
+
     for i in range(size):
       elem = arrview[i]
-      arrview[i] = <ALLINT>table.get(elem, elem)
+      if tbl.find(elem) == tbl.end():
+        continue
+      else:
+        arrview[i] = tbl[elem]
   else:
     for i in range(size):
       elem = arrview[i]
-      arrview[i] = <ALLINT>table[elem]
+      arrview[i] = table[elem]
 
   return arr
 
