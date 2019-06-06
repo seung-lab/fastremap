@@ -227,14 +227,66 @@ def mask(arr, labels, in_place=False, value=0):
   labels = { lbl: value for lbl in labels }
   return remap(arr, labels, preserve_missing_labels=True, in_place=in_place)
 
+def mask(arr, labels, in_place=False, value=0):
+  """
+  mask(arr, labels, in_place=False, value=0)
+
+  Mask out designated labels in an array with the
+  given value. 
+
+  Alternative implementation of:
+
+  arr[np.isin(labels)] = value
+
+  arr: an N-dimensional numpy array
+  labels: an iterable list of integers
+  in_place: if True, modify the input array to reduce
+    memory consumption.
+  value: mask value
+
+  Returns: arr with `labels` masked out
+  """
+  labels = { lbl: value for lbl in labels }
+  return remap(arr, labels, preserve_missing_labels=True, in_place=in_place)
+
+def mask_except(arr, labels, in_place=False, value=0):
+  """
+  mask_except(arr, labels, in_place=False, value=0)
+
+  Mask out all labels except the provided list.
+
+  Alternative implementation of:
+
+  arr[~np.isin(labels)] = value
+
+  arr: an N-dimensional numpy array
+  labels: an iterable list of integers
+  in_place: if True, modify the input array to reduce
+    memory consumption.
+  value: mask value
+
+  Returns: arr with all labels except `labels` masked out
+  """
+  remap_labels = { lbl: value for lbl in np.unique(arr) }
+  for label in labels:
+    remap_labels[label] = label
+  return remap(arr, remap_labels, preserve_missing_labels=False, in_place=in_place)
+
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """
   remap(cnp.ndarray[ALLINT] arr, dict table, 
     preserve_missing_labels=False, in_place=False)
 
   Remap an input numpy array in-place according to the values in the given 
-  dictionary "table". Depending on the value of "preserve_missing_labels", 
-  if an array value is not present in "table", leave it alone or throw a KeyError.
+  dictionary "table".   
+
+  arr: an N-dimensional numpy array
+  table: { label: new_label_value, ... }
+  preserve_missing_labels: If an array value is not present in "table"...
+    True: Leave it alone.
+    False: Throw a KeyError.
+  in_place: if True, modify the input array to reduce
+    memory consumption.
 
   Returns: remapped array
   """
@@ -262,20 +314,18 @@ def _remap(cnp.ndarray[ALLINT] arr, dict table, uint8_t preserve_missing_labels)
 
   cdef unordered_map[ALLINT, ALLINT] tbl 
 
-  if preserve_missing_labels:
-    for k, v in table.items():
-      tbl[k] = v 
+  for k, v in table.items():
+    tbl[k] = v 
 
-    for i in range(size):
-      elem = arrview[i]
-      if tbl.find(elem) == tbl.end():
+  for i in range(size):
+    elem = arrview[i]
+    if tbl.find(elem) == tbl.end():
+      if preserve_missing_labels:
         continue
       else:
-        arrview[i] = tbl[elem]
-  else:
-    for i in range(size):
-      elem = arrview[i]
-      arrview[i] = table[elem]
+        raise KeyError("{} was not in the remap table.".format(elem))  
+    else:
+      arrview[i] = tbl[elem]
 
   return arr
 
