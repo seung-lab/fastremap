@@ -249,10 +249,43 @@ def mask_except(arr, labels, in_place=False, value=0):
 
   Returns: arr with all labels except `labels` masked out
   """
-  remap_labels = { lbl: value for lbl in np.unique(arr) }
+  shape = arr.shape 
+
+  if arr.flags['F_CONTIGUOUS']:
+    order = 'F'
+  else:
+    order = 'C'
+
+  if not in_place:
+    arr = np.copy(arr, order=order)
+
+  arr = reshape(arr, (arr.size,))
+  arr = _mask_except(arr, labels, value)
+  return reshape(arr, shape, order=order)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)          
+def _mask_except(cnp.ndarray[ALLINT] arr, list labels, int64_t value):
+  cdef ALLINT[:] arrview = arr
+  cdef size_t i = 0
+  cdef size_t size = arr.size
+
+  cdef unordered_map[ALLINT, ALLINT] tbl 
+
   for label in labels:
-    remap_labels[label] = label
-  return remap(arr, remap_labels, preserve_missing_labels=False, in_place=in_place)
+    tbl[label] = label 
+
+  if value == 0:
+    for i in range(size):
+      arrview[i] = tbl[arrview[i]]
+  else:
+    for i in range(size):
+      if tbl.find(arrview[i]) == tbl.end():
+        arrview[i] = value
+
+  return arr
+
 
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """

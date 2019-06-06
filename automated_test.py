@@ -195,15 +195,24 @@ def test_mask():
 def test_mask_except():
   for dtype in DTYPES:
     for in_place in (True, False):
-      print(dtype)
-      data = np.arange(100, dtype=dtype)
-      data = fastremap.mask_except(data, [5, 10, 15, 20], in_place=in_place)
+      for value in (0, 7):
+        print(dtype)
+        data = np.arange(100, dtype=dtype)
+        data = fastremap.mask_except(
+          data, [5, 10, 15, 20], 
+          in_place=in_place, value=value
+        )
 
-      labels, cts = np.unique(data, return_counts=True)
-      assert cts[0] == 96 
-      assert labels[0] == 0
-      assert np.all(cts[1:] == 1)
-      assert len(labels == 45)
+        labels, cts = np.unique(data, return_counts=True)
+        print(labels, cts)
+        res = { lbl: ct for lbl, ct in zip(labels, cts) }
+        assert res == {
+          value: 96,
+          5: 1,
+          10: 1,
+          15: 1, 
+          20: 1,
+        }
 
 def test_asfortranarray():
   dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool ]
