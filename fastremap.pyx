@@ -216,24 +216,6 @@ def mask(arr, labels, in_place=False, value=0):
   Mask out designated labels in an array with the
   given value. 
 
-  arr: an N-dimensional numpy array
-  labels: an iterable list of integers
-  in_place: if True, modify the input array to reduce
-    memory consumption.
-  value: mask value
-
-  Returns: arr with `labels` masked out
-  """
-  labels = { lbl: value for lbl in labels }
-  return remap(arr, labels, preserve_missing_labels=True, in_place=in_place)
-
-def mask(arr, labels, in_place=False, value=0):
-  """
-  mask(arr, labels, in_place=False, value=0)
-
-  Mask out designated labels in an array with the
-  given value. 
-
   Alternative implementation of:
 
   arr[np.isin(labels)] = value
