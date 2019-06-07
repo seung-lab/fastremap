@@ -216,6 +216,10 @@ def mask(arr, labels, in_place=False, value=0):
   Mask out designated labels in an array with the
   given value. 
 
+  Alternative implementation of:
+
+  arr[np.isin(labels)] = value
+
   arr: an N-dimensional numpy array
   labels: an iterable list of integers
   in_place: if True, modify the input array to reduce
@@ -227,14 +231,77 @@ def mask(arr, labels, in_place=False, value=0):
   labels = { lbl: value for lbl in labels }
   return remap(arr, labels, preserve_missing_labels=True, in_place=in_place)
 
+def mask_except(arr, labels, in_place=False, value=0):
+  """
+  mask_except(arr, labels, in_place=False, value=0)
+
+  Mask out all labels except the provided list.
+
+  Alternative implementation of:
+
+  arr[~np.isin(labels)] = value
+
+  arr: an N-dimensional numpy array
+  labels: an iterable list of integers
+  in_place: if True, modify the input array to reduce
+    memory consumption.
+  value: mask value
+
+  Returns: arr with all labels except `labels` masked out
+  """
+  shape = arr.shape 
+
+  if arr.flags['F_CONTIGUOUS']:
+    order = 'F'
+  else:
+    order = 'C'
+
+  if not in_place:
+    arr = np.copy(arr, order=order)
+
+  arr = reshape(arr, (arr.size,))
+  arr = _mask_except(arr, labels, value)
+  return reshape(arr, shape, order=order)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)          
+def _mask_except(cnp.ndarray[ALLINT] arr, list labels, int64_t value):
+  cdef ALLINT[:] arrview = arr
+  cdef size_t i = 0
+  cdef size_t size = arr.size
+
+  cdef unordered_map[ALLINT, ALLINT] tbl 
+
+  for label in labels:
+    tbl[label] = label 
+
+  if value == 0:
+    for i in range(size):
+      arrview[i] = tbl[arrview[i]]
+  else:
+    for i in range(size):
+      if tbl.find(arrview[i]) == tbl.end():
+        arrview[i] = value
+
+  return arr
+
+
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """
   remap(cnp.ndarray[ALLINT] arr, dict table, 
     preserve_missing_labels=False, in_place=False)
 
   Remap an input numpy array in-place according to the values in the given 
-  dictionary "table". Depending on the value of "preserve_missing_labels", 
-  if an array value is not present in "table", leave it alone or throw a KeyError.
+  dictionary "table".   
+
+  arr: an N-dimensional numpy array
+  table: { label: new_label_value, ... }
+  preserve_missing_labels: If an array value is not present in "table"...
+    True: Leave it alone.
+    False: Throw a KeyError.
+  in_place: if True, modify the input array to reduce
+    memory consumption.
 
   Returns: remapped array
   """
@@ -262,20 +329,18 @@ def _remap(cnp.ndarray[ALLINT] arr, dict table, uint8_t preserve_missing_labels)
 
   cdef unordered_map[ALLINT, ALLINT] tbl 
 
-  if preserve_missing_labels:
-    for k, v in table.items():
-      tbl[k] = v 
+  for k, v in table.items():
+    tbl[k] = v 
 
-    for i in range(size):
-      elem = arrview[i]
-      if tbl.find(elem) == tbl.end():
+  for i in range(size):
+    elem = arrview[i]
+    if tbl.find(elem) == tbl.end():
+      if preserve_missing_labels:
         continue
       else:
-        arrview[i] = tbl[elem]
-  else:
-    for i in range(size):
-      elem = arrview[i]
-      arrview[i] = table[elem]
+        raise KeyError("{} was not in the remap table.".format(elem))  
+    else:
+      arrview[i] = tbl[elem]
 
   return arr
 
