@@ -1,12 +1,8 @@
 """
-Functions related to remapping volumes into smaller data types.
-For example, a uint64 volume can contain values as high as 2^64,
-however, if the volume is only 512x512x512 voxels, the maximum
-spread of values would be 134,217,728 (ratio: 7.2e-12). 
+Functions related to remapping image volumes.
 
-For some operations, we can save memory and improve performance
-by performing operations on a remapped volume and remembering the
-mapping back to the original value.
+Renumber volumes into smaller data types, mask out labels
+or their complement, and remap the values of image volumes.
 
 This module also constains the facilities for performing
 and in-place matrix transposition for up to 4D arrays. This is 
@@ -15,7 +11,7 @@ constrained environments when format shifting.
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - February 2019
+Date: August 2018 - June 2019
 """
 
 cimport cython
@@ -35,7 +31,7 @@ import sys
 
 PYTHON_2 = (sys.version_info < (3, 0))
 
-__version__ = '1.5.2'
+__version__ = '1.6.0'
 
 ctypedef fused ALLINT:
   uint8_t

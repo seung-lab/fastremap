@@ -1,6 +1,31 @@
 CHANGES
 =======
 
+1.6.0
+-----
+
+* release: 1.6.0
+* feat: add mask\_except (complement of mask) (#9)
+
+1.5.2
+-----
+
+* release: Version 1.5.2
+*  perf: use unordered\_map to prevent any possibility of python interaction (#7)
+
+1.5.1
+-----
+
+* release: version 1.5.1
+* perf: faster fastremap.remap (#6)
+
+1.5.0
+-----
+
+* chore: bump version to 1.5.0
+* feat: add mask function
+* docs: update changelog
+
 1.4.1
 -----
 
