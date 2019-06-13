@@ -169,17 +169,28 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   cdef NUMBER remap_id = start
   cdef NUMBER elem
 
+  cdef NUMBER last_elem = 0
+  cdef NUMBER last_remap_id = 0
+
   cdef size_t size = arr.size
   cdef size_t i = 0
 
   for i in range(size):
     elem = arrview[i]
+
+    if elem == last_elem:
+      arrview[i] = last_remap_id
+      continue
+
     if elem in remap_dict:
       arrview[i] = remap_dict[elem]
     else:
       arrview[i] = remap_id
       remap_dict[elem] = remap_id
       remap_id += 1
+
+    last_elem = elem 
+    last_remap_id = arrview[i]
 
   if start < 0:
     types = [ np.int8, np.int16, np.int32, np.int64 ]
@@ -394,6 +405,41 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
           arrview[i] = remap_dict[elem]
 
   return arr
+
+def transpose(arr):
+  """
+  asfortranarray(arr)
+
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
+
+  Returns: transposed numpy array
+  """
+  if not arr.flags['F_CONTIGUOUS'] and not arr.flags['C_CONTIGUOUS']:
+    arr = np.copy(arr, order='C')
+
+  shape = arr.shape
+  strides = arr.strides
+
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
+
+  dtype = arr.dtype
+  if arr.dtype == np.bool:
+    arr = arr.view(np.uint8)
+
+  if arr.ndim == 2:
+    arr = ipt2d(arr)
+    return arr.view(dtype)
+  elif arr.ndim == 3:
+    arr = ipt3d(arr)
+    return arr.view(dtype)
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    return arr.view(dtype)
+  else:
+    return arr.T
 
 def asfortranarray(arr):
   """
