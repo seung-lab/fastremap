@@ -171,6 +171,8 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   cdef NUMBER last_elem = 0
   cdef NUMBER last_remap_id = 0
+  if not preserve_zero:
+    last_remap_id = start
 
   cdef size_t size = arr.size
   cdef size_t i = 0
