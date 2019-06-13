@@ -208,13 +208,10 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   else:
     final_type = types[3]
 
-  if PYTHON_2:
-    output = bytearray(arrview)
-    output = np.frombuffer(output, dtype=arr.dtype)
+  if arr.dtype == final_type:
+    return arr, remap_dict
   else:
-    output = np.frombuffer(arrview, dtype=arr.dtype)
-
-  return output.astype(final_type), remap_dict
+    return arr.astype(final_type), remap_dict
 
 def mask(arr, labels, in_place=False, value=0):
   """
