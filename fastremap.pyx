@@ -72,7 +72,7 @@ cdef extern from "ipt.hpp" namespace "pyipt":
 
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
-  renumber(arr, start=1, preserve_zero=True)
+  renumber(arr, start=1, preserve_zero=True, in_place=False)
 
   Given an array of integers, renumber all the unique values starting
   from 1. This can allow us to reduce the size of the data width required
