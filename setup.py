@@ -1,9 +1,18 @@
 #!/usr/bin/env python
 import setuptools
+import sys
+
 import numpy as np
 
 # NOTE: If fastremap.cpp does not exist, you must run
 # cython -3 --cplus fastremap.pyx
+
+extra_compile_args = [
+  '-std=c++11', '-O3', 
+]
+
+if sys.platform == 'darwin':
+  extra_compile_args.append('-stdlib=libc++')
 
 setuptools.setup(
   setup_requires=['pbr', 'numpy'],
@@ -19,9 +28,7 @@ setuptools.setup(
       depends=[],
       language='c++',
       include_dirs=[ np.get_include() ],
-      extra_compile_args=[
-        '-std=c++11', '-O3'
-     ]
+      extra_compile_args=extra_compile_args,
     ) 
   ],
   long_description_content_type='text/markdown',
