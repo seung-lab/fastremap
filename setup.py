@@ -12,7 +12,7 @@ extra_compile_args = [
 ]
 
 if sys.platform == 'darwin':
-  extra_compile_args.append('-stdlib=libc++')
+  extra_compile_args += [ '-stdlib=libc++', '-mmacosx-version-min=10.9' ]
 
 setuptools.setup(
   setup_requires=['pbr', 'numpy'],
