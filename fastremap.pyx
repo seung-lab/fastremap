@@ -27,11 +27,7 @@ import operator
 import numpy as np
 cimport numpy as cnp
 
-import sys
-
-PYTHON_2 = (sys.version_info < (3, 0))
-
-__version__ = '1.6.0'
+__version__ = '1.6.1'
 
 ctypedef fused ALLINT:
   uint8_t
