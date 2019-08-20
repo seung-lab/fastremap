@@ -2720,7 +2720,7 @@ static const char __pyx_k_stop[] = "stop";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_vals[] = "vals";
 static const char __pyx_k_view[] = "view";
-static const char __pyx_k_1_6_1[] = "1.6.1";
+static const char __pyx_k_1_6_2[] = "1.6.2";
 static const char __pyx_k_ASCII[] = "ASCII";
 static const char __pyx_k_class[] = "__class__";
 static const char __pyx_k_dtype[] = "dtype";
@@ -2877,7 +2877,7 @@ static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __red
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static const char __pyx_k_Format_string_allocated_too_shor_2[] = "Format string allocated too short.";
-static PyObject *__pyx_kp_u_1_6_1;
+static PyObject *__pyx_kp_u_1_6_2;
 static PyObject *__pyx_n_s_ASCII;
 static PyObject *__pyx_kp_s_Buffer_view_does_not_expose_stri;
 static PyObject *__pyx_n_u_C;
@@ -62339,7 +62339,7 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_u_1_6_1, __pyx_k_1_6_1, sizeof(__pyx_k_1_6_1), 0, 1, 0, 0},
+  {&__pyx_kp_u_1_6_2, __pyx_k_1_6_2, sizeof(__pyx_k_1_6_2), 0, 1, 0, 0},
   {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
   {&__pyx_kp_s_Buffer_view_does_not_expose_stri, __pyx_k_Buffer_view_does_not_expose_stri, sizeof(__pyx_k_Buffer_view_does_not_expose_stri), 0, 0, 1, 0},
   {&__pyx_n_u_C, __pyx_k_C, sizeof(__pyx_k_C), 0, 1, 0, 1},
@@ -63537,11 +63537,11 @@ if (!__Pyx_RefNanny) {
   /* "fastremap.pyx":30
  * cimport numpy as cnp
  * 
- * __version__ = '1.6.1'             # <<<<<<<<<<<<<<
+ * __version__ = '1.6.2'             # <<<<<<<<<<<<<<
  * 
  * ctypedef fused ALLINT:
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version, __pyx_kp_u_1_6_1) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version, __pyx_kp_u_1_6_2) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
 
   /* "fastremap.pyx":69
  *   )
