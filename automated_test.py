@@ -195,7 +195,7 @@ def test_mask():
 def test_mask_except():
   for dtype in DTYPES:
     for in_place in (True, False):
-      for value in (0, 7):
+      for value in (0, 7, np.iinfo(dtype).max):
         print(dtype)
         data = np.arange(100, dtype=dtype)
         data = fastremap.mask_except(

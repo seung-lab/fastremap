@@ -268,7 +268,7 @@ def mask_except(arr, labels, in_place=False, value=0):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)          
-def _mask_except(cnp.ndarray[ALLINT] arr, list labels, int64_t value):
+def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
   cdef ALLINT[:] arrview = arr
   cdef size_t i = 0
   cdef size_t size = arr.size
