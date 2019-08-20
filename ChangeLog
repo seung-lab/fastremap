@@ -1,6 +1,18 @@
 CHANGES
 =======
 
+1.6.2
+-----
+
+* release(1.6.2): mask\_except can accept maximum unsigned values
+* fix: mask\_except can use maximum values for unsigned ints
+
+1.6.1
+-----
+
+* release(1.6.1): much faster renumber
+* perf: much faster renumber (#10)
+
 1.6.0
 -----
 
