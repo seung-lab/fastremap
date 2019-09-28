@@ -4,6 +4,16 @@
 
 Renumber and relabel Numpy arrays at C++ speed and physically convert rectangular Numpy arrays between C and Fortran order using an in-place transposition.   
 
+## All Available Functions 
+- **renumber:** Relabel array from 1 to N which can often use smaller datatypes.
+- **remap:** Custom relabeling of values in an array from a dictionary.
+- **mask:** Zero out labels in an array specified by a given list.
+- **mask_except**: Zero out all labels except those specified in a given list.
+- **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
+- **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
+- **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.
+- **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy algorithm otherwise.
+
 ## `pip` Installation
 
 ```bash
@@ -106,16 +116,6 @@ arr = fastremap.asfortranarray(x)
 arr = np.ones((512,512,512), dtype=np.float32, order='F')
 arr = fastremap.ascontiguousarray(x)
 ```
-
-## All Available Functions:  
-- **renumber:** Relabel array from 1 to N which can often use smaller datatypes.
-- **remap:** Custom relabeling of values in an array from a dictionary.
-- **mask:** Zero out labels in an array specified by a given list.
-- **mask_except**: Zero out all labels except those specified in a given list.
-- **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
-- **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
-- **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.
-- **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy algorithm otherwise.
 
 ## C++ Usage
 
