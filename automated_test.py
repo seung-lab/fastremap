@@ -130,7 +130,8 @@ def test_3d_renumber():
 
 
 def test_remap_1d():
-  for dtype in DTYPES:
+  dtypes = list(DTYPES) + [ np.float32, np.float64 ]
+  for dtype in dtypes:
     print(dtype)
     data = np.array([1, 2, 3, 4, 5], dtype=dtype)
     remap = {
@@ -215,7 +216,7 @@ def test_mask_except():
         }
 
 def test_asfortranarray():
-  dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool ]
+  dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ]
   for dtype in dtypes:
     print(dtype)
     for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
@@ -251,7 +252,7 @@ def test_asfortranarray():
 
 
 def test_ascontiguousarray():
-  dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool ]
+  dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ]
   for dtype in dtypes:
     for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
       x = np.arange(dim**2).reshape((dim,dim), order='F').astype(dtype)
