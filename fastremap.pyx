@@ -51,6 +51,10 @@ ctypedef fused NUMBER:
   float
   double
 
+ctypedef fused COMPLEX_NUMBER:
+  NUMBER
+  float complex 
+
 ctypedef fused UINT:
   uint8_t
   uint16_t
@@ -536,8 +540,8 @@ def ascontiguousarray(arr):
   else:
     return np.ascontiguousarray(arr)
 
-def ipt2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
-  cdef NUMBER[:,:] arrview = arr
+def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
+  cdef COMPLEX_NUMBER[:,:] arrview = arr
 
   cdef int sx
   cdef int sy
@@ -577,8 +581,8 @@ def ipt2d(cnp.ndarray[NUMBER, cast=True, ndim=2] arr):
 
   return arr
 
-def ipt3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
-  cdef NUMBER[:,:,:] arrview = arr
+def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
+  cdef COMPLEX_NUMBER[:,:,:] arrview = arr
 
   cdef int sx
   cdef int sy
@@ -621,8 +625,8 @@ def ipt3d(cnp.ndarray[NUMBER, cast=True, ndim=3] arr):
 
   return arr
 
-def ipt4d(cnp.ndarray[NUMBER, cast=True, ndim=4] arr):
-  cdef NUMBER[:,:,:,:] arrview = arr
+def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
+  cdef COMPLEX_NUMBER[:,:,:,:] arrview = arr
 
   cdef int sx
   cdef int sy
