@@ -130,7 +130,8 @@ def test_3d_renumber():
 
 
 def test_remap_1d():
-  for dtype in DTYPES:
+  dtypes = list(DTYPES) + [ np.float32, np.float64 ]
+  for dtype in dtypes:
     print(dtype)
     data = np.array([1, 2, 3, 4, 5], dtype=dtype)
     remap = {

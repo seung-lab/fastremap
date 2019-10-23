@@ -11,7 +11,7 @@ constrained environments when format shifting.
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - June 2019
+Date: August 2018 - October 2019
 """
 
 cimport cython
@@ -29,37 +29,27 @@ cimport numpy as cnp
 
 __version__ = '1.6.2'
 
-ctypedef fused ALLINT:
+ctypedef fused UINT:
   uint8_t
   uint16_t
   uint32_t
   uint64_t
+
+ctypedef fused ALLINT:
+  UINT
   int8_t
   int16_t
   int32_t
   int64_t
 
 ctypedef fused NUMBER:
-  uint8_t
-  uint16_t
-  uint32_t
-  uint64_t
-  int8_t
-  int16_t
-  int32_t
-  int64_t
+  ALLINT
   float
   double
 
 ctypedef fused COMPLEX_NUMBER:
   NUMBER
   float complex 
-
-ctypedef fused UINT:
-  uint8_t
-  uint16_t
-  uint32_t
-  uint64_t
 
 cdef extern from "ipt.hpp" namespace "pyipt":
   cdef void _ipt2d[T](T* arr, int sx, int sy)
@@ -295,7 +285,7 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
 
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """
-  remap(cnp.ndarray[ALLINT] arr, dict table, 
+  remap(cnp.ndarray[COMPLEX_NUMBER] arr, dict table, 
     preserve_missing_labels=False, in_place=False)
 
   Remap an input numpy array in-place according to the values in the given 
@@ -328,12 +318,12 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)          
-def _remap(cnp.ndarray[ALLINT] arr, dict table, uint8_t preserve_missing_labels):
-  cdef ALLINT[:] arrview = arr
+def _remap(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels):
+  cdef NUMBER[:] arrview = arr
   cdef size_t i = 0
   cdef size_t size = arr.size
 
-  cdef unordered_map[ALLINT, ALLINT] tbl 
+  cdef unordered_map[NUMBER, NUMBER] tbl 
 
   for k, v in table.items():
     tbl[k] = v 
