@@ -301,6 +301,9 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
 
   Returns: remapped array
   """
+  if type(arr) == list:
+    arr = np.array(arr)
+
   shape = arr.shape 
 
   if arr.flags['F_CONTIGUOUS']:
@@ -322,21 +325,46 @@ def _remap(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels)
   cdef NUMBER[:] arrview = arr
   cdef size_t i = 0
   cdef size_t size = arr.size
+  cdef NUMBER elem = 0
+
+  if size == 0:
+    return arr
 
   cdef unordered_map[NUMBER, NUMBER] tbl 
 
   for k, v in table.items():
     tbl[k] = v 
 
-  for i in range(size):
-    elem = arrview[i]
-    if tbl.find(elem) == tbl.end():
-      if preserve_missing_labels:
-        continue
-      else:
-        raise KeyError("{} was not in the remap table.".format(elem))  
+  cdef NUMBER last_elem = arrview[0]
+  cdef NUMBER last_remap_id = 0
+  
+  with nogil:
+    if tbl.find(last_elem) == tbl.end():
+      if not preserve_missing_labels:
+        raise KeyError("{} was not in the remap table.".format(last_elem))  
     else:
-      arrview[i] = tbl[elem]
+      arrview[0] = tbl[last_elem]
+      last_remap_id = arrview[0]
+
+    for i in range(1, size):
+      elem = arrview[i]
+
+      if elem == last_elem:
+        arrview[i] = last_remap_id
+        continue
+
+      if tbl.find(elem) == tbl.end():
+        if preserve_missing_labels:
+          last_elem = elem
+          last_remap_id = elem
+          continue
+        else:
+          raise KeyError("{} was not in the remap table.".format(elem))  
+      else:
+        arrview[i] = tbl[elem]
+      
+      last_elem = elem
+      last_remap_id = arrview[i]
 
   return arr
 
