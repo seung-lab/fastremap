@@ -137,7 +137,7 @@ def test_remap_1d():
     empty = fastremap.remap([], {})
     assert len(empty) == 0
 
-    data = np.array([1, 2, 3, 4, 5], dtype=dtype)
+    data = np.array([1, 2, 2, 2, 3, 4, 5], dtype=dtype)
     remap = {
       1: 10,
       2: 30,
@@ -147,7 +147,7 @@ def test_remap_1d():
     }
 
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-    assert np.all(result == [10, 30, 15, 0, 5])
+    assert np.all(result == [10, 30, 30, 30, 15, 0, 5])
 
     del remap[2]
     try:
@@ -157,7 +157,7 @@ def test_remap_1d():
       pass 
 
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
-    assert np.all(result == [10, 2, 15, 0, 5])
+    assert np.all(result == [10, 2, 2, 2, 15, 0, 5])
 
 def test_remap_2d():
   for dtype in DTYPES:
