@@ -133,6 +133,10 @@ def test_remap_1d():
   dtypes = list(DTYPES) + [ np.float32, np.float64 ]
   for dtype in dtypes:
     print(dtype)
+
+    empty = fastremap.remap([], {})
+    assert len(empty) == 0
+
     data = np.array([1, 2, 3, 4, 5], dtype=dtype)
     remap = {
       1: 10,
