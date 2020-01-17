@@ -11,7 +11,7 @@ constrained environments when format shifting.
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - October 2019
+Date: August 2018 - January 2020
 """
 
 cimport cython
@@ -27,7 +27,7 @@ import operator
 import numpy as np
 cimport numpy as cnp
 
-__version__ = '1.6.2'
+__version__ = '1.8.0'
 
 ctypedef fused UINT:
   uint8_t
