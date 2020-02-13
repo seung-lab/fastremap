@@ -388,29 +388,21 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
   cdef ALLINT last_elem = arrview[0]
   cdef ALLINT last_elem_value = 0
 
-  if value == 0:
-    last_elem_value = tbl[last_elem]
-    for i in range(size):
-      if arrview[i] != last_elem:
-        last_elem = arrview[i]
-        last_elem_value = tbl[arrview[i]]
-      arrview[i] = last_elem_value
+  if tbl.find(last_elem) == tbl.end():
+    last_elem_value = value
   else:
-    if tbl.find(last_elem) == tbl.end():
-      last_elem_value = value
-    else:
-      last_elem_value = last_elem
+    last_elem_value = last_elem
 
-    for i in range(size):
-      if arrview[i] == last_elem:
-        arrview[i] = last_elem_value
-      elif tbl.find(arrview[i]) == tbl.end():
-        last_elem = arrview[i]
-        last_elem_value = value
-        arrview[i] = value
-      else:
-        last_elem = arrview[i]
-        last_elem_value = arrview[i]
+  for i in range(size):
+    if arrview[i] == last_elem:
+      arrview[i] = last_elem_value
+    elif tbl.find(arrview[i]) == tbl.end():
+      last_elem = arrview[i]
+      last_elem_value = value
+      arrview[i] = value
+    else:
+      last_elem = arrview[i]
+      last_elem_value = arrview[i]
 
   return arr
 
