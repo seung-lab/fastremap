@@ -60,6 +60,31 @@ cdef extern from "ipt.hpp" namespace "pyipt":
     T* arr, int sx, int sy, int sz, int sw
   )
 
+def minmax(arr):
+  """
+  Returns (min(arr), max(arr)) computed in a single pass.
+  Returns (None, None) if array is size zero.
+  """
+  return _minmax(reshape(arr, (arr.size,)))
+
+def _minmax(cnp.ndarray[NUMBER, ndim=1] arr):
+  cdef size_t i = 0
+  cdef size_t size = arr.size
+
+  if size == 0:
+    return None, None
+
+  cdef NUMBER minval = arr[0]
+  cdef NUMBER maxval = arr[0]
+
+  for i in range(1, size):
+    if minval > arr[i]:
+      minval = arr[i]
+    if maxval < arr[i]:
+      maxval = arr[i]
+
+  return minval, maxval
+
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
   renumber(arr, start=1, preserve_zero=True, in_place=False)
@@ -227,9 +252,13 @@ def refit(arr, value=None, increase_only=False):
 
   Return: refitted array
   """
+
   if value is None:
-    max_value = np.max(arr)
-    min_value = np.min(arr)
+    min_value, max_value = minmax(arr)
+    if min_value is None or max_value is None:
+      min_value = 0 
+      max_value = 0
+
     if abs(max_value) > abs(min_value):
       value = max_value
     else:
@@ -406,7 +435,13 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   else:
     order = 'C'
 
-  if not in_place:
+  original_dtype = arr.dtype
+  if len(table):
+    min_label, max_label = min(table.values()), max(table.values())
+    fit_value = min_label if abs(min_label) > abs(max_label) else max_label
+    arr = refit(arr, fit_value, increase_only=True)
+
+  if not in_place and original_dtype == arr.dtype:
     arr = np.copy(arr, order=order)
 
   arr = reshape(arr, (arr.size,))
@@ -517,6 +552,111 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
           arrview[i] = remap_dict[elem]
 
   return arr
+
+def unique(labels, return_counts=False):
+  """
+  Compute the sorted set of unique labels in the input array.
+
+  return_counts: also return the unique label frequency as an array.
+
+  Returns: 
+    if return_counts:
+      return (unique_labels, unique_counts)
+    else:
+      return unique_labels
+  """
+  if not np.issubdtype(labels.dtype, np.integer):
+    raise TypeError("fastremap.unique only supports integer types.")
+
+  shape = labels.shape
+  labels = reshape(labels, (labels.size,))
+
+  cdef int64_t max_label
+  cdef int64_t min_label
+  min_label, max_label = minmax(labels)
+
+  if labels.size == 0:
+    uniq = np.array([], dtype=labels.dtype)
+    counts = np.array([], dtype=np.uint32)
+  elif min_label > 0 and max_label < labels.size:
+    uniq, counts = _array_unique(labels, max_label, return_counts=True)
+  elif (max_label - min_label) <= labels.size:
+    labels -= min_label
+    uniq, counts = _array_unique(labels, max_label - min_label + 1, return_counts=True)
+    labels += min_label
+    uniq += min_label
+  else:
+    uniq, counts = _sort_unique(labels)
+
+  if return_counts:
+    return uniq, counts
+  return uniq
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _sort_unique(cnp.ndarray[ALLINT, ndim=1] labels):
+  """Slower than _array_unique but can handle any label."""
+  labels = np.copy(labels)
+  labels.sort()
+
+  cdef size_t voxels = labels.size  
+
+  cdef cnp.ndarray[ALLINT, ndim=1] uniq = np.zeros((voxels,), dtype=labels.dtype)
+  cdef cnp.ndarray[uint32_t, ndim=1] counts = np.zeros((voxels,), dtype=np.uint32)
+
+  cdef size_t i = 0
+  cdef size_t j = 0
+
+  cdef ALLINT cur = labels[0]
+  cdef size_t accum = 1
+  for i in range(1, voxels):
+    if cur == labels[i]:
+      accum += 1
+    else:
+      uniq[j] = cur
+      counts[j] = accum
+      accum = 1
+      cur = labels[i]
+      j += 1
+
+  uniq[j] = cur
+  counts[j] = accum
+
+  return uniq[:j+1], counts[:j+1]
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _array_unique(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, return_counts=False):
+  """
+  unique(cnp.ndarray[ALLINT, ndim=1] labels, return_counts=False)
+
+  Faster implementation of np.unique that depends
+  on the maximum label in the array being less than
+  the size of the array.
+  """
+  cdef cnp.ndarray[uint32_t, ndim=1] counts = np.zeros( 
+    (max_label+1,), dtype=np.uint32
+  )
+
+  cdef size_t voxels = labels.shape[0]
+  cdef size_t i = 0
+  for i in range(voxels):
+    counts[labels[i]] += 1
+
+  cdef list segids = []
+  cdef list cts = []
+
+  for i in range(max_label + 1):
+    if counts[i] > 0:
+      segids.append(i)
+      cts.append(counts[i])
+
+  if return_counts:
+    return np.array(segids, dtype=labels.dtype), np.array(cts, dtype=np.uint32)
+  else:
+    return np.array(segids, dtype=labels.dtype)
 
 def transpose(arr):
   """
