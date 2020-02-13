@@ -283,3 +283,93 @@ def test_ascontiguousarray():
         x = np.arange(dim**4 + dim*dim*dim).reshape((dim+1,dim,dim,dim)).astype(dtype)
         y = np.copy(x, order='F')
         assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+
+@pytest.mark.parametrize("dtype", [ np.uint8, np.uint16, np.uint32, np.uint64 ])
+def test_fit_dtype_uint(dtype):
+  assert fastremap.fit_dtype(dtype, 0) == np.uint8
+  assert fastremap.fit_dtype(dtype, 255) == np.uint8
+  assert fastremap.fit_dtype(dtype, 256) == np.uint16
+  assert fastremap.fit_dtype(dtype, 10000) == np.uint16
+  assert fastremap.fit_dtype(dtype, 2**16 - 1) == np.uint16
+  assert fastremap.fit_dtype(dtype, 2**16) == np.uint32
+  assert fastremap.fit_dtype(dtype, 2**32) == np.uint64
+  assert fastremap.fit_dtype(dtype, 2**64 - 1) == np.uint64
+
+  try:
+    fastremap.fit_dtype(dtype, -1)
+    assert False 
+  except ValueError:
+    pass
+
+  try:
+    fastremap.fit_dtype(dtype, 2**64)
+  except ValueError:
+    pass
+
+@pytest.mark.parametrize("dtype", [ np.int8, np.int16, np.int32, np.int64 ])
+def test_fit_dtype_int(dtype):
+  assert fastremap.fit_dtype(dtype, 0) == np.int8
+  assert fastremap.fit_dtype(dtype, 127) == np.int8
+  assert fastremap.fit_dtype(dtype, 128) == np.int16
+  assert fastremap.fit_dtype(dtype, 10000) == np.int16
+  assert fastremap.fit_dtype(dtype, 2**15 - 1) == np.int16
+  assert fastremap.fit_dtype(dtype, 2**15) == np.int32
+  assert fastremap.fit_dtype(dtype, 2**32) == np.int64
+  assert fastremap.fit_dtype(dtype, 2**63 - 1) == np.int64
+
+  try:
+    fastremap.fit_dtype(dtype, 2**63)
+  except ValueError:
+    pass
+
+  try:
+    fastremap.fit_dtype(dtype, -2**63)
+  except ValueError:
+    pass
+
+@pytest.mark.parametrize("dtype", [ np.float16, np.float32, np.float64 ])
+def test_fit_dtype_float(dtype):
+  assert fastremap.fit_dtype(dtype, 0) == np.float32
+  assert fastremap.fit_dtype(dtype, 127) == np.float32
+  assert fastremap.fit_dtype(dtype, 128) == np.float32
+  assert fastremap.fit_dtype(dtype, 10000) == np.float32
+  assert fastremap.fit_dtype(dtype, 2**15 - 1) == np.float32
+  assert fastremap.fit_dtype(dtype, 2**15) == np.float32
+  assert fastremap.fit_dtype(dtype, 2**32) == np.float32
+  assert fastremap.fit_dtype(dtype, 2**63 - 1) == np.float32
+  assert fastremap.fit_dtype(dtype, -2**63) == np.float32
+  assert fastremap.fit_dtype(dtype, 2**128) == np.float64
+
+  assert fastremap.fit_dtype(dtype, 0, exotics=True) == np.float16
+  assert fastremap.fit_dtype(dtype, 127, exotics=True) == np.float16
+  assert fastremap.fit_dtype(dtype, 128, exotics=True) == np.float16
+  assert fastremap.fit_dtype(dtype, 10000, exotics=True) == np.float16
+  assert fastremap.fit_dtype(dtype, 2**15 - 1, exotics=True) == np.float16
+  assert fastremap.fit_dtype(dtype, 2**15, exotics=True) == np.float16
+  assert fastremap.fit_dtype(dtype, 2**32, exotics=True) == np.float32
+  assert fastremap.fit_dtype(dtype, 2**63 - 1, exotics=True) == np.float32
+  assert fastremap.fit_dtype(dtype, -2**63, exotics=True) == np.float32
+
+@pytest.mark.parametrize("dtype", [ np.csingle, np.cdouble ])
+@pytest.mark.parametrize("sign", [ 1, -1, 1j, -1j ])
+def test_fit_dtype_float(dtype, sign):
+  assert fastremap.fit_dtype(dtype, sign * 0+0j) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 127) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 127) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 128) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 128) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 10000) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 10000) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 2**15 - 1) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 2**15) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 2**32) == np.csingle
+  assert fastremap.fit_dtype(dtype, sign * 2**63 - 1) == np.csingle
+  assert fastremap.fit_dtype(dtype, -2**63) == np.csingle
+  
+  try:
+    fastremap.fit_dtype(dtype, sign * 2**128)
+    assert False
+  except ValueError:
+    pass
+
+  assert fastremap.fit_dtype(dtype, sign * 2**128, exotics=True) == np.cdouble

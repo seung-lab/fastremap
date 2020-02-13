@@ -205,6 +205,102 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   else:
     return arr.astype(final_type), remap_dict
 
+def refit(arr, value=None, increase_only=False):
+  """
+  Resize the array to the smallest dtype of the 
+  same kind that will fit a given value.
+
+  For example, if the input array is uint8 and 
+  the value is 2^32+1 return the array as a 
+  uint32.
+
+  Works for standard floating, integer, 
+  unsigned integer, and complex types.
+
+  arr: numpy array
+  value: value to fit array to. if None,
+    it is set to the value of the absolutely
+    larger of the min and max value in the array.
+  increase_only: if true, only resize the array if it can't
+    contain value. if false, always resize to the 
+    smallest size that fits.
+
+  Return: refitted array
+  """
+  if value is None:
+    max_value = np.max(arr)
+    min_value = np.min(arr)
+    if abs(max_value) > abs(min_value):
+      value = max_value
+    else:
+      value = min_value
+
+  dtype = fit_dtype(arr.dtype, value)
+
+  if increase_only and np.dtype(dtype).itemsize <= np.dtype(arr.dtype).itemsize:
+    return arr
+  elif dtype == arr.dtype:
+    return arr
+  return arr.astype(dtype)
+
+def fit_dtype(dtype, value, exotics=False):
+  """
+  Find the smallest dtype of the 
+  same kind that will fit a given value.
+
+  For example, if the input array is uint8 and 
+  the value is 2^32+1 return the array as a 
+  uint32.
+
+  Works for standard floating, integer, 
+  unsigned integer, and complex types.
+
+  exotics: if True, allow fitting to
+    e.g. float16 (half-precision, 16-bits) 
+      or double complex (which takes 128-bits).
+
+  Return: refitted array
+  """
+  dtype = np.dtype(dtype)
+  if np.issubdtype(dtype, np.floating):
+    if exotics:
+      sequence = [ np.float16, np.float32, np.float64 ] 
+    else:
+      sequence = [ np.float32, np.float64 ] 
+    infofn = np.finfo
+  elif np.issubdtype(dtype, np.unsignedinteger):
+    sequence = [ np.uint8, np.uint16, np.uint32, np.uint64 ]
+    infofn = np.iinfo
+    if value < 0:
+      raise ValueError(str(value) + " is negative but unsigned data type {} is selected.".format(dtype))
+  elif np.issubdtype(dtype, np.complexfloating):
+    if exotics:
+      sequence = [ np.csingle, np.cdouble ]
+    else:
+      sequence = [ np.csingle ]
+    infofn = np.finfo
+  elif np.issubdtype(dtype, np.integer):
+    sequence = [ np.int8, np.int16, np.int32, np.int64 ]
+    infofn = np.iinfo
+  else:
+    raise ValueError(
+      "Unsupported dtype: {} Only standard floats, integers, and complex types are supported.".format(dtype)
+    )
+
+  test_value = np.real(value) 
+  if abs(np.real(value)) < abs(np.imag(value)):
+    test_value = np.imag(value)
+
+  for seq_dtype in sequence:
+    if test_value >= 0 and infofn(seq_dtype).max >= test_value:
+      return seq_dtype
+    elif test_value < 0 and infofn(seq_dtype).min < test_value:
+      return seq_dtype
+
+  raise ValueError("Unable to find a compatible dtype for {} that can fit {}".format(
+    dtype, value
+  ))
+
 def mask(arr, labels, in_place=False, value=0):
   """
   mask(arr, labels, in_place=False, value=0)
@@ -281,7 +377,6 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
         arrview[i] = value
 
   return arr
-
 
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """
