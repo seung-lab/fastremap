@@ -184,40 +184,38 @@ def test_remap_2d():
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
     assert np.all(result == [[10, 2, 15, 0, 5], [5, 0, 15, 2, 10]])
 
-def test_mask():
-  for dtype in DTYPES:
-    for in_place in (True, False):
-      print(dtype)
-      data = np.arange(100, dtype=dtype)
-      data = fastremap.mask(data, [5, 10, 15, 20], in_place=in_place)
+@pytest.mark.parametrize("dtype", DTYPES)
+@pytest.mark.parametrize("in_place", [ True, False ])
+def test_mask(dtype, in_place):
+  data = np.arange(100, dtype=dtype)
+  data = fastremap.mask(data, [5, 10, 15, 20], in_place=in_place)
 
-      labels, cts = np.unique(data, return_counts=True)
-      assert cts[0] == 5 
-      assert labels[0] == 0
-      assert np.all(cts[1:] == 1)
-      assert len(labels == 95)
+  labels, cts = np.unique(data, return_counts=True)
+  assert cts[0] == 5 
+  assert labels[0] == 0
+  assert np.all(cts[1:] == 1)
+  assert len(labels == 95)
 
-def test_mask_except():
-  for dtype in DTYPES:
-    for in_place in (True, False):
-      for value in (0, 7, np.iinfo(dtype).max):
-        print(dtype)
-        data = np.arange(100, dtype=dtype)
-        data = fastremap.mask_except(
-          data, [5, 10, 15, 20], 
-          in_place=in_place, value=value
-        )
+@pytest.mark.parametrize("dtype", DTYPES)
+@pytest.mark.parametrize("in_place", [ True, False ])
+def test_mask_except(dtype, in_place):
+  for value in (0, 7, np.iinfo(dtype).max):
+    data = np.arange(100, dtype=dtype)
+    data = fastremap.mask_except(
+      data, [5, 10, 15, 20], 
+      in_place=in_place, value=value
+    )
 
-        labels, cts = np.unique(data, return_counts=True)
-        print(labels, cts)
-        res = { lbl: ct for lbl, ct in zip(labels, cts) }
-        assert res == {
-          value: 96,
-          5: 1,
-          10: 1,
-          15: 1, 
-          20: 1,
-        }
+    labels, cts = np.unique(data, return_counts=True)
+    print(labels, cts)
+    res = { lbl: ct for lbl, ct in zip(labels, cts) }
+    assert res == {
+      value: 96,
+      5: 1,
+      10: 1,
+      15: 1, 
+      20: 1,
+    }
 
 def test_asfortranarray():
   dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ]
