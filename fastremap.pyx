@@ -605,17 +605,19 @@ def unique(labels, return_counts=False):
   if voxels == 0:
     uniq = np.array([], dtype=labels.dtype)
     counts = np.array([], dtype=np.uint32)
-  elif min_label >= 0 and max_label < voxels:
+  elif min_label >= 0 and max_label < <int64_t>voxels:
     uniq, counts = _array_unique(labels, max_label)
-  elif (max_label - min_label) <= voxels:
+  elif (max_label - min_label) <= <int64_t>voxels:
     labels -= min_label
     uniq, counts = _array_unique(labels, max_label - min_label + 1)
     labels += min_label
     uniq += min_label
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
+    dtype = labels.dtype
     labels, remap = renumber(labels)
     remap = { v:k for k,v in remap.items() }
     uniq, counts = _array_unique(labels, max(remap.keys()))
+    uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
   else:
     uniq, counts = _sort_unique(labels)
 
