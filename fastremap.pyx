@@ -377,18 +377,40 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
   cdef size_t i = 0
   cdef size_t size = arr.size
 
+  if size == 0:
+    return arr
+
   cdef unordered_map[ALLINT, ALLINT] tbl 
 
   for label in labels:
     tbl[label] = label 
 
+  cdef ALLINT last_elem = arrview[0]
+  cdef ALLINT last_elem_value = 0
+
   if value == 0:
+    last_elem_value = tbl[last_elem]
     for i in range(size):
-      arrview[i] = tbl[arrview[i]]
+      if arrview[i] != last_elem:
+        last_elem = arrview[i]
+        last_elem_value = tbl[arrview[i]]
+      arrview[i] = last_elem_value
   else:
+    if tbl.find(last_elem) == tbl.end():
+      last_elem_value = value
+    else:
+      last_elem_value = last_elem
+
     for i in range(size):
-      if tbl.find(arrview[i]) == tbl.end():
+      if arrview[i] == last_elem:
+        arrview[i] = last_elem_value
+      elif tbl.find(arrview[i]) == tbl.end():
+        last_elem = arrview[i]
+        last_elem_value = value
         arrview[i] = value
+      else:
+        last_elem = arrview[i]
+        last_elem_value = arrview[i]
 
   return arr
 
