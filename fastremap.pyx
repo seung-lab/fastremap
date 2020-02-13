@@ -209,26 +209,11 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
     last_elem = elem 
     last_remap_id = arrview[i]
 
-  if start < 0:
-    types = [ np.int8, np.int16, np.int32, np.int64 ]
-  else:
-    types = [ np.uint8, np.uint16, np.uint32, np.uint64 ]
-  
-  factor = max(abs(start), abs(remap_id))
+  factor = remap_id 
+  if abs(start) > abs(factor):
+    factor = start
 
-  if factor < 2 ** 8:
-    final_type = types[0]
-  elif factor < 2 ** 16:
-    final_type = types[1]
-  elif factor < 2 ** 32:
-    final_type = types[2]
-  else:
-    final_type = types[3]
-
-  if arr.dtype == final_type:
-    return arr, remap_dict
-  else:
-    return arr.astype(final_type), remap_dict
+  return refit(arr, factor), remap_dict
 
 def refit(arr, value=None, increase_only=False):
   """
