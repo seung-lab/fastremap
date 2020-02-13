@@ -124,7 +124,7 @@ def test_3d_renumber(dtype):
   ])
 
 def test_3d_renumber_dtype_shift():
-  big = np.random.randint(0, (2**64)-1, size=(512,512,100), dtype=np.uint64)
+  big = np.random.randint(0, (2**64)-1, size=(128,128,100), dtype=np.uint64)
   big, remapdict = fastremap.renumber(big, preserve_zero=True, in_place=True)
   assert np.dtype(big.dtype).itemsize <= 4
   assert np.dtype(big.dtype).itemsize > 1
@@ -213,70 +213,66 @@ def test_mask_except(dtype, in_place):
       20: 1,
     }
 
-def test_asfortranarray():
-  dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ]
-  for dtype in dtypes:
-    print(dtype)
-    for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
-      print(dim)
-      x = np.arange(dim**1).reshape((dim)).astype(dtype)
-      y = np.copy(x)
-      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ])
+@pytest.mark.parametrize("dim", [1, 4, 7, 9, 27, 31, 100, 127, 200] )
+def test_asfortranarray(dtype, dim):
+  x = np.arange(dim**1).reshape((dim)).astype(dtype)
+  y = np.copy(x)
+  assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
-      x = np.arange(dim**2).reshape((dim,dim)).astype(dtype)
-      y = np.copy(x)
-      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+  x = np.arange(dim**2).reshape((dim,dim)).astype(dtype)
+  y = np.copy(x)
+  assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
-      x = np.arange(dim**3).reshape((dim,dim,dim)).astype(dtype)
-      y = np.copy(x)
-      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+  x = np.arange(dim**3).reshape((dim,dim,dim)).astype(dtype)
+  y = np.copy(x)
+  assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
-      x = np.arange(dim**2+dim).reshape((dim,dim+1)).astype(dtype)
-      y = np.copy(x)
-      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+  x = np.arange(dim**2+dim).reshape((dim,dim+1)).astype(dtype)
+  y = np.copy(x)
+  assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
-      x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim)).astype(dtype)
-      y = np.copy(x)
-      assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+  x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim)).astype(dtype)
+  y = np.copy(x)
+  assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
-      if dim < 100:
-        x = np.arange(dim**4).reshape((dim,dim,dim,dim)).astype(dtype)
-        y = np.copy(x)
-        assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+  if dim < 100:
+    x = np.arange(dim**4).reshape((dim,dim,dim,dim)).astype(dtype)
+    y = np.copy(x)
+    assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
-        x = np.arange(dim**4 + dim*dim*dim).reshape((dim+1,dim,dim,dim)).astype(dtype)
-        y = np.copy(x)
-        assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
+    x = np.arange(dim**4 + dim*dim*dim).reshape((dim+1,dim,dim,dim)).astype(dtype)
+    y = np.copy(x)
+    assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
 
-def test_ascontiguousarray():
-  dtypes = list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ]
-  for dtype in dtypes:
-    for dim in (1, 4, 7, 9, 27, 31, 100, 127, 200):
-      x = np.arange(dim**2).reshape((dim,dim), order='F').astype(dtype)
-      y = np.copy(x, order='F')
-      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ])
+@pytest.mark.parametrize("dim", [1, 4, 7, 9, 27, 31, 100, 127, 200] )
+def test_ascontiguousarray(dtype, dim):
+  x = np.arange(dim**2).reshape((dim,dim), order='F').astype(dtype)
+  y = np.copy(x, order='F')
+  assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
-      x = np.arange(dim**3).reshape((dim,dim,dim), order='F').astype(dtype)
-      y = np.copy(x, order='F')
-      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+  x = np.arange(dim**3).reshape((dim,dim,dim), order='F').astype(dtype)
+  y = np.copy(x, order='F')
+  assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
-      x = np.arange(dim**2+dim).reshape((dim,dim+1), order='F').astype(dtype)
-      y = np.copy(x, order='F')
-      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+  x = np.arange(dim**2+dim).reshape((dim,dim+1), order='F').astype(dtype)
+  y = np.copy(x, order='F')
+  assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
-      x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim), order='F').astype(dtype)
-      y = np.copy(x, order='F')
-      assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+  x = np.arange(dim**3+dim*dim).reshape((dim,dim+1,dim), order='F').astype(dtype)
+  y = np.copy(x, order='F')
+  assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
-      if dim < 100:
-        x = np.arange(dim**4).reshape((dim,dim,dim,dim)).astype(dtype)
-        y = np.copy(x, order='F')
-        assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+  if dim < 100:
+    x = np.arange(dim**4).reshape((dim,dim,dim,dim)).astype(dtype)
+    y = np.copy(x, order='F')
+    assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
-        x = np.arange(dim**4 + dim*dim*dim).reshape((dim+1,dim,dim,dim)).astype(dtype)
-        y = np.copy(x, order='F')
-        assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
+    x = np.arange(dim**4 + dim*dim*dim).reshape((dim+1,dim,dim,dim)).astype(dtype)
+    y = np.copy(x, order='F')
+    assert np.all(np.ascontiguousarray(x) == fastremap.ascontiguousarray(y))
 
 @pytest.mark.parametrize("dtype", [ np.uint8, np.uint16, np.uint32, np.uint64 ])
 def test_fit_dtype_uint(dtype):
