@@ -400,3 +400,12 @@ def test_unique():
   print(cts_fr)
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)  
+
+def test_renumber_remap():
+  labels = np.random.randint(-500, 500, size=(128,128,128))
+  new_labels, remap = fastremap.renumber(labels, in_place=False)
+  remap = { v:k for k,v in remap.items() }
+  new_labels = fastremap.remap(new_labels, remap, in_place=True)
+  assert np.all(labels == new_labels)
+  assert new_labels.dtype in (np.int8, np.int16)
+  assert labels.dtype == np.int64
