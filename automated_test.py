@@ -80,109 +80,105 @@ def test_2d_renumber():
       [4, 6, 4, 3],
     ])
 
-def test_3d_renumber():
-  for dtype in DTYPES:
-    bits = np.dtype(dtype).itemsize * 8
-    big = (2 ** (bits - 1)) - 1 # cover ints and uints
-    data = np.array([
-      [
-        [big, 0],
-        [2, big],
-      ],
-      [
-        [big-5, big-1],
-        [big-7, big-3],
-      ],
-    ], dtype=dtype)
+@pytest.mark.parametrize("dtype", DTYPES)
+def test_3d_renumber(dtype):
+  bits = np.dtype(dtype).itemsize * 8
+  big = (2 ** (bits - 1)) - 1 # cover ints and uints
+  data = np.array([
+    [
+      [big, 0],
+      [2, big],
+    ],
+    [
+      [big-5, big-1],
+      [big-7, big-3],
+    ],
+  ], dtype=dtype)
 
-    data2 = np.copy(data, order='C')
-    data2, remapdict = fastremap.renumber(data2, preserve_zero=False)
+  data2 = np.copy(data, order='C')
+  data2, remapdict = fastremap.renumber(data2, preserve_zero=False)
 
-    assert np.all(data2 == [
-      [
-        [1, 2],
-        [3, 1]
-      ],
-      [ 
-        [4, 5],
-        [6, 7],
-      ],
-    ])
+  assert np.all(data2 == [
+    [
+      [1, 2],
+      [3, 1]
+    ],
+    [ 
+      [4, 5],
+      [6, 7],
+    ],
+  ])
 
-    data2 = np.copy(data, order='F')
-    data2, remapdict = fastremap.renumber(data2, preserve_zero=False)
+  data2 = np.copy(data, order='F')
+  data2, remapdict = fastremap.renumber(data2, preserve_zero=False)
 
-    assert np.all(data2 == [
-      [
-        [1, 5],
-        [3, 1]
-      ],
-      [ 
-        [2, 6],
-        [4, 7],
-      ],
-    ])
+  assert np.all(data2 == [
+    [
+      [1, 5],
+      [3, 1]
+    ],
+    [ 
+      [2, 6],
+      [4, 7],
+    ],
+  ])
 
+def test_3d_renumber_dtype_shift():
   big = np.random.randint(0, (2**64)-1, size=(512,512,100), dtype=np.uint64)
   big, remapdict = fastremap.renumber(big, preserve_zero=True, in_place=True)
   assert np.dtype(big.dtype).itemsize <= 4
   assert np.dtype(big.dtype).itemsize > 1
 
+@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64 ])
+def test_remap_1d(dtype):
+  empty = fastremap.remap([], {})
+  assert len(empty) == 0
 
-def test_remap_1d():
-  dtypes = list(DTYPES) + [ np.float32, np.float64 ]
-  for dtype in dtypes:
-    print(dtype)
+  data = np.array([1, 2, 2, 2, 3, 4, 5], dtype=dtype)
+  remap = {
+    1: 10,
+    2: 30,
+    3: 15,
+    4: 0,
+    5: 5,
+  }
 
-    empty = fastremap.remap([], {})
-    assert len(empty) == 0
+  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
+  assert np.all(result == [10, 30, 30, 30, 15, 0, 5])
 
-    data = np.array([1, 2, 2, 2, 3, 4, 5], dtype=dtype)
-    remap = {
-      1: 10,
-      2: 30,
-      3: 15,
-      4: 0,
-      5: 5,
-    }
-
+  del remap[2]
+  try:
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-    assert np.all(result == [10, 30, 30, 30, 15, 0, 5])
+    assert False
+  except KeyError:
+    pass 
 
-    del remap[2]
-    try:
-      result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-      assert False
-    except KeyError:
-      pass 
+  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
+  assert np.all(result == [10, 2, 2, 2, 15, 0, 5])
 
-    result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
-    assert np.all(result == [10, 2, 2, 2, 15, 0, 5])
+@pytest.mark.parametrize("dtype", DTYPES)
+def test_remap_2d(dtype):
+  data = np.array([[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]], dtype=dtype)
+  remap = {
+    1: 10,
+    2: 30,
+    3: 15,
+    4: 0,
+    5: 5,
+  }
 
-def test_remap_2d():
-  for dtype in DTYPES:
-    print(dtype)
-    data = np.array([[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]], dtype=dtype)
-    remap = {
-      1: 10,
-      2: 30,
-      3: 15,
-      4: 0,
-      5: 5,
-    }
+  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
+  assert np.all(result == [[10, 30, 15, 0, 5], [5, 0, 15, 30, 10]])
 
+  del remap[2]
+  try:
     result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-    assert np.all(result == [[10, 30, 15, 0, 5], [5, 0, 15, 30, 10]])
+    assert False
+  except KeyError:
+    pass 
 
-    del remap[2]
-    try:
-      result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=False)
-      assert False
-    except KeyError:
-      pass 
-
-    result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
-    assert np.all(result == [[10, 2, 15, 0, 5], [5, 0, 15, 2, 10]])
+  result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
+  assert np.all(result == [[10, 2, 15, 0, 5], [5, 0, 15, 2, 10]])
 
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize("in_place", [ True, False ])
