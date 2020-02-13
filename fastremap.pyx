@@ -552,6 +552,32 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
   return arr
 
+def pixel_pairs(labels):
+  """
+  Computes the number of matching adjacent memory locations.
+
+  This is useful for rapidly evaluating whether an image is
+  more binary or more connectomics like.
+  """
+  if labels.size == 0:
+    return 0
+  return _pixel_pairs(reshape(labels, (labels.size,)))
+
+def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
+  cdef size_t voxels = labels.size
+
+  cdef size_t pairs = 0
+  cdef ALLINT label = labels[0]
+
+  cdef size_t i = 0
+  for i in range(1, voxels):
+    if label == labels[i]:
+      pairs += 1
+    else:
+      label = labels[i]
+
+  return pairs
+
 def unique(labels, return_counts=False):
   """
   Compute the sorted set of unique labels in the input array.
@@ -567,23 +593,29 @@ def unique(labels, return_counts=False):
   if not np.issubdtype(labels.dtype, np.integer):
     raise TypeError("fastremap.unique only supports integer types.")
 
+  cdef size_t voxels = labels.size
+
   shape = labels.shape
-  labels = reshape(labels, (labels.size,))
+  labels = reshape(labels, (voxels,))
 
   cdef int64_t max_label
   cdef int64_t min_label
   min_label, max_label = minmax(labels)
 
-  if labels.size == 0:
+  if voxels == 0:
     uniq = np.array([], dtype=labels.dtype)
     counts = np.array([], dtype=np.uint32)
-  elif min_label > 0 and max_label < labels.size:
-    uniq, counts = _array_unique(labels, max_label, return_counts=True)
-  elif (max_label - min_label) <= labels.size:
+  elif min_label >= 0 and max_label < voxels:
+    uniq, counts = _array_unique(labels, max_label)
+  elif (max_label - min_label) <= voxels:
     labels -= min_label
-    uniq, counts = _array_unique(labels, max_label - min_label + 1, return_counts=True)
+    uniq, counts = _array_unique(labels, max_label - min_label + 1)
     labels += min_label
     uniq += min_label
+  elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
+    labels, remap = renumber(labels)
+    remap = { v:k for k,v in remap.items() }
+    uniq, counts = _array_unique(labels, max(remap.keys()))
   else:
     uniq, counts = _sort_unique(labels)
 
@@ -627,7 +659,7 @@ def _sort_unique(cnp.ndarray[ALLINT, ndim=1] labels):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _array_unique(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, return_counts=False):
+def _array_unique(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label):
   """
   unique(cnp.ndarray[ALLINT, ndim=1] labels, return_counts=False)
 
@@ -652,11 +684,8 @@ def _array_unique(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, return_c
       segids.append(i)
       cts.append(counts[i])
 
-  if return_counts:
-    return np.array(segids, dtype=labels.dtype), np.array(cts, dtype=np.uint32)
-  else:
-    return np.array(segids, dtype=labels.dtype)
-
+  return np.array(segids, dtype=labels.dtype), np.array(cts, dtype=np.uint32)
+  
 def transpose(arr):
   """
   asfortranarray(arr)
