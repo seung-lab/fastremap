@@ -396,8 +396,6 @@ def test_unique():
   labels = np.random.randint(-1000, 128**3, size=(7,7,7))
   uniq_np, cts_np = np.unique(labels, return_counts=True)
   uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
-  print(cts_np)
-  print(cts_fr)
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)  
 
