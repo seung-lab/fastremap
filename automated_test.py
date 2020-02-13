@@ -373,3 +373,30 @@ def test_fit_dtype_float(dtype, sign):
     pass
 
   assert fastremap.fit_dtype(dtype, sign * 2**128, exotics=True) == np.cdouble
+
+def test_minmax():
+  volume = np.random.randint(-500, 500, size=(128,128,128))
+  minval, maxval = fastremap.minmax(volume)
+  assert minval == np.min(volume)
+  assert maxval == np.max(volume)
+
+def test_unique():
+  labels = np.random.randint(-500, 500, size=(128,128,128))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)
+
+  labels = np.random.randint(128**3 - 500, 128**3 + 500, size=(128,128,128))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)
+
+  labels = np.random.randint(-1000, 128**3, size=(7,7,7))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
+  print(cts_np)
+  print(cts_fr)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)  
