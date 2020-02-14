@@ -578,7 +578,7 @@ def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
 
   return pairs
 
-def unique(labels, return_counts=False):
+def unique(labels, return_index=False, return_inverse=False, return_counts=False, axis=None):
   """
   Compute the sorted set of unique labels in the input array.
 
@@ -592,6 +592,17 @@ def unique(labels, return_counts=False):
   """
   if not np.issubdtype(labels.dtype, np.integer):
     raise TypeError("fastremap.unique only supports integer types.")
+
+  # These flags are currently unsupported so call uncle and
+  # use the standard implementation instead.
+  if return_index or return_inverse or (axis is not None):
+    return np.unique(
+      labels, 
+      return_index=return_index, 
+      return_inverse=return_inverse, 
+      return_counts=return_counts, 
+      axis=axis
+    )
 
   cdef size_t voxels = labels.size
 
