@@ -606,30 +606,41 @@ def unique(labels, return_counts=False):
     uniq = np.array([], dtype=labels.dtype)
     counts = np.array([], dtype=np.uint32)
   elif min_label >= 0 and max_label < <int64_t>voxels:
-    uniq, counts = _array_unique(labels, max_label)
+    uniq, counts = unique_via_array(labels, max_label)
   elif (max_label - min_label) <= <int64_t>voxels:
-    labels -= min_label
-    uniq, counts = _array_unique(labels, max_label - min_label + 1)
-    labels += min_label
-    uniq += min_label
+    uniq, counts = unique_via_shifted_array(labels, min_label, max_label)
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
-    dtype = labels.dtype
-    labels, remap = renumber(labels)
-    remap = { v:k for k,v in remap.items() }
-    uniq, counts = _array_unique(labels, max(remap.keys()))
-    uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
+    uniq, counts = unique_via_renumber(labels)
   else:
-    uniq, counts = _sort_unique(labels)
+    uniq, counts = unique_via_sort(labels)
 
   if return_counts:
     return uniq, counts
   return uniq
 
+def unique_via_shifted_array(labels, min_label=None, max_label=None):
+  if min_label is None or max_label is None:
+    min_label, max_label = minmax(labels)
+
+  labels -= min_label
+  uniq, counts = unique_via_array(labels, max_label - min_label + 1)
+  labels += min_label
+  uniq += min_label
+  return uniq, counts
+
+def unique_via_renumber(labels):
+  dtype = labels.dtype
+  labels, remap = renumber(labels)
+  remap = { v:k for k,v in remap.items() }
+  uniq, counts = unique_via_array(labels, max(remap.keys()))
+  uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
+  return uniq, counts
+
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _sort_unique(cnp.ndarray[ALLINT, ndim=1] labels):
-  """Slower than _array_unique but can handle any label."""
+def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
+  """Slower than unique_via_array but can handle any label."""
   labels = np.copy(labels)
   labels.sort()
 
@@ -661,7 +672,7 @@ def _sort_unique(cnp.ndarray[ALLINT, ndim=1] labels):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _array_unique(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label):
+def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label):
   """
   unique(cnp.ndarray[ALLINT, ndim=1] labels, return_counts=False)
 
