@@ -378,8 +378,27 @@ def test_unique():
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)
 
+  labels = np.random.randint(0, 500, size=(128,128,128))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique_via_array(labels.flatten(), np.max(labels))
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)
+
   # array_unique + shift
   labels = np.random.randint(-500, 500, size=(128,128,128))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)
+
+  labels = np.random.randint(-500, 500, size=(128,128,128))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique_via_shifted_array(labels.flatten())
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)
+
+  # array_unique + shift
+  labels = np.random.randint(128**3 - 500, 128**3 + 500, size=(128,128,128))
   uniq_np, cts_np = np.unique(labels, return_counts=True)
   uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
   assert np.all(uniq_np == uniq_fr)
@@ -388,7 +407,7 @@ def test_unique():
   # array_unique + shift
   labels = np.random.randint(128**3 - 500, 128**3 + 500, size=(128,128,128))
   uniq_np, cts_np = np.unique(labels, return_counts=True)
-  uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique_via_shifted_array(labels.flatten())
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)
 
@@ -400,10 +419,23 @@ def test_unique():
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)  
 
+  labels = np.random.randint(0, 1, size=(128,128,128))
+  labels[0,0,0] = 128**3 + 10
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique_via_renumber(labels.flatten())
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)  
+
   # sort
   labels = np.random.randint(-1000, 128**3, size=(100,100,100))
   uniq_np, cts_np = np.unique(labels, return_counts=True)
   uniq_fr, cts_fr = fastremap.unique(labels, return_counts=True)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(cts_np == cts_fr)  
+
+  labels = np.random.randint(-1000, 128**3, size=(100,100,100))
+  uniq_np, cts_np = np.unique(labels, return_counts=True)
+  uniq_fr, cts_fr = fastremap.unique_via_sort(labels.flatten())
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)  
 
