@@ -60,6 +60,31 @@ cdef extern from "ipt.hpp" namespace "pyipt":
     T* arr, int sx, int sy, int sz, int sw
   )
 
+def minmax(arr):
+  """
+  Returns (min(arr), max(arr)) computed in a single pass.
+  Returns (None, None) if array is size zero.
+  """
+  return _minmax(reshape(arr, (arr.size,)))
+
+def _minmax(cnp.ndarray[NUMBER, ndim=1] arr):
+  cdef size_t i = 0
+  cdef size_t size = arr.size
+
+  if size == 0:
+    return None, None
+
+  cdef NUMBER minval = arr[0]
+  cdef NUMBER maxval = arr[0]
+
+  for i in range(1, size):
+    if minval > arr[i]:
+      minval = arr[i]
+    if maxval < arr[i]:
+      maxval = arr[i]
+
+  return minval, maxval
+
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
   renumber(arr, start=1, preserve_zero=True, in_place=False)
@@ -184,26 +209,113 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
     last_elem = elem 
     last_remap_id = arrview[i]
 
-  if start < 0:
-    types = [ np.int8, np.int16, np.int32, np.int64 ]
-  else:
-    types = [ np.uint8, np.uint16, np.uint32, np.uint64 ]
-  
-  factor = max(abs(start), abs(remap_id))
+  factor = remap_id 
+  if abs(start) > abs(factor):
+    factor = start
 
-  if factor < 2 ** 8:
-    final_type = types[0]
-  elif factor < 2 ** 16:
-    final_type = types[1]
-  elif factor < 2 ** 32:
-    final_type = types[2]
-  else:
-    final_type = types[3]
+  return refit(arr, factor), remap_dict
 
-  if arr.dtype == final_type:
-    return arr, remap_dict
+def refit(arr, value=None, increase_only=False, exotics=False):
+  """
+  Resize the array to the smallest dtype of the 
+  same kind that will fit a given value.
+
+  For example, if the input array is uint8 and 
+  the value is 2^20 return the array as a 
+  uint32.
+
+  Works for standard floating, integer, 
+  unsigned integer, and complex types.
+
+  arr: numpy array
+  value: value to fit array to. if None,
+    it is set to the value of the absolutely
+    larger of the min and max value in the array.
+  increase_only: if true, only resize the array if it can't
+    contain value. if false, always resize to the 
+    smallest size that fits.
+  exotics: if true, allow e.g. half precision floats (16-bit) 
+    or double complex (128-bit)
+
+  Return: refitted array
+  """
+
+  if value is None:
+    min_value, max_value = minmax(arr)
+    if min_value is None or max_value is None:
+      min_value = 0 
+      max_value = 0
+
+    if abs(max_value) > abs(min_value):
+      value = max_value
+    else:
+      value = min_value
+
+  dtype = fit_dtype(arr.dtype, value, exotics=exotics)
+
+  if increase_only and np.dtype(dtype).itemsize <= np.dtype(arr.dtype).itemsize:
+    return arr
+  elif dtype == arr.dtype:
+    return arr
+  return arr.astype(dtype)
+
+def fit_dtype(dtype, value, exotics=False):
+  """
+  Find the smallest dtype of the 
+  same kind that will fit a given value.
+
+  For example, if the input array is uint8 and 
+  the value is 2^20 return the array as a 
+  uint32.
+
+  Works for standard floating, integer, 
+  unsigned integer, and complex types.
+
+  exotics: if True, allow fitting to
+    e.g. float16 (half-precision, 16-bits) 
+      or double complex (which takes 128-bits).
+
+  Return: refitted array
+  """
+  dtype = np.dtype(dtype)
+  if np.issubdtype(dtype, np.floating):
+    if exotics:
+      sequence = [ np.float16, np.float32, np.float64 ] 
+    else:
+      sequence = [ np.float32, np.float64 ] 
+    infofn = np.finfo
+  elif np.issubdtype(dtype, np.unsignedinteger):
+    sequence = [ np.uint8, np.uint16, np.uint32, np.uint64 ]
+    infofn = np.iinfo
+    if value < 0:
+      raise ValueError(str(value) + " is negative but unsigned data type {} is selected.".format(dtype))
+  elif np.issubdtype(dtype, np.complexfloating):
+    if exotics:
+      sequence = [ np.csingle, np.cdouble ]
+    else:
+      sequence = [ np.csingle ]
+    infofn = np.finfo
+  elif np.issubdtype(dtype, np.integer):
+    sequence = [ np.int8, np.int16, np.int32, np.int64 ]
+    infofn = np.iinfo
   else:
-    return arr.astype(final_type), remap_dict
+    raise ValueError(
+      "Unsupported dtype: {} Only standard floats, integers, and complex types are supported.".format(dtype)
+    )
+
+  test_value = np.real(value) 
+  if abs(np.real(value)) < abs(np.imag(value)):
+    test_value = np.imag(value)
+
+  for seq_dtype in sequence:
+    if test_value >= 0 and infofn(seq_dtype).max >= test_value:
+      return seq_dtype
+    elif test_value < 0 and infofn(seq_dtype).min <= test_value:
+      return seq_dtype
+
+  raise ValueError("Unable to find a compatible dtype for {} that can fit {}".format(
+    dtype, value
+  ))
 
 def mask(arr, labels, in_place=False, value=0):
   """
@@ -267,21 +379,34 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
   cdef size_t i = 0
   cdef size_t size = arr.size
 
+  if size == 0:
+    return arr
+
   cdef unordered_map[ALLINT, ALLINT] tbl 
 
   for label in labels:
     tbl[label] = label 
 
-  if value == 0:
-    for i in range(size):
-      arrview[i] = tbl[arrview[i]]
+  cdef ALLINT last_elem = arrview[0]
+  cdef ALLINT last_elem_value = 0
+
+  if tbl.find(last_elem) == tbl.end():
+    last_elem_value = value
   else:
-    for i in range(size):
-      if tbl.find(arrview[i]) == tbl.end():
-        arrview[i] = value
+    last_elem_value = last_elem
+
+  for i in range(size):
+    if arrview[i] == last_elem:
+      arrview[i] = last_elem_value
+    elif tbl.find(arrview[i]) == tbl.end():
+      last_elem = arrview[i]
+      last_elem_value = value
+      arrview[i] = value
+    else:
+      last_elem = arrview[i]
+      last_elem_value = arrview[i]
 
   return arr
-
 
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """
@@ -311,7 +436,13 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   else:
     order = 'C'
 
-  if not in_place:
+  original_dtype = arr.dtype
+  if len(table):
+    min_label, max_label = min(table.values()), max(table.values())
+    fit_value = min_label if abs(min_label) > abs(max_label) else max_label
+    arr = refit(arr, fit_value, increase_only=True)
+
+  if not in_place and original_dtype == arr.dtype:
     arr = np.copy(arr, order=order)
 
   arr = reshape(arr, (arr.size,))
@@ -423,9 +554,167 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
   return arr
 
+def pixel_pairs(labels):
+  """
+  Computes the number of matching adjacent memory locations.
+
+  This is useful for rapidly evaluating whether an image is
+  more binary or more connectomics like.
+  """
+  if labels.size == 0:
+    return 0
+  return _pixel_pairs(reshape(labels, (labels.size,)))
+
+def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
+  cdef size_t voxels = labels.size
+
+  cdef size_t pairs = 0
+  cdef ALLINT label = labels[0]
+
+  cdef size_t i = 0
+  for i in range(1, voxels):
+    if label == labels[i]:
+      pairs += 1
+    else:
+      label = labels[i]
+
+  return pairs
+
+def unique(labels, return_index=False, return_inverse=False, return_counts=False, axis=None):
+  """
+  Compute the sorted set of unique labels in the input array.
+
+  return_counts: also return the unique label frequency as an array.
+
+  Returns: 
+    if return_counts:
+      return (unique_labels, unique_counts)
+    else:
+      return unique_labels
+  """
+  if not np.issubdtype(labels.dtype, np.integer):
+    raise TypeError("fastremap.unique only supports integer types.")
+
+  # These flags are currently unsupported so call uncle and
+  # use the standard implementation instead.
+  if return_index or return_inverse or (axis is not None):
+    return np.unique(
+      labels, 
+      return_index=return_index, 
+      return_inverse=return_inverse, 
+      return_counts=return_counts, 
+      axis=axis
+    )
+
+  cdef size_t voxels = labels.size
+
+  shape = labels.shape
+  labels = reshape(labels, (voxels,))
+
+  cdef int64_t max_label
+  cdef int64_t min_label
+  min_label, max_label = minmax(labels)
+
+  if voxels == 0:
+    uniq = np.array([], dtype=labels.dtype)
+    counts = np.array([], dtype=np.uint32)
+  elif min_label >= 0 and max_label < <int64_t>voxels:
+    uniq, counts = unique_via_array(labels, max_label)
+  elif (max_label - min_label) <= <int64_t>voxels:
+    uniq, counts = unique_via_shifted_array(labels, min_label, max_label)
+  elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
+    uniq, counts = unique_via_renumber(labels)
+  else:
+    uniq, counts = unique_via_sort(labels)
+
+  if return_counts:
+    return uniq, counts
+  return uniq
+
+def unique_via_shifted_array(labels, min_label=None, max_label=None):
+  if min_label is None or max_label is None:
+    min_label, max_label = minmax(labels)
+
+  labels -= min_label
+  uniq, counts = unique_via_array(labels, max_label - min_label + 1)
+  labels += min_label
+  uniq += min_label
+  return uniq, counts
+
+def unique_via_renumber(labels):
+  dtype = labels.dtype
+  labels, remap = renumber(labels)
+  remap = { v:k for k,v in remap.items() }
+  uniq, counts = unique_via_array(labels, max(remap.keys()))
+  uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
+  return uniq, counts
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
+  """Slower than unique_via_array but can handle any label."""
+  labels = np.copy(labels)
+  labels.sort()
+
+  cdef size_t voxels = labels.size  
+
+  cdef cnp.ndarray[ALLINT, ndim=1] uniq = np.zeros((voxels,), dtype=labels.dtype)
+  cdef cnp.ndarray[uint32_t, ndim=1] counts = np.zeros((voxels,), dtype=np.uint32)
+
+  cdef size_t i = 0
+  cdef size_t j = 0
+
+  cdef ALLINT cur = labels[0]
+  cdef size_t accum = 1
+  for i in range(1, voxels):
+    if cur == labels[i]:
+      accum += 1
+    else:
+      uniq[j] = cur
+      counts[j] = accum
+      accum = 1
+      cur = labels[i]
+      j += 1
+
+  uniq[j] = cur
+  counts[j] = accum
+
+  return uniq[:j+1], counts[:j+1]
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label):
+  """
+  unique(cnp.ndarray[ALLINT, ndim=1] labels, return_counts=False)
+
+  Faster implementation of np.unique that depends
+  on the maximum label in the array being less than
+  the size of the array.
+  """
+  cdef cnp.ndarray[uint32_t, ndim=1] counts = np.zeros( 
+    (max_label+1,), dtype=np.uint32
+  )
+
+  cdef size_t voxels = labels.shape[0]
+  cdef size_t i = 0
+  for i in range(voxels):
+    counts[labels[i]] += 1
+
+  cdef list segids = []
+  cdef list cts = []
+
+  for i in range(max_label + 1):
+    if counts[i] > 0:
+      segids.append(i)
+      cts.append(counts[i])
+
+  return np.array(segids, dtype=labels.dtype), np.array(cts, dtype=np.uint32)
+  
 def transpose(arr):
   """
-  asfortranarray(arr)
+  transpose(arr)
 
   For up to four dimensional matrices, perform in-place transposition. 
   Square matrices up to three dimensions are faster than numpy's out-of-place

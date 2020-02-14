@@ -4,15 +4,45 @@
 
 Renumber and relabel Numpy arrays at C++ speed and physically convert rectangular Numpy arrays between C and Fortran order using an in-place transposition.   
 
+```python
+import fastremap
+
+uniq, cts = fastremap.unique(labels, return_counts=True) # may be much faster than np.unique
+labels = fastremap.renumber(labels, in_place=True) # relabel values from 1 and refit data type
+
+labels = fastremap.refit(labels) # resize the data type of the array to fit extrema
+labels = fastremap.refit(labels, value=-35) # resize the data type to fit the value provided
+
+# remap all occurances of 1 -> 2
+labels = fastremap.remap(labels, { 1: 2 }, preserve_missing_labels=True, in_place=True)
+
+labels = fastremap.mask(labels, [1,5,13]) # set all occurances of 1,5,13 to 0
+labels = fastremap.mask_except(labels, [1,5,13]) # set all labels except 1,5,13 to 0
+
+fastremap.transpose(labels) # physically transpose labels in-place
+fastremap.ascontiguousarray(labels) # try to perform a physical in-place transposition to C order
+fastremap.asfortranarray(labels) # try to perform a physical in-place transposition to F order
+
+minval, maxval = fastremap.minmax(labels) # faster version of (np.min(labels), np.max(labels))
+
+# computes number of matching adjacent pixel pairs in an image
+num_pairs = fastremap.pixel_pairs(labels) 
+```
+
 ## All Available Functions 
+- **unique:** Faster implementation of `np.unique`.
 - **renumber:** Relabel array from 1 to N which can often use smaller datatypes.
 - **remap:** Custom relabeling of values in an array from a dictionary.
+- **refit:** Resize the data type of an array to the smallest that can contain the most extreme values in it.
 - **mask:** Zero out labels in an array specified by a given list.
 - **mask_except**: Zero out all labels except those specified in a given list.
 - **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
 - **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
 - **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.
 - **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy algorithm otherwise.
+- **minmax:** Compute the min and max of an array in one pass.
+- **pixel_pairs:** Computes the number of adjacent matching memory locations in an image. A quick heuristic for understanding if the image statistics are roughly similar to a connectomics segmentation.
+
 
 ## `pip` Installation
 
