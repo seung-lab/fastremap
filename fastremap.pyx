@@ -215,7 +215,7 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   return refit(arr, factor), remap_dict
 
-def refit(arr, value=None, increase_only=False):
+def refit(arr, value=None, increase_only=False, exotics=False):
   """
   Resize the array to the smallest dtype of the 
   same kind that will fit a given value.
@@ -234,6 +234,8 @@ def refit(arr, value=None, increase_only=False):
   increase_only: if true, only resize the array if it can't
     contain value. if false, always resize to the 
     smallest size that fits.
+  exotics: if true, allow e.g. half precision floats (16-bit) 
+    or double complex (128-bit)
 
   Return: refitted array
   """
@@ -249,7 +251,7 @@ def refit(arr, value=None, increase_only=False):
     else:
       value = min_value
 
-  dtype = fit_dtype(arr.dtype, value)
+  dtype = fit_dtype(arr.dtype, value, exotics=exotics)
 
   if increase_only and np.dtype(dtype).itemsize <= np.dtype(arr.dtype).itemsize:
     return arr
