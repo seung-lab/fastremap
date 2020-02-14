@@ -300,6 +300,7 @@ def test_fit_dtype_uint(dtype):
 def test_fit_dtype_int(dtype):
   assert fastremap.fit_dtype(dtype, 0) == np.int8
   assert fastremap.fit_dtype(dtype, 127) == np.int8
+  assert fastremap.fit_dtype(dtype, -128) == np.int8
   assert fastremap.fit_dtype(dtype, 128) == np.int16
   assert fastremap.fit_dtype(dtype, 10000) == np.int16
   assert fastremap.fit_dtype(dtype, 2**15 - 1) == np.int16

@@ -15947,7 +15947,7 @@ static PyObject *__pyx_pf_9fastremap_94_renumber(CYTHON_UNUSED PyObject *__pyx_s
 
 /* Python wrapper */
 static PyObject *__pyx_pw_9fastremap_11refit(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_9fastremap_10refit[] = "\n  Resize the array to the smallest dtype of the \n  same kind that will fit a given value.\n\n  For example, if the input array is uint8 and \n  the value is 2^32+1 return the array as a \n  uint32.\n\n  Works for standard floating, integer, \n  unsigned integer, and complex types.\n\n  arr: numpy array\n  value: value to fit array to. if None,\n    it is set to the value of the absolutely\n    larger of the min and max value in the array.\n  increase_only: if true, only resize the array if it can't\n    contain value. if false, always resize to the \n    smallest size that fits.\n  exotics: if true, allow e.g. half precision floats (16-bit) \n    or double complex (128-bit)\n\n  Return: refitted array\n  ";
+static char __pyx_doc_9fastremap_10refit[] = "\n  Resize the array to the smallest dtype of the \n  same kind that will fit a given value.\n\n  For example, if the input array is uint8 and \n  the value is 2^20 return the array as a \n  uint32.\n\n  Works for standard floating, integer, \n  unsigned integer, and complex types.\n\n  arr: numpy array\n  value: value to fit array to. if None,\n    it is set to the value of the absolutely\n    larger of the min and max value in the array.\n  increase_only: if true, only resize the array if it can't\n    contain value. if false, always resize to the \n    smallest size that fits.\n  exotics: if true, allow e.g. half precision floats (16-bit) \n    or double complex (128-bit)\n\n  Return: refitted array\n  ";
 static PyMethodDef __pyx_mdef_9fastremap_11refit = {"refit", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9fastremap_11refit, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_10refit};
 static PyObject *__pyx_pw_9fastremap_11refit(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_arr = 0;
@@ -16475,7 +16475,7 @@ static PyObject *__pyx_pf_9fastremap_10refit(CYTHON_UNUSED PyObject *__pyx_self,
 
 /* Python wrapper */
 static PyObject *__pyx_pw_9fastremap_13fit_dtype(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_9fastremap_12fit_dtype[] = "\n  Find the smallest dtype of the \n  same kind that will fit a given value.\n\n  For example, if the input array is uint8 and \n  the value is 2^32+1 return the array as a \n  uint32.\n\n  Works for standard floating, integer, \n  unsigned integer, and complex types.\n\n  exotics: if True, allow fitting to\n    e.g. float16 (half-precision, 16-bits) \n      or double complex (which takes 128-bits).\n\n  Return: refitted array\n  ";
+static char __pyx_doc_9fastremap_12fit_dtype[] = "\n  Find the smallest dtype of the \n  same kind that will fit a given value.\n\n  For example, if the input array is uint8 and \n  the value is 2^20 return the array as a \n  uint32.\n\n  Works for standard floating, integer, \n  unsigned integer, and complex types.\n\n  exotics: if True, allow fitting to\n    e.g. float16 (half-precision, 16-bits) \n      or double complex (which takes 128-bits).\n\n  Return: refitted array\n  ";
 static PyMethodDef __pyx_mdef_9fastremap_13fit_dtype = {"fit_dtype", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9fastremap_13fit_dtype, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9fastremap_12fit_dtype};
 static PyObject *__pyx_pw_9fastremap_13fit_dtype(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_dtype = 0;
@@ -17479,7 +17479,7 @@ static PyObject *__pyx_pf_9fastremap_12fit_dtype(CYTHON_UNUSED PyObject *__pyx_s
  *   for seq_dtype in sequence:
  *     if test_value >= 0 and infofn(seq_dtype).max >= test_value:             # <<<<<<<<<<<<<<
  *       return seq_dtype
- *     elif test_value < 0 and infofn(seq_dtype).min < test_value:
+ *     elif test_value < 0 and infofn(seq_dtype).min <= test_value:
  */
     __pyx_t_6 = PyObject_RichCompare(__pyx_v_test_value, __pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 311, __pyx_L1_error)
     __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 311, __pyx_L1_error)
@@ -17520,7 +17520,7 @@ static PyObject *__pyx_pf_9fastremap_12fit_dtype(CYTHON_UNUSED PyObject *__pyx_s
  *   for seq_dtype in sequence:
  *     if test_value >= 0 and infofn(seq_dtype).max >= test_value:
  *       return seq_dtype             # <<<<<<<<<<<<<<
- *     elif test_value < 0 and infofn(seq_dtype).min < test_value:
+ *     elif test_value < 0 and infofn(seq_dtype).min <= test_value:
  *       return seq_dtype
  */
       __Pyx_XDECREF(__pyx_r);
@@ -17534,14 +17534,14 @@ static PyObject *__pyx_pf_9fastremap_12fit_dtype(CYTHON_UNUSED PyObject *__pyx_s
  *   for seq_dtype in sequence:
  *     if test_value >= 0 and infofn(seq_dtype).max >= test_value:             # <<<<<<<<<<<<<<
  *       return seq_dtype
- *     elif test_value < 0 and infofn(seq_dtype).min < test_value:
+ *     elif test_value < 0 and infofn(seq_dtype).min <= test_value:
  */
     }
 
     /* "fastremap.pyx":313
  *     if test_value >= 0 and infofn(seq_dtype).max >= test_value:
  *       return seq_dtype
- *     elif test_value < 0 and infofn(seq_dtype).min < test_value:             # <<<<<<<<<<<<<<
+ *     elif test_value < 0 and infofn(seq_dtype).min <= test_value:             # <<<<<<<<<<<<<<
  *       return seq_dtype
  * 
  */
@@ -17572,7 +17572,7 @@ static PyObject *__pyx_pf_9fastremap_12fit_dtype(CYTHON_UNUSED PyObject *__pyx_s
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_min); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyObject_RichCompare(__pyx_t_2, __pyx_v_test_value, Py_LT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_6 = PyObject_RichCompare(__pyx_t_2, __pyx_v_test_value, Py_LE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -17582,7 +17582,7 @@ static PyObject *__pyx_pf_9fastremap_12fit_dtype(CYTHON_UNUSED PyObject *__pyx_s
 
       /* "fastremap.pyx":314
  *       return seq_dtype
- *     elif test_value < 0 and infofn(seq_dtype).min < test_value:
+ *     elif test_value < 0 and infofn(seq_dtype).min <= test_value:
  *       return seq_dtype             # <<<<<<<<<<<<<<
  * 
  *   raise ValueError("Unable to find a compatible dtype for {} that can fit {}".format(
@@ -17596,7 +17596,7 @@ static PyObject *__pyx_pf_9fastremap_12fit_dtype(CYTHON_UNUSED PyObject *__pyx_s
       /* "fastremap.pyx":313
  *     if test_value >= 0 and infofn(seq_dtype).max >= test_value:
  *       return seq_dtype
- *     elif test_value < 0 and infofn(seq_dtype).min < test_value:             # <<<<<<<<<<<<<<
+ *     elif test_value < 0 and infofn(seq_dtype).min <= test_value:             # <<<<<<<<<<<<<<
  *       return seq_dtype
  * 
  */
@@ -51035,12 +51035,12 @@ static PyObject *__pyx_pf_9fastremap_216unique_via_array(CYTHON_UNUSED PyObject 
  * 
  * def transpose(arr):             # <<<<<<<<<<<<<<
  *   """
- *   asfortranarray(arr)
+ *   transpose(arr)
  */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_9fastremap_43transpose(PyObject *__pyx_self, PyObject *__pyx_v_arr); /*proto*/
-static char __pyx_doc_9fastremap_42transpose[] = "\n  asfortranarray(arr)\n\n  For up to four dimensional matrices, perform in-place transposition. \n  Square matrices up to three dimensions are faster than numpy's out-of-place\n  algorithm. Default to the out-of-place implementation numpy uses for cases\n  that aren't specially handled.\n\n  Returns: transposed numpy array\n  ";
+static char __pyx_doc_9fastremap_42transpose[] = "\n  transpose(arr)\n\n  For up to four dimensional matrices, perform in-place transposition. \n  Square matrices up to three dimensions are faster than numpy's out-of-place\n  algorithm. Default to the out-of-place implementation numpy uses for cases\n  that aren't specially handled.\n\n  Returns: transposed numpy array\n  ";
 static PyMethodDef __pyx_mdef_9fastremap_43transpose = {"transpose", (PyCFunction)__pyx_pw_9fastremap_43transpose, METH_O, __pyx_doc_9fastremap_42transpose};
 static PyObject *__pyx_pw_9fastremap_43transpose(PyObject *__pyx_self, PyObject *__pyx_v_arr) {
   PyObject *__pyx_r = 0;
@@ -51540,7 +51540,7 @@ static PyObject *__pyx_pf_9fastremap_42transpose(CYTHON_UNUSED PyObject *__pyx_s
  * 
  * def transpose(arr):             # <<<<<<<<<<<<<<
  *   """
- *   asfortranarray(arr)
+ *   transpose(arr)
  */
 
   /* function exit code */
@@ -87062,7 +87062,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * def transpose(arr):             # <<<<<<<<<<<<<<
  *   """
- *   asfortranarray(arr)
+ *   transpose(arr)
  */
   __pyx_tuple__86 = PyTuple_Pack(5, __pyx_n_s_arr, __pyx_n_s_shape, __pyx_n_s_strides, __pyx_n_s_nbytes, __pyx_n_s_dtype); if (unlikely(!__pyx_tuple__86)) __PYX_ERR(0, 715, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__86);
@@ -88412,7 +88412,7 @@ if (!__Pyx_RefNanny) {
  * 
  * def transpose(arr):             # <<<<<<<<<<<<<<
  *   """
- *   asfortranarray(arr)
+ *   transpose(arr)
  */
   __pyx_t_20 = PyCFunction_NewEx(&__pyx_mdef_9fastremap_43transpose, NULL, __pyx_n_s_fastremap); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 715, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_20);

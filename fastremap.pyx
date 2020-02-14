@@ -221,7 +221,7 @@ def refit(arr, value=None, increase_only=False, exotics=False):
   same kind that will fit a given value.
 
   For example, if the input array is uint8 and 
-  the value is 2^32+1 return the array as a 
+  the value is 2^20 return the array as a 
   uint32.
 
   Works for standard floating, integer, 
@@ -265,7 +265,7 @@ def fit_dtype(dtype, value, exotics=False):
   same kind that will fit a given value.
 
   For example, if the input array is uint8 and 
-  the value is 2^32+1 return the array as a 
+  the value is 2^20 return the array as a 
   uint32.
 
   Works for standard floating, integer, 
@@ -310,7 +310,7 @@ def fit_dtype(dtype, value, exotics=False):
   for seq_dtype in sequence:
     if test_value >= 0 and infofn(seq_dtype).max >= test_value:
       return seq_dtype
-    elif test_value < 0 and infofn(seq_dtype).min < test_value:
+    elif test_value < 0 and infofn(seq_dtype).min <= test_value:
       return seq_dtype
 
   raise ValueError("Unable to find a compatible dtype for {} that can fit {}".format(
@@ -714,7 +714,7 @@ def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label):
   
 def transpose(arr):
   """
-  asfortranarray(arr)
+  transpose(arr)
 
   For up to four dimensional matrices, perform in-place transposition. 
   Square matrices up to three dimensions are faster than numpy's out-of-place
