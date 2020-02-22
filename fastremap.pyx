@@ -53,12 +53,12 @@ ctypedef fused COMPLEX_NUMBER:
   float complex 
 
 cdef extern from "ipt.hpp" namespace "pyipt":
-  cdef void _ipt2d[T](T* arr, int sx, int sy)
+  cdef void _ipt2d[T](T* arr, size_t sx, size_t sy)
   cdef void _ipt3d[T](
-    T* arr, int sx, int sy, int sz
+    T* arr, size_t sx, size_t sy, size_t sz
   )
   cdef void _ipt4d[T](
-    T* arr, int sx, int sy, int sz, int sw
+    T* arr, size_t sx, size_t sy, size_t sz, size_t sw
   )
 
 def minmax(arr):
@@ -851,8 +851,8 @@ def ascontiguousarray(arr):
 def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
   cdef COMPLEX_NUMBER[:,:] arrview = arr
 
-  cdef int sx
-  cdef int sy
+  cdef size_t sx
+  cdef size_t sy
 
   if arr.flags['F_CONTIGUOUS']:
     sx = arr.shape[0]
@@ -892,9 +892,9 @@ def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
 def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
   cdef COMPLEX_NUMBER[:,:,:] arrview = arr
 
-  cdef int sx
-  cdef int sy
-  cdef int sz
+  cdef size_t sx
+  cdef size_t sy
+  cdef size_t sz
 
   if arr.flags['F_CONTIGUOUS']:
     sx = arr.shape[0]
@@ -936,10 +936,10 @@ def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
 def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
   cdef COMPLEX_NUMBER[:,:,:,:] arrview = arr
 
-  cdef int sx
-  cdef int sy
-  cdef int sz
-  cdef int sw
+  cdef size_t sx
+  cdef size_t sy
+  cdef size_t sz
+  cdef size_t sw
 
   if arr.flags['F_CONTIGUOUS']:
     sx = arr.shape[0]

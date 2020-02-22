@@ -1,11 +1,31 @@
 CHANGES
 =======
 
+1.9.0
+-----
+
+* release(1.9.0): adds unique, minmax, refit, fit\_dtype, pixel\_pairs
+* chore: add py3.8 to dockerfile
+* feat: unique, minmax, refit, fit\_dtype, pixel\_pairs (#20)
+
+1.8.0
+-----
+
+* release(1.8.0): faster remap and mask operators
+* perf: faster remap and mask operators (#19)
+
+1.7.0
+-----
+
+* feat: add support for single precision complex numbers to IPT (#17)
+* docs: move "all available functions" higher
+
 1.6.2
 -----
 
 * release(1.6.2): mask\_except can accept maximum unsigned values
 * fix: mask\_except can use maximum values for unsigned ints
+* install: add -stdlib=libc++ for mac builds (#14)
 
 1.6.1
 -----
