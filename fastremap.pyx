@@ -703,15 +703,26 @@ def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label):
   for i in range(voxels):
     counts[labels[i]] += 1
 
-  cdef list segids = []
-  cdef list cts = []
-
+  cdef size_t real_size = 0
   for i in range(max_label + 1):
     if counts[i] > 0:
-      segids.append(i)
-      cts.append(counts[i])
+      real_size += 1
 
-  return np.array(segids, dtype=labels.dtype), np.array(cts, dtype=np.uint32)
+  cdef cnp.ndarray[ALLINT, ndim=1] segids = np.zeros( 
+    (real_size,), dtype=labels.dtype
+  )
+  cdef cnp.ndarray[uint32_t, ndim=1] cts = np.zeros( 
+    (real_size,), dtype=np.uint32
+  )
+
+  cdef size_t j = 0
+  for i in range(max_label + 1):
+    if counts[i] > 0:
+      segids[j] = i
+      cts[j] = counts[i]
+      j += 1
+
+  return segids, cts
   
 def transpose(arr):
   """
