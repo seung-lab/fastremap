@@ -8,7 +8,7 @@ Renumber and relabel Numpy arrays at C++ speed and physically convert rectangula
 import fastremap
 
 uniq, cts = fastremap.unique(labels, return_counts=True) # may be much faster than np.unique
-labels = fastremap.renumber(labels, in_place=True) # relabel values from 1 and refit data type
+labels, remapping = fastremap.renumber(labels, in_place=True) # relabel values from 1 and refit data type
 
 labels = fastremap.refit(labels) # resize the data type of the array to fit extrema
 labels = fastremap.refit(labels, value=-35) # resize the data type to fit the value provided
