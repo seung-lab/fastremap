@@ -19,6 +19,9 @@ labels = fastremap.remap(labels, { 1: 2 }, preserve_missing_labels=True, in_plac
 labels = fastremap.mask(labels, [1,5,13]) # set all occurances of 1,5,13 to 0
 labels = fastremap.mask_except(labels, [1,5,13]) # set all labels except 1,5,13 to 0
 
+mapping = fastremap.component_map([ 1, 2, 3, 4 ], [ 5, 5, 6, 7 ]) # { 1: 5, 2: 5, 3: 6, 4: 7 }
+mapping = fastremap.inverse_component_map([ 1, 2, 1, 3 ], [ 4, 4, 5, 6 ]) # { 1: [ 4, 5 ], 2: [ 4 ], 3: [ 6 ] }
+
 fastremap.transpose(labels) # physically transpose labels in-place
 fastremap.ascontiguousarray(labels) # try to perform a physical in-place transposition to C order
 fastremap.asfortranarray(labels) # try to perform a physical in-place transposition to F order
@@ -36,6 +39,8 @@ num_pairs = fastremap.pixel_pairs(labels)
 - **refit:** Resize the data type of an array to the smallest that can contain the most extreme values in it.
 - **mask:** Zero out labels in an array specified by a given list.
 - **mask_except**: Zero out all labels except those specified in a given list.
+- **component_map**: Extract an int-to-int dictionary mapping of labels from one image containing component labels to another parent labels.  
+- **inverse_component_map**: Extract an int-to-list-of-ints dictionary mapping from an image containing groups of components to an image containing the components.  
 - **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
 - **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
 - **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.
