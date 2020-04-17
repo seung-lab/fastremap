@@ -441,7 +441,7 @@ def test_unique():
   assert np.all(cts_np == cts_fr)  
 
 def test_renumber_remap():
-  labels = np.random.randint(-500, 500, size=(128,128,128))
+  labels = np.random.randint(-500, 500, size=(128,128,128)).astype(np.uint64)
   new_labels, remap = fastremap.renumber(labels, in_place=False)
   remap = { v:k for k,v in remap.items() }
   new_labels = fastremap.remap(new_labels, remap, in_place=True)
