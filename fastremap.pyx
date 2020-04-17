@@ -21,6 +21,7 @@ from libc.stdint cimport (
 )
 from libcpp.unordered_map cimport unordered_map
 
+from collections import defaultdict
 from functools import reduce
 import operator
 
@@ -42,6 +43,9 @@ ctypedef fused ALLINT:
   int16_t
   int32_t
   int64_t
+
+ctypedef fused ALLINT_2:
+  ALLINT
 
 ctypedef fused NUMBER:
   ALLINT
@@ -408,6 +412,118 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
       last_elem_value = arrview[i]
 
   return arr
+
+def component_map(component_labels, parent_labels):
+  """
+  Given two sets of images that have a surjective mapping between their labels,
+  generate a dictionary for that mapping.
+
+  For example, generate a mapping from connected components of labels to their
+  parent labels.
+
+  e.g. component_map([ 1, 2, 3, 4 ], [ 5, 5, 6, 7 ])
+    returns { 1: 5, 2: 5, 3: 6, 4: 7 }
+
+  Returns: { $COMPONENT_LABEL: $PARENT_LABEL }
+  """
+  if not isinstance(component_labels, np.ndarray):
+    component_labels = np.array(component_labels)
+  if not isinstance(parent_labels, np.ndarray):
+    parent_labels = np.array(parent_labels)
+
+  if component_labels.size == 0:
+    return {}
+
+  if component_labels.shape != parent_labels.shape:
+    raise ValueError("The size of the inputs must match: {} vs {}".format(
+      component_labels.shape, parent_labels.shape
+    ))
+
+  shape = component_labels.shape 
+
+  component_labels = reshape(component_labels, (component_labels.size,))
+  parent_labels = reshape(parent_labels, (parent_labels.size,))
+  return _component_map(component_labels, parent_labels)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _component_map(
+  cnp.ndarray[ALLINT, ndim=1, cast=True] component_labels, 
+  cnp.ndarray[ALLINT_2, ndim=1, cast=True] parent_labels
+):
+  cdef size_t size = component_labels.size
+  if size == 0:
+    return {}
+
+  cdef dict remap = {}
+  cdef size_t i = 0
+
+  cdef ALLINT last_label = component_labels[0]
+  remap[component_labels[0]] = parent_labels[0]
+  for i in range(size):
+    if last_label == component_labels[i]:
+      continue
+    remap[component_labels[i]] = parent_labels[i]
+    last_label = component_labels[i]
+
+  return remap
+
+def inverse_component_map(parent_labels, component_labels):
+  """
+  Given two sets of images that have a mapping between their labels,
+  generate a dictionary for that mapping.
+
+  For example, generate a mapping from connected components of labels to their
+  parent labels.
+
+  e.g. inverse_component_map([ 1, 2, 1, 3 ], [ 4, 4, 5, 6 ])
+    returns { 1: [ 4, 5 ], 2: [ 4 ], 3: [ 6 ] }
+
+  Returns: { $PARENT_LABEL: [ $COMPONENT_LABELS, ... ] }
+  """
+  if not isinstance(component_labels, np.ndarray):
+    component_labels = np.array(component_labels)
+  if not isinstance(parent_labels, np.ndarray):
+    parent_labels = np.array(parent_labels)
+
+  if component_labels.size == 0:
+    return {}
+
+  if component_labels.shape != parent_labels.shape:
+    raise ValueError("The size of the inputs must match: {} vs {}".format(
+      component_labels.shape, parent_labels.shape
+    ))
+
+  shape = component_labels.shape 
+
+  component_labels = reshape(component_labels, (component_labels.size,))
+  parent_labels = reshape(parent_labels, (parent_labels.size,))
+  return _inverse_component_map(parent_labels, component_labels)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _inverse_component_map(
+  cnp.ndarray[ALLINT, ndim=1, cast=True] parent_labels, 
+  cnp.ndarray[ALLINT_2, ndim=1, cast=True] component_labels
+):
+  cdef size_t size = parent_labels.size
+  if size == 0:
+    return {}
+
+  remap = defaultdict(list)
+  cdef size_t i = 0
+
+  cdef ALLINT last_label = parent_labels[0]
+  remap[parent_labels[0]].append(component_labels[0])
+  for i in range(size):
+    if last_label == parent_labels[i]:
+      continue
+    remap[parent_labels[i]].append(component_labels[i])
+    last_label = parent_labels[i]
+
+  return remap
 
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """

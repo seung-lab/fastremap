@@ -448,3 +448,28 @@ def test_renumber_remap():
   assert np.all(labels == new_labels)
   assert new_labels.dtype in (np.int8, np.int16)
   assert labels.dtype == np.int64
+
+@pytest.mark.parametrize("dtype_cc", DTYPES)
+@pytest.mark.parametrize("dtype_p", DTYPES)
+def test_component_map(dtype_cc, dtype_p):
+  shape = (128,128,128)
+  cc_labels = np.random.randint(0, 100, size=shape).astype(dtype_cc)
+  parent_labels = (cc_labels + 1).astype(dtype_p)
+
+  mapping = fastremap.component_map(cc_labels, parent_labels)
+  for k,v in mapping.items():
+    assert k == v - 1
+
+  mapping = fastremap.component_map([ 1, 2, 3, 4 ], [ 5, 5, 6, 7 ])
+  assert mapping == { 1: 5, 2: 5, 3: 6, 4: 7 }
+
+  mapping = fastremap.component_map([], [])
+
+
+@pytest.mark.parametrize("dtype_cc", DTYPES)
+@pytest.mark.parametrize("dtype_p", DTYPES)
+def test_inverse_component_map(dtype_cc, dtype_p):
+  mapping = fastremap.inverse_component_map([ 1, 2, 1, 3 ], [ 4, 4, 5, 6 ])
+  assert mapping == { 1: [ 4, 5 ], 2: [ 4 ], 3: [ 6 ] }
+
+  mapping = fastremap.inverse_component_map([], [])
