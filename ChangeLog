@@ -1,6 +1,31 @@
 CHANGES
 =======
 
+1.10.0
+------
+
+* release(1.10.0): adds component\_map and inverse\_component\_map
+* fix: should use int instead of uint
+* test: abort appveyor early if a test fails
+* fix: test for renumber dying on uint64 assertion
+* fix: remove 'build.cmd' as we are not supporting 3.3 or 3.4
+* chore: add appveyor.yml
+* docs: show how to use component\_map and inverse\_component\_map
+* feat: add components\_map and inverse\_components\_map
+* Update README.md
+
+1.9.2
+-----
+
+* release(1.9.2): fixed performance issue with fastremap.unique
+* perf: faster unique\_va\_array
+
+1.9.1
+-----
+
+* release(1.9.1): ipt handles 64-bit addressable arrays
+* fix: support 64-bit addressable volumes for IPT
+
 1.9.0
 -----
 

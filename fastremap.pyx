@@ -124,8 +124,13 @@ def renumber(arr, start=1, preserve_zero=True, in_place=False):
   if not in_place:
     arr = np.copy(arr, order=order)
 
+  sx = arr.shape[0]
+  sy = 1
+  if arr.ndim > 1:
+    sy = arr.shape[1]
+
   arr = np.lib.stride_tricks.as_strided(arr, shape=(arr.size,), strides=(nbytes,))
-  arr, remap_dict = _renumber(arr, <int64_t>start, preserve_zero)
+  arr, remap_dict = _renumber(arr, sx, sy, <int64_t>start, preserve_zero)
   arr = reshape(arr, shape, order)
 
   return arr, remap_dict
@@ -166,7 +171,10 @@ def reshape(arr, shape, order=None):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, preserve_zero=True):
+def _renumber(
+  cnp.ndarray[NUMBER, cast=True, ndim=1] arr, size_t sx, size_t sy, 
+  int64_t start=1, preserve_zero=True
+):
   """
   renumber(arr, int64_t start=1, preserve_zero=True)
 
@@ -185,6 +193,7 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
     remap_dict[0] = 0
 
   cdef NUMBER[:] arrview = arr
+  cdef NUMBER[:] last_elem_y = np.zeros((sx,), dtype=arr.dtype) 
 
   cdef NUMBER remap_id = start
   cdef NUMBER elem
@@ -196,13 +205,26 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   cdef size_t size = arr.size
   cdef size_t i = 0
+  cdef size_t x = 0
+  cdef size_t y = 0
 
   for i in range(size):
     elem = arrview[i]
 
+    if x == sx:
+      x = 0
+      y += 1
+    if y == sy:
+      y = 0
+
     if elem == last_elem:
       arrview[i] = last_remap_id
       continue
+    elif y > 0 and elem == last_elem_y[x]:
+      arrview[i] = arrview[i - sx]
+      continue
+
+    last_elem_y[x] = elem
 
     if elem in remap_dict:
       arrview[i] = remap_dict[elem]
