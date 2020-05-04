@@ -180,7 +180,7 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   Return: a renumbered array, dict with remapping of oldval => newval
   """
-  cdef dict remap_dict = {}
+  cdef unordered_map[NUMBER, NUMBER] remap_dict
   if preserve_zero:
     remap_dict[0] = 0
 
@@ -204,12 +204,12 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
       arrview[i] = last_remap_id
       continue
 
-    if elem in remap_dict:
-      arrview[i] = remap_dict[elem]
-    else:
+    if remap_dict.find(elem) == remap_dict.end():
       arrview[i] = remap_id
       remap_dict[elem] = remap_id
-      remap_id += 1
+      remap_id += 1      
+    else:
+      arrview[i] = remap_dict[elem]
 
     last_elem = elem 
     last_remap_id = arrview[i]
