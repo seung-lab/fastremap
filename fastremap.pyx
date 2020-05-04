@@ -219,9 +219,11 @@ def _renumber(
 
     if elem == last_elem:
       arrview[i] = last_remap_id
+      x += 1
       continue
     elif y > 0 and elem == last_elem_y[x]:
       arrview[i] = arrview[i - sx]
+      x += 1
       continue
 
     last_elem_y[x] = elem
@@ -235,6 +237,7 @@ def _renumber(
 
     last_elem = elem 
     last_remap_id = arrview[i]
+    x += 1
 
   factor = remap_id 
   if abs(start) > abs(factor):
