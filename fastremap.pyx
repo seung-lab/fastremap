@@ -28,7 +28,7 @@ import operator
 import numpy as np
 cimport numpy as cnp
 
-__version__ = '1.10.0'
+__version__ = '1.10.1'
 __VERSION__ = __version__
 
 ctypedef fused UINT:
