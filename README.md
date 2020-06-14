@@ -27,6 +27,11 @@ fastremap.ascontiguousarray(labels) # try to perform a physical in-place transpo
 fastremap.asfortranarray(labels) # try to perform a physical in-place transposition to F order
 
 minval, maxval = fastremap.minmax(labels) # faster version of (np.min(labels), np.max(labels))
+minidx, maxidx = fastremap.argminmax(labels) # faster than numpy for fortran arrays
+minidx = fastremap.argmin(labels) 
+maxidx = fastremap.argmax(labels) 
+
+loc = fastremap.ravel_index(int, shape, order='C') # counterpart to np.unravel_index
 
 # computes number of matching adjacent pixel pairs in an image
 num_pairs = fastremap.pixel_pairs(labels) 

@@ -473,3 +473,24 @@ def test_inverse_component_map(dtype_cc, dtype_p):
   assert mapping == { 1: [ 4, 5 ], 2: [ 4 ], 3: [ 6 ] }
 
   mapping = fastremap.inverse_component_map([], [])
+
+@pytest.mark.parametrize("order", ("C", "F"))
+def test_argminmax(order):
+  for _ in range(10):
+    labels = np.random.randint(0, 128 ** 3, size=(128,128,128))
+    if order == "C":
+      labels = np.ascontiguousarray(labels)
+    else:
+      labels = np.asfortranarray(labels)
+
+    fr_res = fastremap.argminmax(labels)
+    np_res = (np.argmin(labels), np.argmax(labels))
+
+    labels = labels.flatten()
+
+    assert labels[fr_res[0]] == labels[np_res[0]]
+    assert labels[fr_res[1]] == labels[np_res[1]]
+
+
+
+

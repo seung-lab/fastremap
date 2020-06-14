@@ -65,6 +65,89 @@ cdef extern from "ipt.hpp" namespace "pyipt":
     T* arr, size_t sx, size_t sy, size_t sz, size_t sw
   )
 
+def argmin(arr):
+  """
+  Returns an index into a flattened array containing 
+  a minimum value of the array. 
+  """
+  if arr.flags['C_CONTIGUOUS']:
+    return np.argmin(arr)
+  return argminmax(arr)[0]
+
+def argmax(arr):
+  """
+  Returns an index into a flattened array containing 
+  a maximum value of the array. 
+  """
+  if arr.flags['C_CONTIGUOUS']:
+    return np.argmax(arr)
+  return argminmax(arr)[1]
+
+def argminmax(arr):
+  """
+  Returns (argmin(arr), argmax(arr)) computed in a single pass.
+  Returns (None, None) if array is size zero.
+  """
+  res = _argminmax(reshape(arr, (arr.size,)))
+  if res == (None, None):
+    return res
+
+  if arr.flags['C_CONTIGUOUS']:
+    return res
+
+  lt = np.unravel_index(res[0], arr.shape, order='F')
+  rt = np.unravel_index(res[1], arr.shape, order='F')
+
+  return ravel_index(lt, arr.shape), ravel_index(rt, arr.shape)
+
+def _argminmax(cnp.ndarray[NUMBER, ndim=1] arr):
+  cdef size_t i = 0
+  cdef size_t size = arr.size
+
+  if size == 0:
+    return (None, None)
+
+  cdef NUMBER minval = arr[0]
+  cdef size_t minidx = 0
+  cdef NUMBER maxval = arr[0]
+  cdef size_t maxidx = 0
+
+  for i in range(1, size):
+    if minval > arr[i]:
+      minval = arr[i]
+      minidx = i
+    if maxval < arr[i]:
+      maxval = arr[i]
+      maxidx = i
+
+  return (minidx, maxidx)
+
+def ravel_index(coord, shape, order='C'):
+  """
+  Counterpart to np.unravel_index. 
+
+  Takes a coordinate and converts it into the
+  linear array index with the corresponding shape
+  in either C or Fortran order.
+
+  Returns: int
+  """
+  cdef size_t idx = 0
+  cdef size_t mult = 1
+  
+  cdef size_t i = 0
+  cdef size_t size = 1
+
+  if order == 'C':
+    shape = shape[::-1]
+    coord = coord[::-1]
+
+  for i, size in enumerate(shape):
+    idx += mult * coord[i]
+    mult *= size
+
+  return idx
+
 def minmax(arr):
   """
   Returns (min(arr), max(arr)) computed in a single pass.
