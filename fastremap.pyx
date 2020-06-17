@@ -562,6 +562,9 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   if not in_place and original_dtype == arr.dtype:
     arr = np.copy(arr, order=order)
 
+  if all([ k == v for k,v in table.items() ]) and preserve_missing_labels:
+    return arr
+
   arr = reshape(arr, (arr.size,))
   arr = _remap(arr, table, preserve_missing_labels)
   return reshape(arr, shape, order=order)
@@ -589,7 +592,9 @@ def _remap(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels)
   with nogil:
     if tbl.find(last_elem) == tbl.end():
       if not preserve_missing_labels:
-        raise KeyError("{} was not in the remap table.".format(last_elem))  
+        raise KeyError("{} was not in the remap table.".format(last_elem))
+      else:
+        last_remap_id = last_elem
     else:
       arrview[0] = tbl[last_elem]
       last_remap_id = arrview[0]
