@@ -562,6 +562,9 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   if not in_place and original_dtype == arr.dtype:
     arr = np.copy(arr, order=order)
 
+  if all([ k == v for k,v in table.items() ]) and preserve_missing_labels:
+    return arr
+
   arr = reshape(arr, (arr.size,))
   arr = _remap(arr, table, preserve_missing_labels)
   return reshape(arr, shape, order=order)
