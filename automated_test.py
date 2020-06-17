@@ -180,6 +180,15 @@ def test_remap_2d(dtype):
   result = fastremap.remap(np.copy(data), remap, preserve_missing_labels=True)
   assert np.all(result == [[10, 2, 15, 0, 5], [5, 0, 15, 2, 10]])
 
+def test_remap_broken():
+  labels = np.zeros((256, 256, 256), dtype=np.uint32)
+
+  labels[:50, :40, :30] = 2
+  labels[50:100, 40:100, 30:80] = 5
+
+  res = fastremap.remap(labels, {5:5}, preserve_missing_labels=True)
+  assert np.all(res == labels)
+
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize("in_place", [ True, False ])
 def test_mask(dtype, in_place):
