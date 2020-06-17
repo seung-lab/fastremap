@@ -1,6 +1,16 @@
 CHANGES
 =======
 
+1.10.2
+------
+
+* release(1.10.2): fixed bug in remap
+* fix: remap was not handling missing labels correctly (#23)
+* Revert "feat: adds argminmax, argmin, argmax, ravel\_index (#22)"
+* feat: adds argminmax, argmin, argmax, ravel\_index (#22)
+* chore: update changelog
+* chore: adds tox
+
 1.10.1
 ------
 
