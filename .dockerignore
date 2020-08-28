@@ -1,0 +1,6 @@
+.tox
+.pytest_cache
+build
+dist
+.git
+.eggs
