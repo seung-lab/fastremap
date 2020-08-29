@@ -676,6 +676,37 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
 
   return arr
 
+def point_cloud(cnp.ndarray[ALLINT, ndim=3] labels):
+  """
+  Converts a 3D array into a point cloud.
+
+  Returns: {
+    23432: [ (x,y,z), (x,y,z), ... ]
+  }
+  """
+  cdef size_t sx = labels.shape[0]
+  cdef size_t sy = labels.shape[1]
+  cdef size_t sz = labels.shape[2]
+
+  cdef size_t x = 0
+  cdef size_t y = 0
+  cdef size_t z = 0
+
+  cloud = defaultdict(list)
+
+  if labels.flags['F_CONTIGUOUS']:
+    for z in range(sz):
+      for y in range(sy):
+        for x in range(sx):    
+          cloud[labels[x,y,z]].append((x,y,z))
+  else:
+    for x in range(sx):
+      for y in range(sy):
+        for z in range(sz):
+          cloud[labels[x,y,z]].append((x,y,z))
+
+  return cloud
+
 def pixel_pairs(labels):
   """
   Computes the number of matching adjacent memory locations.
