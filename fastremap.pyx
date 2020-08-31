@@ -742,11 +742,11 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     counts = np.array([], dtype=np.uint32)
     index = np.array([], dtype=np.uint64)
   elif min_label >= 0 and max_label < <int64_t>voxels:
-    uniq, counts, index = unique_via_array(labels, max_label, return_index=return_index)
+    uniq, index, counts = unique_via_array(labels, max_label, return_index=return_index)
   elif (max_label - min_label) <= <int64_t>voxels:
-    uniq, counts, index = unique_via_shifted_array(labels, min_label, max_label, return_index=return_index)
+    uniq, index, counts = unique_via_shifted_array(labels, min_label, max_label, return_index=return_index)
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
-    uniq, counts, index = unique_via_renumber(labels, return_index=return_index)
+    uniq, index, counts = unique_via_renumber(labels, return_index=return_index)
   elif return_index:
     return np.unique(labels, return_index=return_index, return_counts=return_counts)
   else:
@@ -767,18 +767,18 @@ def unique_via_shifted_array(labels, min_label=None, max_label=None, return_inde
     min_label, max_label = minmax(labels)
 
   labels -= min_label
-  uniq, counts, idx = unique_via_array(labels, max_label - min_label + 1, return_index)
+  uniq, idx, counts = unique_via_array(labels, max_label - min_label + 1, return_index)
   labels += min_label
   uniq += min_label
-  return uniq, counts, idx
+  return uniq, idx, counts
 
 def unique_via_renumber(labels, return_index=False):
   dtype = labels.dtype
   labels, remap = renumber(labels)
   remap = { v:k for k,v in remap.items() }
-  uniq, counts, idx = unique_via_array(labels, max(remap.keys()), return_index)
+  uniq, idx, counts = unique_via_array(labels, max(remap.keys()), return_index)
   uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
-  return uniq, counts, idx
+  return uniq, idx, counts
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
@@ -874,9 +874,9 @@ def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, retur
         j += 1   
 
   if return_index:
-    return segids, cts, idx
+    return segids, idx, cts
   else:
-    return segids, cts, None
+    return segids, None, cts
 
 def transpose(arr):
   """
