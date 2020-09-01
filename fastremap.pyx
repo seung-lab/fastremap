@@ -706,11 +706,13 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   """
   Compute the sorted set of unique labels in the input array.
 
+  return_index: also return the index of the first detected occurance 
+    of each label.
   return_counts: also return the unique label frequency as an array.
 
   Returns: 
-    if return_counts:
-      return (unique_labels, unique_counts)
+    if return_counts or return_index:
+      return (unique_labels, unique_index, unique_counts)
     else:
       return unique_labels
   """
@@ -731,11 +733,21 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   cdef size_t voxels = labels.size
 
   shape = labels.shape
+  fortran_order = labels.flags['F_CONTIGUOUS']
+  labels_orig = labels
   labels = reshape(labels, (voxels,))
 
   cdef int64_t max_label
   cdef int64_t min_label
   min_label, max_label = minmax(labels)
+
+  def c_order_index(index):
+    if len(shape) > 1 and fortran_order:
+      return np.ravel_multi_index(
+        np.unravel_index(index, shape, order='F'), 
+        shape, order='C'
+      )
+    return index
 
   if voxels == 0:
     uniq = np.array([], dtype=labels.dtype)
@@ -748,13 +760,14 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
     uniq, index, counts = unique_via_renumber(labels, return_index=return_index)
   elif return_index:
-    return np.unique(labels, return_index=return_index, return_counts=return_counts)
+    return np.unique(labels_orig, return_index=return_index, return_counts=return_counts)
   else:
     uniq, counts = unique_via_sort(labels)
 
   results = [ uniq ]
   if return_index:
-    results.append(index)
+    # This is required to match numpy's behavior
+    results.append(c_order_index(index))
   if return_counts:
     results.append(counts)
 
