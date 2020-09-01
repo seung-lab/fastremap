@@ -1,6 +1,13 @@
 CHANGES
 =======
 
+1.11.0
+------
+
+* feat(unique): adds return\_index to high performance paths (#25)
+* chore: add .dockerignore
+* chore: update ChangeLog, tox.ini
+
 1.10.2
 ------
 
