@@ -17,7 +17,8 @@ Date: August 2018 - January 2020
 cimport cython
 from libc.stdint cimport (  
   uint8_t, uint16_t, uint32_t, uint64_t,
-  int8_t, int16_t, int32_t, int64_t
+  int8_t, int16_t, int32_t, int64_t,
+  uintptr_t
 )
 from libcpp.unordered_map cimport unordered_map
 
@@ -840,12 +841,12 @@ def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, retur
   cdef cnp.ndarray[uint32_t, ndim=1] counts = np.zeros( 
     (max_label+1,), dtype=np.uint32
   )
-  cdef cnp.ndarray[uint64_t, ndim=1] index
+  cdef cnp.ndarray[uintptr_t, ndim=1] index
   
-  cdef size_t sentinel = np.iinfo(np.uint64).max
+  cdef uintptr_t sentinel = np.iinfo(np.uintp).max
   if return_index:
     index = np.zeros( 
-      (max_label+1,), dtype=np.uint64
+      (max_label+1,), dtype=np.uintp
     ) + sentinel
 
   cdef size_t voxels = labels.shape[0]
@@ -869,7 +870,7 @@ def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, retur
   cdef cnp.ndarray[uint32_t, ndim=1] cts = np.zeros( 
     (real_size,), dtype=np.uint32
   )
-  cdef cnp.ndarray[uint64_t, ndim=1] idx
+  cdef cnp.ndarray[uintptr_t, ndim=1] idx
 
   cdef size_t j = 0
   for i in range(max_label + 1):
@@ -879,7 +880,7 @@ def unique_via_array(cnp.ndarray[ALLINT, ndim=1] labels, size_t max_label, retur
       j += 1
 
   if return_index:
-    idx = np.zeros( (real_size,), dtype=np.uint64)
+    idx = np.zeros( (real_size,), dtype=np.uintp)
     j = 0
     for i in range(max_label + 1):
       if counts[i] > 0:
