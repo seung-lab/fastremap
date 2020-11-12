@@ -1,9 +1,9 @@
 FROM quay.io/pypa/manylinux1_x86_64
 LABEL maintainer="William Silversmith"
 
-ADD . /fastremap
+ADD . /build
 
-WORKDIR "/fastremap"
+WORKDIR "/build"
 
 ENV CXX "g++"
 
