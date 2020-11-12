@@ -4,6 +4,7 @@ CHANGES
 1.11.0
 ------
 
+* release(1.11.0): unique(..., return\_index=True) now accelerated
 * feat(unique): adds return\_index to high performance paths (#25)
 * chore: add .dockerignore
 * chore: update ChangeLog, tox.ini
