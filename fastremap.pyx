@@ -554,6 +554,11 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   else:
     order = 'C'
 
+  cdef int64_t min_key = 0
+  cdef int64_t max_key = 0
+  cdef int64_t min_label = 0
+  cdef int64_t max_label = 0
+
   original_dtype = arr.dtype
   if len(table):
     min_label, max_label = min(table.values()), max(table.values())
@@ -567,13 +572,71 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
     return arr
 
   arr = reshape(arr, (arr.size,))
-  arr = _remap(arr, table, preserve_missing_labels)
+
+  if len(table):
+    min_key, max_key = min(table.keys()), max(table.keys())
+
+  cdef int64_t missing_label = max_label + 1
+  if min_label > 0:
+    missing_label = min_label - 1
+
+  if (
+    np.issubdtype(arr.dtype, np.integer) 
+    and min_key >= 0 
+    and max_key < arr.size 
+    and (max_label-min_label) < np.iinfo(arr.dtype).max
+  ):
+    arr = _remap_with_array(arr, table, max_key, preserve_missing_labels, missing_label)
+  else:
+    arr = _remap_with_map(arr, table, preserve_missing_labels)
   return reshape(arr, shape, order=order)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)          
-def _remap(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels):
+def _remap_with_array(
+  cnp.ndarray[ALLINT] arr, dict table, ALLINT max_key,
+  uint8_t preserve_missing_labels, ALLINT missing_label
+):
+  cdef size_t size = arr.size
+  
+  if size == 0:
+    return arr
+
+  cdef ALLINT[:] arrview = arr
+  cdef ALLINT[:] tbl = np.zeros((max_key+1,), dtype=arr.dtype)
+
+  if missing_label != 0:
+    tbl[:] = missing_label
+
+  cdef ALLINT k = 0
+  cdef ALLINT v = 0
+  for k, v in table.items():
+    tbl[k] = v
+
+  cdef size_t i = 0
+  cdef ALLINT elem = 0
+  
+  for i in range(size):
+    if arrview[i] > max_key or arrview[i] < 0:
+      elem = missing_label
+    else:
+      elem = tbl[arrview[i]]
+
+    if elem == missing_label:
+      if preserve_missing_labels:
+        continue
+      else:
+        raise KeyError("{} was not in the remap table.".format(elem))
+    
+    arrview[i] = elem
+
+  return arr
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)          
+def _remap_with_map(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels):
   cdef NUMBER[:] arrview = arr
   cdef size_t i = 0
   cdef size_t size = arr.size
