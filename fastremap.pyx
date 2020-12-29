@@ -583,7 +583,7 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   if (
     np.issubdtype(arr.dtype, np.integer) 
     and min_key >= 0 
-    and max_key < arr.size 
+    and (max_key < arr.size or max_key < 125000000)
     and (max_label-min_label) < np.iinfo(arr.dtype).max
   ):
     arr = _remap_with_array(arr, table, max_key, preserve_missing_labels, missing_label)
