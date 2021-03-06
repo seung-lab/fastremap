@@ -111,9 +111,9 @@ def renumber(arr, start=1, preserve_zero=True, in_place=False):
   if arr.size == 0:
     return arr, {}
 
-  if arr.dtype == np.bool and preserve_zero:
+  if arr.dtype == bool and preserve_zero:
     return arr, { 0: 0, 1: start }
-  elif arr.dtype == np.bool:
+  elif arr.dtype == bool:
     arr = arr.view(np.uint8)
 
   cdef int nbytes = np.dtype(arr.dtype).itemsize
@@ -912,7 +912,7 @@ def transpose(arr):
   cdef int nbytes = np.dtype(arr.dtype).itemsize
 
   dtype = arr.dtype
-  if arr.dtype == np.bool:
+  if arr.dtype == bool:
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
@@ -951,7 +951,7 @@ def asfortranarray(arr):
   cdef int nbytes = np.dtype(arr.dtype).itemsize
 
   dtype = arr.dtype
-  if arr.dtype == np.bool:
+  if arr.dtype == bool:
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
@@ -999,7 +999,7 @@ def ascontiguousarray(arr):
   cdef int nbytes = np.dtype(arr.dtype).itemsize
 
   dtype = arr.dtype
-  if arr.dtype == np.bool:
+  if arr.dtype == bool:
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
