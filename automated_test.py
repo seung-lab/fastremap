@@ -36,7 +36,7 @@ def test_1d_renumber():
     assert np.all(data2 == [1,2,3,4,5,6,7,0])
     assert len(remapdict) > 0
 
-  data = np.arange(8).astype(np.bool)
+  data = np.arange(8).astype(bool)
   data = np.flip(data)
 
   data2 = np.copy(data)
@@ -222,7 +222,7 @@ def test_mask_except(dtype, in_place):
       20: 1,
     }
 
-@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ])
+@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64, bool, np.complex64 ])
 @pytest.mark.parametrize("dim", [1, 4, 7, 9, 27, 31, 100, 127, 200] )
 def test_asfortranarray(dtype, dim):
   x = np.arange(dim**1).reshape((dim)).astype(dtype)
@@ -255,7 +255,7 @@ def test_asfortranarray(dtype, dim):
     assert np.all(np.asfortranarray(x) == fastremap.asfortranarray(y))
 
 
-@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64, np.bool, np.complex64 ])
+@pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64, bool, np.complex64 ])
 @pytest.mark.parametrize("dim", [1, 4, 7, 9, 27, 31, 100, 127, 200] )
 def test_ascontiguousarray(dtype, dim):
   x = np.arange(dim**2).reshape((dim,dim), order='F').astype(dtype)
