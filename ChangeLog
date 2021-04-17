@@ -1,6 +1,26 @@
 CHANGES
 =======
 
+* chore: support only py36 - py39
+* chore: drop py27 from build
+* fix(inverse\_component\_map): not checking component for continue cond
+
+1.11.2
+------
+
+* release(1.11.2): fix numpy deprecation of np.bool
+* fix: further fix numpy deprecation of np.bool
+* chore: fix numpy 1.20 deprecation of np.bool in favor of bool
+* chore: update setup.cfg
+
+1.11.1
+------
+
+* release(1.11.1): python39 support
+* chore: make build\_linux.sh script generic
+* chore: add updated build system
+* fix: pbr couldn't see git repo
+
 1.11.0
 ------
 
