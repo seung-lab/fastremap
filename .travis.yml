@@ -1,23 +1,17 @@
 language: python
 python:
-- '2.7'
-- '3.5'
 - '3.6'
-- '3.7-dev'
+- '3.7'
+- '3.8'
+- '3.9'
 before_install:
-- PYTHON_MAJOR_VERSION=`echo $TRAVIS_PYTHON_VERSION | head -c 1`
-- if [[ $PYTHON_MAJOR_VERSION == 3 ]]; then sudo apt-get install python3-pip; fi
+- sudo apt-get install python3-pip
 install:
-- if [[ $PYTHON_MAJOR_VERSION == 2 ]]; then virtualenv venv; fi
-- if [[ $PYTHON_MAJOR_VERSION == 3 ]]; then virtualenv -p python3 venv; fi
+- virtualenv -p python3 venv
 - source venv/bin/activate
-- if [[ $PYTHON_MAJOR_VERSION == 2 ]]; then pip install -r requirements.txt -r requirements_dev.txt; fi
-- if [[ $PYTHON_MAJOR_VERSION == 3 ]]; then pip3 install -r requirements.txt -r requirements_dev.txt; fi
-- if [[ $PYTHON_MAJOR_VERSION == 2 ]]; then pip install -e .; fi
-- if [[ $PYTHON_MAJOR_VERSION == 3 ]]; then pip3 install -e .; fi
-- if [[ $PYTHON_MAJOR_VERSION == 2 ]]; then python setup.py sdist; fi
-- if [[ $PYTHON_MAJOR_VERSION == 3 ]]; then python3 setup.py sdist bdist_wheel --universal; fi
+- pip3 install -r requirements.txt -r requirements_dev.txt
+- pip3 install -e .
+- python3 setup.py sdist bdist_wheel --universal
 script:
-- if [[ $PYTHON_MAJOR_VERSION == 2 ]]; then python -m pytest -v -x automated_test.py; fi
-- if [[ $PYTHON_MAJOR_VERSION == 3 ]]; then python3 -m pytest -v -x automated_test.py; fi
+- python3 -m pytest -v -x automated_test.py
 
