@@ -1165,3 +1165,89 @@ def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
 
   return arr
 
+def foreground(arr):
+  """Returns the number of non-zero voxels in an array."""
+  arr = reshape(arr, (arr.size,))
+  return _foreground(arr)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _foreground(cnp.ndarray[ALLINT, ndim=1] arr):
+  cdef size_t i = 0
+  cdef size_t sz = arr.size
+  cdef size_t n_foreground = 0
+  for i in range(sz):
+    n_foreground += <size_t>(arr[i] != 0)
+  return n_foreground
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def point_cloud(cnp.ndarray[ALLINT, ndim=3] arr):
+  """
+  point_cloud(arr)
+
+  Given a 3D integer image, return a mapping from
+  labels to their (x,y,z) position in the image.
+
+  Zero is considered a background label.
+
+  Returns: ndarray(N, 3, dtype=uint16)
+  """
+  cdef size_t n_foreground = foreground(arr)
+
+  cdef size_t sx = arr.shape[0]
+  cdef size_t sy = arr.shape[1]
+  cdef size_t sz = arr.shape[2]
+
+  if n_foreground == 0:
+    return {}
+
+  cdef cnp.ndarray[ALLINT, ndim=1] ptlabel = np.zeros((n_foreground,), dtype=arr.dtype)
+  cdef cnp.ndarray[uint16_t, ndim=2] ptcloud = np.zeros((n_foreground, 3), dtype=np.uint16)
+
+  cdef size_t i = 0
+  cdef size_t j = 0
+  cdef size_t k = 0
+  
+  cdef size_t idx = 0
+  for i in range(sx):
+    for j in range(sy):
+      for k in range(sz):
+        if arr[i,j,k] != 0:
+          ptlabel[idx] = arr[i,j,k]
+          ptcloud[idx,0] = i
+          ptcloud[idx,1] = j
+          ptcloud[idx,2] = k
+          idx += 1
+
+  sortidx = ptlabel.argsort()
+  ptlabel = ptlabel[sortidx]
+  ptcloud = ptcloud[sortidx]
+  del sortidx
+
+  ptcloud_by_label = {}
+  if n_foreground == 1:
+    ptcloud_by_label[ptlabel[0]] = ptcloud
+    return ptcloud_by_label
+
+  cdef size_t start = 0
+  cdef size_t end = 0
+  for end in range(1, n_foreground):
+    if ptlabel[end] != ptlabel[end - 1]:
+      ptcloud_by_label[ptlabel[end - 1]] = ptcloud[start:end,:]
+      start = end
+
+  ptcloud_by_label[ptlabel[end]] = ptcloud[start:,:]
+
+  return ptcloud_by_label
+
+
+
+
+
+
+
+
+
