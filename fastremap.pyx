@@ -182,6 +182,10 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   Return: a renumbered array, dict with remapping of oldval => newval
   """
   cdef unordered_map[NUMBER, NUMBER] remap_dict
+
+  if arr.size == 0:
+    return refit(np.zeros((0,), dtype=arr.dtype), 0), remap_dict
+
   if preserve_zero:
     remap_dict[0] = 0
 
@@ -190,10 +194,10 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   cdef NUMBER remap_id = start
   cdef NUMBER elem
 
-  cdef NUMBER last_elem = 0
-  cdef NUMBER last_remap_id = 0
-  if not preserve_zero:
-    last_remap_id = start
+  # some value that isn't the first value
+  # and won't cause an overflow
+  cdef NUMBER last_elem = <NUMBER>(~<uint64_t>arr[0])
+  cdef NUMBER last_remap_id = start
 
   cdef size_t size = arr.size
   cdef size_t i = 0

@@ -129,6 +129,23 @@ def test_3d_renumber_dtype_shift():
   assert np.dtype(big.dtype).itemsize <= 4
   assert np.dtype(big.dtype).itemsize > 1
 
+def test_renumber_no_preserve_zero():
+  data = np.array([
+    [0, 1],
+    [1, 2]
+  ])
+  gt = np.array([
+    [0, 1],
+    [1, 2]
+  ])
+
+  res, remap = fastremap.renumber(data, start=0, preserve_zero=False)
+  print(res)
+  print(remap)
+  assert remap == { 0: 0, 1: 1, 2: 2 }
+  assert np.all(res == gt)
+
+
 @pytest.mark.parametrize("dtype", list(DTYPES) + [ np.float32, np.float64 ])
 def test_remap_1d(dtype):
   empty = fastremap.remap([], {})
