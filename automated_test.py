@@ -520,3 +520,40 @@ def test_inverse_component_map(dtype_cc, dtype_p):
   assert mapping == {1: [4, 2, 5, 6]}
 
   mapping = fastremap.inverse_component_map([], [])
+
+def test_point_cloud():
+  x = np.ones((2,2,2), dtype=np.uint8)
+  ptc = fastremap.point_cloud(x)
+  assert len(ptc) == 1
+
+  gt = np.array([
+    [0, 0, 0],
+    [0, 0, 1],
+    [0, 1, 0],
+    [0, 1, 1],
+    [1, 0, 0],
+    [1, 0, 1],
+    [1, 1, 0],
+    [1, 1, 1],
+  ])
+  assert np.all(ptc[1] == gt)
+
+  x[0,0,0] = 2
+  ptc = fastremap.point_cloud(x)
+  assert len(ptc) == 2
+  assert np.all(ptc[1] == gt[1:,:])
+  assert np.all(ptc[2] == gt[:1,:])
+
+  x[1,1,1] = 3
+  ptc = fastremap.point_cloud(x)
+  assert len(ptc) == 3
+  assert np.all(ptc[1] == gt[1:7,:])
+  assert np.all(ptc[2] == gt[:1,:])
+  assert np.all(ptc[3] == gt[7:,:])  
+
+  x = np.ones((0,0,0), dtype=np.uint8)
+  ptc = fastremap.point_cloud(x)
+  assert len(ptc) == 0
+
+  
+
