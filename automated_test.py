@@ -551,4 +551,9 @@ def test_point_cloud():
   assert np.all(ptc[2] == gt[:1,:])
   assert np.all(ptc[3] == gt[7:,:])  
 
+  x = np.ones((0,0,0), dtype=np.uint8)
+  ptc = fastremap.point_cloud(x)
+  assert len(ptc) == 0
+
+  
 
