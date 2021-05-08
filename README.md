@@ -9,6 +9,7 @@ import fastremap
 
 uniq, cts = fastremap.unique(labels, return_counts=True) # may be much faster than np.unique
 labels, remapping = fastremap.renumber(labels, in_place=True) # relabel values from 1 and refit data type
+ptc = fastremap.point_cloud(labels) # dict of coordinates by label
 
 labels = fastremap.refit(labels) # resize the data type of the array to fit extrema
 labels = fastremap.refit(labels, value=-35) # resize the data type to fit the value provided
@@ -29,7 +30,8 @@ fastremap.asfortranarray(labels) # try to perform a physical in-place transposit
 minval, maxval = fastremap.minmax(labels) # faster version of (np.min(labels), np.max(labels))
 
 # computes number of matching adjacent pixel pairs in an image
-num_pairs = fastremap.pixel_pairs(labels) 
+num_pairs = fastremap.pixel_pairs(labels)  
+n_foreground = fastremap.foreground(labels) # number of nonzero voxels
 ```
 
 ## All Available Functions 
@@ -47,7 +49,8 @@ num_pairs = fastremap.pixel_pairs(labels)
 - **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy algorithm otherwise.
 - **minmax:** Compute the min and max of an array in one pass.
 - **pixel_pairs:** Computes the number of adjacent matching memory locations in an image. A quick heuristic for understanding if the image statistics are roughly similar to a connectomics segmentation.
-
+- **foreground:** Count the number of non-zero voxels rapidly.
+- **point_cloud:** Get the X,Y,Z locations of each foreground voxel grouped by label.
 
 ## `pip` Installation
 
