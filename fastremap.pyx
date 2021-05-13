@@ -746,7 +746,10 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
 
   cdef int64_t max_label
   cdef int64_t min_label
-  min_label, max_label = minmax(labels)
+  if voxels > 0:
+    min_label, max_label = minmax(labels)
+  else:
+    min_label, max_label = (0, 0)
 
   def c_order_index(index):
     if len(shape) > 1 and fortran_order:

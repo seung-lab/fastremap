@@ -404,6 +404,8 @@ def test_unique(order):
       return np.asfortranarray(arr)
     return np.ascontiguousarray(arr)
 
+  assert len(fastremap.unique(np.array([], dtype=np.uint8))) == 0
+
   # array_unique
   labels = reorder(np.random.randint(0, 500, size=(128,128,128)))
   uniq_np, idx_np, cts_np = np.unique(labels, return_counts=True, return_index=True)
