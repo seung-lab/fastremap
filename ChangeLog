@@ -1,6 +1,26 @@
 CHANGES
 =======
 
+* chore: use oldest-supported-numpy when building wheels
+
+1.12.1
+------
+
+* release(1.12.1): unique accepts empty arrays
+* fix: fastremap.unique doesn't accept empty arrays
+
+1.12.0
+------
+
+* release(1.12.0): new point\_cloud and foreground functions
+* feat(point\_cloud): new point\_cloud and foreground functions (#28)
+* fix(renumber): preserve\_zero=False w/ arrays starting with 0
+
+1.11.4
+------
+
+* release(1.11.4): fixes issue with inverse\_component\_map
+* chore: update changelog
 * chore: support only py36 - py39
 * chore: drop py27 from build
 * fix(inverse\_component\_map): not checking component for continue cond
