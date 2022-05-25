@@ -11,7 +11,7 @@ constrained environments when format shifting.
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - Februrary 2022
+Date: August 2018 - May 2022
 """
 
 cimport cython
