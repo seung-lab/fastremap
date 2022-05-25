@@ -11,7 +11,7 @@ constrained environments when format shifting.
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - January 2020
+Date: August 2018 - May 2022
 """
 
 cimport cython
@@ -20,7 +20,7 @@ from libc.stdint cimport (
   int8_t, int16_t, int32_t, int64_t,
   uintptr_t
 )
-from libcpp.unordered_map cimport unordered_map
+cimport fastremap
 
 from collections import defaultdict
 from functools import reduce
@@ -181,10 +181,12 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
 
   Return: a renumbered array, dict with remapping of oldval => newval
   """
-  cdef unordered_map[NUMBER, NUMBER] remap_dict
+  cdef flat_hash_map[NUMBER, NUMBER] remap_dict
 
   if arr.size == 0:
-    return refit(np.zeros((0,), dtype=arr.dtype), 0), remap_dict
+    return refit(np.zeros((0,), dtype=arr.dtype), 0), {}
+
+  remap_dict.reserve(1024)
 
   if preserve_zero:
     remap_dict[0] = 0
@@ -223,7 +225,7 @@ def _renumber(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, int64_t start=1, prese
   if abs(start) > abs(factor):
     factor = start
 
-  return refit(arr, factor), remap_dict
+  return refit(arr, factor), { k:v for k,v in remap_dict }
 
 def refit(arr, value=None, increase_only=False, exotics=False):
   """
@@ -392,7 +394,7 @@ def _mask_except(cnp.ndarray[ALLINT] arr, list labels, ALLINT value):
   if size == 0:
     return arr
 
-  cdef unordered_map[ALLINT, ALLINT] tbl 
+  cdef flat_hash_map[ALLINT, ALLINT] tbl 
 
   for label in labels:
     tbl[label] = label 
@@ -588,7 +590,21 @@ def _remap(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels)
   if size == 0:
     return arr
 
-  cdef unordered_map[NUMBER, NUMBER] tbl 
+  # fast path for remapping only a single label
+  # e.g. for masking something out
+  cdef NUMBER before = 0
+  cdef NUMBER after = 0
+  if preserve_missing_labels and len(table) == 1:
+    before = next(iter(table.keys()))
+    after = table[before]
+    if before == after:
+      return arr
+    for i in range(size):
+      if arr[i] == before:
+        arr[i] = after
+    return arr
+    
+  cdef flat_hash_map[NUMBER, NUMBER] tbl 
 
   for k, v in table.items():
     tbl[k] = v 
@@ -658,7 +674,7 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
   cdef ALLINT[:] keyview = keys
   cdef ALLINT[:] valview = vals
   cdef ALLINT[:] arrview = arr
-  cdef unordered_map[ALLINT, ALLINT] remap_dict
+  cdef flat_hash_map[ALLINT, ALLINT] remap_dict
 
   assert keys.size == vals.size
 
