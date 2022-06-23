@@ -744,6 +744,9 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     else:
       return unique_labels
   """
+  if not isinstance(labels, np.ndarray):
+    labels = np.array(labels)
+
   if not np.issubdtype(labels.dtype, np.integer):
     raise TypeError("fastremap.unique only supports integer types.")
 

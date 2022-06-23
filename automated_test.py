@@ -483,6 +483,11 @@ def test_unique(order):
   assert np.all(uniq_np == uniq_fr)
   assert np.all(cts_np == cts_fr)
 
+  labels = [ 1, 1, 2, 3, 2, 4, 3 ]
+  uniq = fastremap.unique(labels)
+  assert np.all(uniq == np.array([1,2,3,4]))
+
+
 def test_renumber_remap():
   labels = np.random.randint(-500, 500, size=(128,128,128)).astype(np.int64)
   new_labels, remap = fastremap.renumber(labels, in_place=False)
