@@ -524,7 +524,7 @@ def test_inverse_component_map(dtype_cc, dtype_p):
   assert mapping == {1: [4, 5], 3: [6]}
 
   mapping = fastremap.inverse_component_map([ 1, 1, 1, 1 ], [ 4, 2, 5, 6 ]) 
-  assert mapping == {1: [4, 2, 5, 6]}
+  assert mapping == {1: [2, 4, 5, 6]}
 
   mapping = fastremap.inverse_component_map([], [])
 
