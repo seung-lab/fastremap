@@ -519,18 +519,23 @@ def _inverse_component_map(
   if size == 0:
     return {}
 
-  remap = defaultdict(list)
+  remap = defaultdict(set)
   cdef size_t i = 0
 
   cdef ALLINT last_label = parent_labels[0]
   cdef ALLINT_2 last_component = component_labels[0]
-  remap[parent_labels[0]].append(component_labels[0])
+  remap[parent_labels[0]].add(component_labels[0])
   for i in range(size):
     if last_label == parent_labels[i] and last_component == component_labels[i]:
       continue
-    remap[parent_labels[i]].append(component_labels[i])
+    remap[parent_labels[i]].add(component_labels[i])
     last_label = parent_labels[i]
     last_component = component_labels[i]
+
+  # for backwards compatibility
+  for key in remap:
+    remap[key] = list(remap[key])
+  remap.default_factory = list
 
   return remap
 
