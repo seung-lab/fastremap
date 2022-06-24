@@ -32,3 +32,7 @@ jobs:
         env:
           CIBW_ARCHS_LINUX: ${{matrix.arch}}
           CIBW_BEFORE_BUILD: pip install oldest-supported-numpy
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
