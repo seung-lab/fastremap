@@ -91,6 +91,15 @@ def _minmax(cnp.ndarray[NUMBER, ndim=1] arr):
 
   return minval, maxval
 
+def match_array_orders(*arrs, order="K"):
+  if len(arrs) == 0:
+    return []
+
+  if order == "C" or (order == "K" and arrs[0].flags.c_contiguous):
+    return [ np.ascontiguousarray(arr) for arr in arrs ]
+  else:
+    return [ np.asfortranarray(arr) for arr in arrs ]
+
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
   renumber(arr, start=1, preserve_zero=True, in_place=False)
@@ -448,6 +457,10 @@ def component_map(component_labels, parent_labels):
 
   shape = component_labels.shape 
 
+  component_labels, parent_labels = match_array_orders(
+    component_labels, parent_labels
+  )
+
   component_labels = reshape(component_labels, (component_labels.size,))
   parent_labels = reshape(parent_labels, (parent_labels.size,))
   return _component_map(component_labels, parent_labels)
@@ -503,7 +516,9 @@ def inverse_component_map(parent_labels, component_labels):
     ))
 
   shape = component_labels.shape 
-
+  component_labels, parent_labels = match_array_orders(
+    component_labels, parent_labels
+  )
   component_labels = reshape(component_labels, (component_labels.size,))
   parent_labels = reshape(parent_labels, (parent_labels.size,))
   return _inverse_component_map(parent_labels, component_labels)
