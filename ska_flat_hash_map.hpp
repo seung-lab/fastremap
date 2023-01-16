@@ -39,7 +39,7 @@
 
 // Check GCC
 #if __GNUC__
-  #if __x86_64__ || __ppc64__ || __aarch64__
+  #if __x86_64__ || __ppc64__ || __aarch64__ || __LP64__
     #define ENV64BIT
   #else
     #define ENV32BIT
