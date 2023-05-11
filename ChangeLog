@@ -1,6 +1,33 @@
 CHANGES
 =======
 
+1.13.4
+------
+
+* release(1.13.4): easier installation
+* Delayed numpy import during setup (#33)
+* fix: handle all LP64 platforms generically (#32)
+
+1.13.3
+------
+
+* release(1.13.3): rerelease of binaries
+
+1.13.2
+------
+
+* release(1.13.2): (inverse\_)component\_map accepts non-aligned inputs
+* fix: component\_map and inverse\_component\_map accept non-aligned inputs
+
+1.13.1
+------
+
+* fixtest: elements in inv\_component\_map are now sorted
+* release(1.13.1): unique accepts lists, inverse\_component\_map uniq vals
+* feat: unique accepts lists
+* fix: remove duplicates from inverse\_component\_map
+* build: update build system with aarch64 and py310
+
 1.13.0
 ------
 

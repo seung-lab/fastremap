@@ -2,7 +2,6 @@
 import setuptools
 import sys
 
-
 class NumpyImport:
   def __repr__(self):
     import numpy as np
@@ -24,7 +23,7 @@ if sys.platform == 'darwin':
 
 setuptools.setup(
   setup_requires=['pbr', 'numpy'],
-  python_requires="~=3.6",  # >= 3.6 < 4.0
+  python_requires=">=3.7,<4.0",
   pbr=True,
   ext_modules=[
     setuptools.Extension(
