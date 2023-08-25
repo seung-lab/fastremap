@@ -1,3 +1,4 @@
+# cython: language_level=3
 from libcpp.utility cimport pair
 
 cdef extern from "ska_flat_hash_map.hpp" namespace "ska" nogil:

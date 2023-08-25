@@ -28,10 +28,11 @@ setuptools.setup(
   ext_modules=[
     setuptools.Extension(
       'fastremap',
-      sources=['fastremap.cpp'],
+      sources=['fastremap.pyx'],
       depends=[],
       language='c++',
-      include_dirs=[NumpyImport()],
+      language_level=3,
+      include_dirs=[str(NumpyImport())],
       extra_compile_args=extra_compile_args,
     )
   ],
