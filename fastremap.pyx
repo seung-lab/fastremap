@@ -1300,6 +1300,9 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
   shape = np.array((image.shape[0], image.shape[1], image.shape[2]), dtype=float)
   grid_size = np.ceil(shape / chunk_size).astype(int)
 
+  if np.any(np.remainder(shape, chunk_size)):
+    raise ValueError(f"chunk_size ({chunk_size}) must evenly divide the image shape ({shape}).")
+
   chunk_array_size = int(reduce(operator.mul, chunk_size))
   chunk_size = chunk_size.astype(int)
   shape = shape.astype(int)
@@ -1347,7 +1350,7 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
     for i in range(num_grid)
   ]
 
-  cdef cnp.ndarray[NUMBER, ndim=1] img8 = reshape(image, (image.size,))
+  cdef cnp.ndarray[NUMBER, ndim=1] img = reshape(image, (image.size,))
 
   if image.flags.f_contiguous:
     for gz in range(sgz):
@@ -1360,7 +1363,7 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
               img_i = cx * gx + sx * ((cy * gy + y) + sy * (cz * gz + z))
               idx = cx * (y + cy * z)
               for x in range(cx):
-                arr[idx + x] = img8[img_i + x]
+                arr[idx + x] = img[img_i + x]
   else:
     for gz in range(sgz):
       for z in range(cz):
@@ -1369,9 +1372,9 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
             gi = gx + sgx * (gy + sgy * gz)
             arr = array_grid[gi]
             for y in range(cy):
-              img_i = cz * gz + sz * ((cy * gy + y) + sy * (cx * gx + x))
+              img_i = z + cz * gz + sz * ((cy * gy + y) + sy * (cx * gx))
               idx = cx * (y + cy * z)
               for x in range(cx):
-                arr[idx + x] = img8[img_i + sxy * x]
+                arr[idx + x] = img[img_i + sxy * x]
 
   return [ bytes(memoryview(ar)) for ar in array_grid ]
