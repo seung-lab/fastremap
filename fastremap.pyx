@@ -21,7 +21,7 @@ from libc.stdint cimport (
   int8_t, int16_t, int32_t, int64_t,
   uintptr_t
 )
-# cimport fastremap
+cimport fastremap
 
 from collections import defaultdict
 from functools import reduce
@@ -58,14 +58,14 @@ ctypedef fused COMPLEX_NUMBER:
   NUMBER
   float complex 
 
-# cdef extern from "ipt.hpp" namespace "pyipt":
-#   cdef void _ipt2d[T](T* arr, size_t sx, size_t sy)
-#   cdef void _ipt3d[T](
-#     T* arr, size_t sx, size_t sy, size_t sz
-#   )
-#   cdef void _ipt4d[T](
-#     T* arr, size_t sx, size_t sy, size_t sz, size_t sw
-#   )
+cdef extern from "ipt.hpp" namespace "pyipt":
+  cdef void _ipt2d[T](T* arr, size_t sx, size_t sy)
+  cdef void _ipt3d[T](
+    T* arr, size_t sx, size_t sy, size_t sz
+  )
+  cdef void _ipt4d[T](
+    T* arr, size_t sx, size_t sy, size_t sz, size_t sw
+  )
 
 def minmax(arr):
   """
@@ -941,356 +941,361 @@ def reshape(arr, shape, order=None):
 #   else:
 #     return segids, None, cts
 
-# def transpose(arr):
-#   """
-#   transpose(arr)
+def transpose(arr):
+  """
+  transpose(arr)
 
-#   For up to four dimensional matrices, perform in-place transposition. 
-#   Square matrices up to three dimensions are faster than numpy's out-of-place
-#   algorithm. Default to the out-of-place implementation numpy uses for cases
-#   that aren't specially handled.
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
 
-#   Returns: transposed numpy array
-#   """
-#   if not arr.flags['F_CONTIGUOUS'] and not arr.flags['C_CONTIGUOUS']:
-#     arr = np.copy(arr, order='C')
+  Returns: transposed numpy array
+  """
+  if not arr.flags['F_CONTIGUOUS'] and not arr.flags['C_CONTIGUOUS']:
+    arr = np.copy(arr, order='C')
 
-#   shape = arr.shape
-#   strides = arr.strides
+  shape = arr.shape
+  strides = arr.strides
 
-#   cdef int nbytes = np.dtype(arr.dtype).itemsize
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
 
-#   dtype = arr.dtype
-#   if arr.dtype == bool:
-#     arr = arr.view(np.uint8)
+  dtype = arr.dtype
+  if arr.dtype == bool:
+    arr = arr.view(np.uint8)
 
-#   if arr.ndim == 2:
-#     arr = ipt2d(arr)
-#     return arr.view(dtype)
-#   elif arr.ndim == 3:
-#     arr = ipt3d(arr)
-#     return arr.view(dtype)
-#   elif arr.ndim == 4:
-#     arr = ipt4d(arr)
-#     return arr.view(dtype)
-#   else:
-#     return arr.T
+  if arr.ndim == 2:
+    arr = ipt2d(arr)
+    return arr.view(dtype)
+  elif arr.ndim == 3:
+    arr = ipt3d(arr)
+    return arr.view(dtype)
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    return arr.view(dtype)
+  else:
+    return arr.T
 
-# def asfortranarray(arr):
-#   """
-#   asfortranarray(arr)
+def asfortranarray(arr):
+  """
+  asfortranarray(arr)
 
-#   For up to four dimensional matrices, perform in-place transposition. 
-#   Square matrices up to three dimensions are faster than numpy's out-of-place
-#   algorithm. Default to the out-of-place implementation numpy uses for cases
-#   that aren't specially handled.
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
 
-#   Returns: transposed numpy array
-#   """
-#   if arr.flags['F_CONTIGUOUS']:
-#     return arr
-#   elif not arr.flags['C_CONTIGUOUS']:
-#     return np.asfortranarray(arr)
-#   elif arr.ndim == 1:
-#     return arr 
+  Returns: transposed numpy array
+  """
+  if arr.flags['F_CONTIGUOUS']:
+    return arr
+  elif not arr.flags['C_CONTIGUOUS']:
+    return np.asfortranarray(arr)
+  elif arr.ndim == 1:
+    return arr 
 
-#   shape = arr.shape
-#   strides = arr.strides
+  shape = arr.shape
+  strides = arr.strides
 
-#   cdef int nbytes = np.dtype(arr.dtype).itemsize
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
 
-#   dtype = arr.dtype
-#   if arr.dtype == bool:
-#     arr = arr.view(np.uint8)
+  dtype = arr.dtype
+  if arr.dtype == bool:
+    arr = arr.view(np.uint8)
 
-#   if arr.ndim == 2:
-#     arr = ipt2d(arr)
-#     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
-#     return arr.view(dtype)
-#   elif arr.ndim == 3:
-#     arr = ipt3d(arr)
-#     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
-#     return arr.view(dtype)
-#   elif arr.ndim == 4:
-#     arr = ipt4d(arr)
-#     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
-#       strides=(
-#         nbytes, 
-#         shape[0] * nbytes, 
-#         shape[0] * shape[1] * nbytes, 
-#         shape[0] * shape[1] * shape[2] * nbytes
-#       ))
-#     return arr.view(dtype)
-#   else:
-#     return np.asfortranarray(arr)
+  if arr.ndim == 2:
+    arr = ipt2d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
+    return arr.view(dtype)
+  elif arr.ndim == 3:
+    arr = ipt3d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
+    return arr.view(dtype)
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
+      strides=(
+        nbytes, 
+        shape[0] * nbytes, 
+        shape[0] * shape[1] * nbytes, 
+        shape[0] * shape[1] * shape[2] * nbytes
+      ))
+    return arr.view(dtype)
+  else:
+    return np.asfortranarray(arr)
 
-# def ascontiguousarray(arr):
-#   """
-#   ascontiguousarray(arr)
+def ascontiguousarray(arr):
+  """
+  ascontiguousarray(arr)
 
-#   For up to four dimensional matrices, perform in-place transposition. 
-#   Square matrices up to three dimensions are faster than numpy's out-of-place
-#   algorithm. Default to the out-of-place implementation numpy uses for cases
-#   that aren't specially handled.
+  For up to four dimensional matrices, perform in-place transposition. 
+  Square matrices up to three dimensions are faster than numpy's out-of-place
+  algorithm. Default to the out-of-place implementation numpy uses for cases
+  that aren't specially handled.
 
-#   Returns: transposed numpy array
-#   """
-#   if arr.flags['C_CONTIGUOUS']:
-#     return arr
-#   elif not arr.flags['F_CONTIGUOUS']:
-#     return np.ascontiguousarray(arr)
-#   elif arr.ndim == 1:
-#     return arr 
+  Returns: transposed numpy array
+  """
+  if arr.flags['C_CONTIGUOUS']:
+    return arr
+  elif not arr.flags['F_CONTIGUOUS']:
+    return np.ascontiguousarray(arr)
+  elif arr.ndim == 1:
+    return arr 
 
-#   shape = arr.shape
-#   strides = arr.strides
+  shape = arr.shape
+  strides = arr.strides
 
-#   cdef int nbytes = np.dtype(arr.dtype).itemsize
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
 
-#   dtype = arr.dtype
-#   if arr.dtype == bool:
-#     arr = arr.view(np.uint8)
+  dtype = arr.dtype
+  if arr.dtype == bool:
+    arr = arr.view(np.uint8)
 
-#   if arr.ndim == 2:
-#     arr = ipt2d(arr)
-#     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
-#     return arr.view(dtype)
-#   elif arr.ndim == 3:
-#     arr = ipt3d(arr)
-#     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
-#         shape[2] * shape[1] * nbytes, 
-#         shape[2] * nbytes, 
-#         nbytes,
-#       ))
-#     return arr.view(dtype)
-#   elif arr.ndim == 4:
-#     arr = ipt4d(arr)
-#     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
-#       strides=(
-#         shape[3] * shape[2] * shape[1] * nbytes,
-#         shape[3] * shape[2] * nbytes, 
-#         shape[3] * nbytes, 
-#         nbytes, 
-#       ))
-#     return arr.view(dtype)
-#   else:
-#     return np.ascontiguousarray(arr)
+  if arr.ndim == 2:
+    arr = ipt2d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
+    return arr.view(dtype)
+  elif arr.ndim == 3:
+    arr = ipt3d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
+        shape[2] * shape[1] * nbytes, 
+        shape[2] * nbytes, 
+        nbytes,
+      ))
+    return arr.view(dtype)
+  elif arr.ndim == 4:
+    arr = ipt4d(arr)
+    arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
+      strides=(
+        shape[3] * shape[2] * shape[1] * nbytes,
+        shape[3] * shape[2] * nbytes, 
+        shape[3] * nbytes, 
+        nbytes, 
+      ))
+    return arr.view(dtype)
+  else:
+    return np.ascontiguousarray(arr)
 
-# def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
-#   cdef COMPLEX_NUMBER[:,:] arrview = arr
+def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
+  cdef COMPLEX_NUMBER[:,:] arrview = arr
 
-#   cdef size_t sx
-#   cdef size_t sy
+  cdef size_t sx
+  cdef size_t sy
 
-#   if arr.flags['F_CONTIGUOUS']:
-#     sx = arr.shape[0]
-#     sy = arr.shape[1]
-#   else:
-#     sx = arr.shape[1]
-#     sy = arr.shape[0]
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+  else:
+    sx = arr.shape[1]
+    sy = arr.shape[0]
 
-#   cdef int nbytes = np.dtype(arr.dtype).itemsize
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
 
-#   # ipt doesn't do anything with values, 
-#   # just moves them around, so only bit width matters
-#   # int, uint, float, bool who cares
-#   if nbytes == 1:
-#     _ipt2d[uint8_t](
-#       <uint8_t*>&arrview[0,0],
-#       sx, sy
-#     )
-#   elif nbytes == 2:
-#     _ipt2d[uint16_t](
-#       <uint16_t*>&arrview[0,0],
-#       sx, sy
-#     )
-#   elif nbytes == 4:
-#     _ipt2d[uint32_t](
-#       <uint32_t*>&arrview[0,0],
-#       sx, sy
-#     )
-#   else:
-#     _ipt2d[uint64_t](
-#       <uint64_t*>&arrview[0,0],
-#       sx, sy
-#     )
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt2d[uint8_t](
+      <uint8_t*>&arrview[0,0],
+      sx, sy
+    )
+  elif nbytes == 2:
+    _ipt2d[uint16_t](
+      <uint16_t*>&arrview[0,0],
+      sx, sy
+    )
+  elif nbytes == 4:
+    _ipt2d[uint32_t](
+      <uint32_t*>&arrview[0,0],
+      sx, sy
+    )
+  else:
+    _ipt2d[uint64_t](
+      <uint64_t*>&arrview[0,0],
+      sx, sy
+    )
 
-#   return arr
+  return arr
 
-# def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
-#   cdef COMPLEX_NUMBER[:,:,:] arrview = arr
+def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
+  cdef COMPLEX_NUMBER[:,:,:] arrview = arr
 
-#   cdef size_t sx
-#   cdef size_t sy
-#   cdef size_t sz
+  cdef size_t sx
+  cdef size_t sy
+  cdef size_t sz
 
-#   if arr.flags['F_CONTIGUOUS']:
-#     sx = arr.shape[0]
-#     sy = arr.shape[1]
-#     sz = arr.shape[2]
-#   else:
-#     sx = arr.shape[2]
-#     sy = arr.shape[1]
-#     sz = arr.shape[0]
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+    sz = arr.shape[2]
+  else:
+    sx = arr.shape[2]
+    sy = arr.shape[1]
+    sz = arr.shape[0]
 
-#   cdef int nbytes = np.dtype(arr.dtype).itemsize
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
 
-#   # ipt doesn't do anything with values, 
-#   # just moves them around, so only bit width matters
-#   # int, uint, float, bool who cares
-#   if nbytes == 1:
-#     _ipt3d[uint8_t](
-#       <uint8_t*>&arrview[0,0,0],
-#       sx, sy, sz
-#     )
-#   elif nbytes == 2:
-#     _ipt3d[uint16_t](
-#       <uint16_t*>&arrview[0,0,0],
-#       sx, sy, sz
-#     )
-#   elif nbytes == 4:
-#     _ipt3d[uint32_t](
-#       <uint32_t*>&arrview[0,0,0],
-#       sx, sy, sz
-#     )
-#   else:
-#     _ipt3d[uint64_t](
-#       <uint64_t*>&arrview[0,0,0],
-#       sx, sy, sz
-#     )    
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt3d[uint8_t](
+      <uint8_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  elif nbytes == 2:
+    _ipt3d[uint16_t](
+      <uint16_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  elif nbytes == 4:
+    _ipt3d[uint32_t](
+      <uint32_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )
+  else:
+    _ipt3d[uint64_t](
+      <uint64_t*>&arrview[0,0,0],
+      sx, sy, sz
+    )    
 
-#   return arr
+  return arr
 
-# def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
-#   cdef COMPLEX_NUMBER[:,:,:,:] arrview = arr
+def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
+  cdef COMPLEX_NUMBER[:,:,:,:] arrview = arr
 
-#   cdef size_t sx
-#   cdef size_t sy
-#   cdef size_t sz
-#   cdef size_t sw
+  cdef size_t sx
+  cdef size_t sy
+  cdef size_t sz
+  cdef size_t sw
 
-#   if arr.flags['F_CONTIGUOUS']:
-#     sx = arr.shape[0]
-#     sy = arr.shape[1]
-#     sz = arr.shape[2]
-#     sw = arr.shape[3]
-#   else:
-#     sx = arr.shape[3]
-#     sy = arr.shape[2]
-#     sz = arr.shape[1]
-#     sw = arr.shape[0]
+  if arr.flags['F_CONTIGUOUS']:
+    sx = arr.shape[0]
+    sy = arr.shape[1]
+    sz = arr.shape[2]
+    sw = arr.shape[3]
+  else:
+    sx = arr.shape[3]
+    sy = arr.shape[2]
+    sz = arr.shape[1]
+    sw = arr.shape[0]
 
-#   cdef int nbytes = np.dtype(arr.dtype).itemsize
+  cdef int nbytes = np.dtype(arr.dtype).itemsize
 
-#   # ipt doesn't do anything with values, 
-#   # just moves them around, so only bit width matters
-#   # int, uint, float, bool who cares
-#   if nbytes == 1:
-#     _ipt4d[uint8_t](
-#       <uint8_t*>&arrview[0,0,0,0],
-#       sx, sy, sz, sw
-#     )
-#   elif nbytes == 2:
-#     _ipt4d[uint16_t](
-#       <uint16_t*>&arrview[0,0,0,0],
-#       sx, sy, sz, sw
-#     )
-#   elif nbytes == 4:
-#     _ipt4d[uint32_t](
-#       <uint32_t*>&arrview[0,0,0,0],
-#       sx, sy, sz, sw
-#     )
-#   else:
-#     _ipt4d[uint64_t](
-#       <uint64_t*>&arrview[0,0,0,0],
-#       sx, sy, sz, sw
-#     )
+  # ipt doesn't do anything with values, 
+  # just moves them around, so only bit width matters
+  # int, uint, float, bool who cares
+  if nbytes == 1:
+    _ipt4d[uint8_t](
+      <uint8_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  elif nbytes == 2:
+    _ipt4d[uint16_t](
+      <uint16_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  elif nbytes == 4:
+    _ipt4d[uint32_t](
+      <uint32_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
+  else:
+    _ipt4d[uint64_t](
+      <uint64_t*>&arrview[0,0,0,0],
+      sx, sy, sz, sw
+    )
 
-#   return arr
+  return arr
 
-# def foreground(arr):
-#   """Returns the number of non-zero voxels in an array."""
-#   arr = reshape(arr, (arr.size,))
-#   return _foreground(arr)
-
-# @cython.boundscheck(False)
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function
-# @cython.nonecheck(False)
-# def _foreground(cnp.ndarray[ALLINT, ndim=1] arr):
-#   cdef size_t i = 0
-#   cdef size_t sz = arr.size
-#   cdef size_t n_foreground = 0
-#   for i in range(sz):
-#     n_foreground += <size_t>(arr[i] != 0)
-#   return n_foreground
-
-# @cython.boundscheck(False)
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function
-# @cython.nonecheck(False)
-# def point_cloud(cnp.ndarray[ALLINT, ndim=3] arr):
-#   """
-#   point_cloud(arr)
-
-#   Given a 3D integer image, return a mapping from
-#   labels to their (x,y,z) position in the image.
-
-#   Zero is considered a background label.
-
-#   Returns: ndarray(N, 3, dtype=uint16)
-#   """
-#   cdef size_t n_foreground = foreground(arr)
-
-#   cdef size_t sx = arr.shape[0]
-#   cdef size_t sy = arr.shape[1]
-#   cdef size_t sz = arr.shape[2]
-
-#   if n_foreground == 0:
-#     return {}
-
-#   cdef cnp.ndarray[ALLINT, ndim=1] ptlabel = np.zeros((n_foreground,), dtype=arr.dtype)
-#   cdef cnp.ndarray[uint16_t, ndim=2] ptcloud = np.zeros((n_foreground, 3), dtype=np.uint16)
-
-#   cdef size_t i = 0
-#   cdef size_t j = 0
-#   cdef size_t k = 0
-  
-#   cdef size_t idx = 0
-#   for i in range(sx):
-#     for j in range(sy):
-#       for k in range(sz):
-#         if arr[i,j,k] != 0:
-#           ptlabel[idx] = arr[i,j,k]
-#           ptcloud[idx,0] = i
-#           ptcloud[idx,1] = j
-#           ptcloud[idx,2] = k
-#           idx += 1
-
-#   sortidx = ptlabel.argsort()
-#   ptlabel = ptlabel[sortidx]
-#   ptcloud = ptcloud[sortidx]
-#   del sortidx
-
-#   ptcloud_by_label = {}
-#   if n_foreground == 1:
-#     ptcloud_by_label[ptlabel[0]] = ptcloud
-#     return ptcloud_by_label
-
-#   cdef size_t start = 0
-#   cdef size_t end = 0
-#   for end in range(1, n_foreground):
-#     if ptlabel[end] != ptlabel[end - 1]:
-#       ptcloud_by_label[ptlabel[end - 1]] = ptcloud[start:end,:]
-#       start = end
-
-#   ptcloud_by_label[ptlabel[end]] = ptcloud[start:,:]
-
-#   return ptcloud_by_label
+def foreground(arr):
+  """Returns the number of non-zero voxels in an array."""
+  arr = reshape(arr, (arr.size,))
+  return _foreground(arr)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def chunked_tobytes(cnp.ndarray[uint8_t, ndim=3] image, chunk_size):
+def _foreground(cnp.ndarray[ALLINT, ndim=1] arr):
+  cdef size_t i = 0
+  cdef size_t sz = arr.size
+  cdef size_t n_foreground = 0
+  for i in range(sz):
+    n_foreground += <size_t>(arr[i] != 0)
+  return n_foreground
 
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def point_cloud(cnp.ndarray[ALLINT, ndim=3] arr):
+  """
+  point_cloud(arr)
+
+  Given a 3D integer image, return a mapping from
+  labels to their (x,y,z) position in the image.
+
+  Zero is considered a background label.
+
+  Returns: ndarray(N, 3, dtype=uint16)
+  """
+  cdef size_t n_foreground = foreground(arr)
+
+  cdef size_t sx = arr.shape[0]
+  cdef size_t sy = arr.shape[1]
+  cdef size_t sz = arr.shape[2]
+
+  if n_foreground == 0:
+    return {}
+
+  cdef cnp.ndarray[ALLINT, ndim=1] ptlabel = np.zeros((n_foreground,), dtype=arr.dtype)
+  cdef cnp.ndarray[uint16_t, ndim=2] ptcloud = np.zeros((n_foreground, 3), dtype=np.uint16)
+
+  cdef size_t i = 0
+  cdef size_t j = 0
+  cdef size_t k = 0
+  
+  cdef size_t idx = 0
+  for i in range(sx):
+    for j in range(sy):
+      for k in range(sz):
+        if arr[i,j,k] != 0:
+          ptlabel[idx] = arr[i,j,k]
+          ptcloud[idx,0] = i
+          ptcloud[idx,1] = j
+          ptcloud[idx,2] = k
+          idx += 1
+
+  sortidx = ptlabel.argsort()
+  ptlabel = ptlabel[sortidx]
+  ptcloud = ptcloud[sortidx]
+  del sortidx
+
+  ptcloud_by_label = {}
+  if n_foreground == 1:
+    ptcloud_by_label[ptlabel[0]] = ptcloud
+    return ptcloud_by_label
+
+  cdef size_t start = 0
+  cdef size_t end = 0
+  for end in range(1, n_foreground):
+    if ptlabel[end] != ptlabel[end - 1]:
+      ptcloud_by_label[ptlabel[end - 1]] = ptcloud[start:end,:]
+      start = end
+
+  ptcloud_by_label[ptlabel[end]] = ptcloud[start:,:]
+
+  return ptcloud_by_label
+
+
+@cython.binding(True)
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
+  """
+  Faster method for generating chunked byte encodings of an 
+  image.
+  """
   chunk_size = np.array(chunk_size, dtype=float)
   shape = np.array((image.shape[0], image.shape[1], image.shape[2]), dtype=float)
   grid_size = np.ceil(shape / chunk_size).astype(int)
@@ -1301,30 +1306,30 @@ def chunked_tobytes(cnp.ndarray[uint8_t, ndim=3] image, chunk_size):
 
   num_grid = int(reduce(operator.mul, grid_size))
 
-  cdef int img_i = 0
+  cdef int64_t img_i = 0
 
-  cdef int sgx = grid_size[0]
-  cdef int sgy = grid_size[1]
-  cdef int sgz = grid_size[2]
+  cdef int64_t sgx = grid_size[0]
+  cdef int64_t sgy = grid_size[1]
+  cdef int64_t sgz = grid_size[2]
 
-  cdef int sx = shape[0]
-  cdef int sy = shape[1]
-  cdef int sz = shape[2]
-  cdef int sxy = sx * sy
+  cdef int64_t sx = shape[0]
+  cdef int64_t sy = shape[1]
+  cdef int64_t sz = shape[2]
+  cdef int64_t sxy = sx * sy
 
-  cdef int cx = chunk_size[0]
-  cdef int cy = chunk_size[1]
-  cdef int cz = chunk_size[2]
+  cdef int64_t cx = chunk_size[0]
+  cdef int64_t cy = chunk_size[1]
+  cdef int64_t cz = chunk_size[2]
 
-  cdef int gx = 0
-  cdef int gy = 0
-  cdef int gz = 0
-  cdef int gi = 0
+  cdef int64_t gx = 0
+  cdef int64_t gy = 0
+  cdef int64_t gz = 0
+  cdef int64_t gi = 0
 
-  cdef int idx = 0
-  cdef int x = 0
-  cdef int y = 0
-  cdef int z = 0
+  cdef int64_t idx = 0
+  cdef int64_t x = 0
+  cdef int64_t y = 0
+  cdef int64_t z = 0
 
   if not image.flags.f_contiguous and not image.flags.c_contiguous:
     res = []
@@ -1335,14 +1340,14 @@ def chunked_tobytes(cnp.ndarray[uint8_t, ndim=3] image, chunk_size):
           res.append(cutout.tobytes("F"))
     return res
 
-  cdef cnp.ndarray[uint8_t] arr
+  cdef cnp.ndarray[NUMBER] arr
 
-  cdef list[cnp.ndarray[uint8_t]] array_grid = [ 
-    np.zeros((chunk_array_size,), dtype=np.uint8)
+  cdef list[cnp.ndarray[NUMBER]] array_grid = [ 
+    np.zeros((chunk_array_size,), dtype=image.dtype)
     for i in range(num_grid)
   ]
 
-  cdef cnp.ndarray[uint8_t, ndim=1] img8 = reshape(image, (image.size,))
+  cdef cnp.ndarray[NUMBER, ndim=1] img8 = reshape(image, (image.size,))
 
   if image.flags.f_contiguous:
     for gz in range(sgz):
@@ -1352,7 +1357,7 @@ def chunked_tobytes(cnp.ndarray[uint8_t, ndim=3] image, chunk_size):
             gi = gx + sgx * (gy + sgy * gz)
             arr = array_grid[gi]
             for y in range(cy):
-              img_i = sgx * gx + sx * ((sgy * gy + y) + sy * (sgz * gz + z))
+              img_i = cx * gx + sx * ((cy * gy + y) + sy * (cz * gz + z))
               idx = cx * (y + cy * z)
               for x in range(cx):
                 arr[idx + x] = img8[img_i + x]
@@ -1364,12 +1369,9 @@ def chunked_tobytes(cnp.ndarray[uint8_t, ndim=3] image, chunk_size):
             gi = gx + sgx * (gy + sgy * gz)
             arr = array_grid[gi]
             for y in range(cy):
-              img_i = sgz * gz + sz * ((sgy * gy + y) + sy * (sgx * gx + x))
+              img_i = cz * gz + sz * ((cy * gy + y) + sy * (cx * gx + x))
               idx = cx * (y + cy * z)
               for x in range(cx):
                 arr[idx + x] = img8[img_i + sxy * x]
 
   return [ bytes(memoryview(ar)) for ar in array_grid ]
-
-
-
