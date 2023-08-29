@@ -562,5 +562,48 @@ def test_point_cloud():
   ptc = fastremap.point_cloud(x)
   assert len(ptc) == 0
 
+
+@pytest.mark.parametrize("dtype", DTYPES)
+@pytest.mark.parametrize("input_order", ['C','F'])
+@pytest.mark.parametrize("output_order", ['F', 'C'])
+@pytest.mark.parametrize("size", [16,64,128])
+@pytest.mark.parametrize("chunk_size", [4,8,16])
+def test_tobytes(size, chunk_size, dtype, input_order, output_order):
+  cs = chunk_size
+  image = np.arange(size*size*size, dtype=dtype).reshape((size,size,size), order=input_order)
   
+  res1 = fastremap.tobytes(image, (cs,cs,cs), order=output_order)
+
+  N = size // cs
+
+  res2 = []
+  for z in range(N):
+    for y in range(N):
+      for x in range(N):
+        cutout = image[x*cs:(x+1)*cs, y*cs:(y+1)*cs, z*cs:(z+1)*cs]
+        res2.append(cutout.tobytes(output_order))
+
+  for i, (enc1, enc2) in enumerate(zip(res1, res2)):
+    assert enc1 == enc2, i
+
+@pytest.mark.parametrize("order", ['C','F'])
+def test_tobytes_misaligned(order):
+  size = 128
+  cs = 32
+  image = np.arange(size*size*size, dtype=np.uint8).reshape((size,size,size), order=order)
+
+  res1 = fastremap.tobytes(image, (cs,cs,cs))
+
+  cs = 17
+  try:
+    res1 = fastremap.tobytes(image, (cs,cs,cs))
+    assert False
+  except ValueError:
+    pass
+
+
+
+
+
+
 

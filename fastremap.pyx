@@ -14,7 +14,7 @@ Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
 Date: August 2018 - May 2022
 """
-
+from typing import Sequence
 cimport cython
 from libc.stdint cimport (  
   uint8_t, uint16_t, uint32_t, uint64_t,
@@ -1291,11 +1291,14 @@ def point_cloud(cnp.ndarray[ALLINT, ndim=3] arr):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
+def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size:Sequence[int,int,int], order:str="C"):
   """
   Faster method for generating chunked byte encodings of an 
   image.
   """
+  if order not in ["C", "F"]:
+    raise ValueError(f"order must be C or F. Got: {order}")
+
   chunk_size = np.array(chunk_size, dtype=float)
   shape = np.array((image.shape[0], image.shape[1], image.shape[2]), dtype=float)
   grid_size = np.ceil(shape / chunk_size).astype(int)
@@ -1334,13 +1337,21 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
   cdef int64_t y = 0
   cdef int64_t z = 0
 
-  if not image.flags.f_contiguous and not image.flags.c_contiguous:
+  # It's difficult to do better than numpy when f and c or c and f
+  # because at least one of the arrays must be transversed substantially
+  # out of order. However, when f and f or c and c you can do strips in 
+  # order.
+  if (
+    (not image.flags.f_contiguous and not image.flags.c_contiguous)
+    or (image.flags.f_contiguous and order == "C")
+    or (image.flags.c_contiguous and order == "F")
+  ):
     res = []
     for gz in range(sgz):
       for gy in range(sgy):
         for gx in range(sgx):
           cutout = image[gx*cx:(gx+1)*cx, gy*cy:(gy+1)*cy, gz*cz:(gz+1)*cz]
-          res.append(cutout.tobytes("F"))
+          res.append(cutout.tobytes(order))
     return res
 
   cdef cnp.ndarray[NUMBER] arr
@@ -1352,7 +1363,7 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
 
   cdef cnp.ndarray[NUMBER, ndim=1] img = reshape(image, (image.size,))
 
-  if image.flags.f_contiguous:
+  if order == "F": # b/c of guard above, this is F to F order
     for gz in range(sgz):
       for z in range(cz):
         for gy in range(sgy):
@@ -1364,17 +1375,17 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size):
               idx = cx * (y + cy * z)
               for x in range(cx):
                 arr[idx + x] = img[img_i + x]
-  else:
-    for gz in range(sgz):
-      for z in range(cz):
+  else: # b/c of guard above, this is C to C order
+    for gx in range(sgx):
+      for x in range(cx):
         for gy in range(sgy):
-          for gx in range(sgx):
+          for gz in range(sgz):
             gi = gx + sgx * (gy + sgy * gz)
             arr = array_grid[gi]
             for y in range(cy):
-              img_i = z + cz * gz + sz * ((cy * gy + y) + sy * (cx * gx))
-              idx = cx * (y + cy * z)
-              for x in range(cx):
-                arr[idx + x] = img[img_i + sxy * x]
+              img_i = cz * gz + sz * ((cy * gy + y) + sy * (cx * gx + x))
+              idx = cz * (y + cy * x)
+              for z in range(cz):
+                arr[idx + z] = img[img_i + z]
 
   return [ bytes(memoryview(ar)) for ar in array_grid ]
