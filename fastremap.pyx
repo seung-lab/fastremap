@@ -1353,6 +1353,8 @@ def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size:Sequence[int,int,int],
           cutout = image[gx*cx:(gx+1)*cx, gy*cy:(gy+1)*cy, gz*cz:(gz+1)*cz]
           res.append(cutout.tobytes(order))
     return res
+  elif (cx == sx and cy == sy and cz == sz):
+    return [ image.tobytes(order) ]
 
   cdef cnp.ndarray[NUMBER] arr
 
