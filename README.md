@@ -32,6 +32,13 @@ minval, maxval = fastremap.minmax(labels) # faster version of (np.min(labels), n
 # computes number of matching adjacent pixel pairs in an image
 num_pairs = fastremap.pixel_pairs(labels)  
 n_foreground = fastremap.foreground(labels) # number of nonzero voxels
+
+# computes the cutout.tobytes(order) of each chunk and returns
+# the binaries indexed by fortran order in the order specified (C or F)
+# If the input image is F contiguous and F is requested, or C and C order,
+# and the image is larger than a single chunk, this will be significantly
+# faster than iterating and using tobytes.
+binaries = fastremap.tobytes(labels, (64,64,64), order="F")
 ```
 
 ## All Available Functions 
