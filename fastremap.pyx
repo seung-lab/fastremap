@@ -1,3 +1,4 @@
+# cython: language_level=3
 """
 Functions related to remapping image volumes.
 
@@ -13,7 +14,7 @@ Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
 Date: August 2018 - May 2022
 """
-
+from typing import Sequence
 cimport cython
 from libc.stdint cimport (  
   uint8_t, uint16_t, uint32_t, uint64_t,
@@ -1286,10 +1287,107 @@ def point_cloud(cnp.ndarray[ALLINT, ndim=3] arr):
   return ptcloud_by_label
 
 
+@cython.binding(True)
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size:Sequence[int,int,int], order:str="C"):
+  """
+  Faster method for generating chunked byte encodings of an 
+  image.
+  """
+  if order not in ["C", "F"]:
+    raise ValueError(f"order must be C or F. Got: {order}")
 
+  chunk_size = np.array(chunk_size, dtype=float)
+  shape = np.array((image.shape[0], image.shape[1], image.shape[2]), dtype=float)
+  grid_size = np.ceil(shape / chunk_size).astype(int)
 
+  if np.any(np.remainder(shape, chunk_size)):
+    raise ValueError(f"chunk_size ({chunk_size}) must evenly divide the image shape ({shape}).")
 
+  chunk_array_size = int(reduce(operator.mul, chunk_size))
+  chunk_size = chunk_size.astype(int)
+  shape = shape.astype(int)
 
+  num_grid = int(reduce(operator.mul, grid_size))
 
+  cdef int64_t img_i = 0
 
+  cdef int64_t sgx = grid_size[0]
+  cdef int64_t sgy = grid_size[1]
+  cdef int64_t sgz = grid_size[2]
 
+  cdef int64_t sx = shape[0]
+  cdef int64_t sy = shape[1]
+  cdef int64_t sz = shape[2]
+  cdef int64_t sxy = sx * sy
+
+  cdef int64_t cx = chunk_size[0]
+  cdef int64_t cy = chunk_size[1]
+  cdef int64_t cz = chunk_size[2]
+
+  cdef int64_t gx = 0
+  cdef int64_t gy = 0
+  cdef int64_t gz = 0
+  cdef int64_t gi = 0
+
+  cdef int64_t idx = 0
+  cdef int64_t x = 0
+  cdef int64_t y = 0
+  cdef int64_t z = 0
+
+  # It's difficult to do better than numpy when f and c or c and f
+  # because at least one of the arrays must be transversed substantially
+  # out of order. However, when f and f or c and c you can do strips in 
+  # order.
+  if (
+    (not image.flags.f_contiguous and not image.flags.c_contiguous)
+    or (image.flags.f_contiguous and order == "C")
+    or (image.flags.c_contiguous and order == "F")
+  ):
+    res = []
+    for gz in range(sgz):
+      for gy in range(sgy):
+        for gx in range(sgx):
+          cutout = image[gx*cx:(gx+1)*cx, gy*cy:(gy+1)*cy, gz*cz:(gz+1)*cz]
+          res.append(cutout.tobytes(order))
+    return res
+  elif (cx == sx and cy == sy and cz == sz):
+    return [ image.tobytes(order) ]
+
+  cdef cnp.ndarray[NUMBER] arr
+
+  cdef list[cnp.ndarray[NUMBER]] array_grid = [ 
+    np.zeros((chunk_array_size,), dtype=image.dtype)
+    for i in range(num_grid)
+  ]
+
+  cdef cnp.ndarray[NUMBER, ndim=1] img = reshape(image, (image.size,))
+
+  if order == "F": # b/c of guard above, this is F to F order
+    for gz in range(sgz):
+      for z in range(cz):
+        for gy in range(sgy):
+          for gx in range(sgx):
+            gi = gx + sgx * (gy + sgy * gz)
+            arr = array_grid[gi]
+            for y in range(cy):
+              img_i = cx * gx + sx * ((cy * gy + y) + sy * (cz * gz + z))
+              idx = cx * (y + cy * z)
+              for x in range(cx):
+                arr[idx + x] = img[img_i + x]
+  else: # b/c of guard above, this is C to C order
+    for gx in range(sgx):
+      for x in range(cx):
+        for gy in range(sgy):
+          for gz in range(sgz):
+            gi = gx + sgx * (gy + sgy * gz)
+            arr = array_grid[gi]
+            for y in range(cy):
+              img_i = cz * gz + sz * ((cy * gy + y) + sy * (cx * gx + x))
+              idx = cz * (y + cy * x)
+              for z in range(cz):
+                arr[idx + z] = img[img_i + z]
+
+  return [ bytes(memoryview(ar)) for ar in array_grid ]
