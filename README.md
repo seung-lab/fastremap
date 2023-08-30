@@ -58,6 +58,7 @@ binaries = fastremap.tobytes(labels, (64,64,64), order="F")
 - **pixel_pairs:** Computes the number of adjacent matching memory locations in an image. A quick heuristic for understanding if the image statistics are roughly similar to a connectomics segmentation.
 - **foreground:** Count the number of non-zero voxels rapidly.
 - **point_cloud:** Get the X,Y,Z locations of each foreground voxel grouped by label.
+- **tobytes**: Compute the tobytes of an image divided into a grid and return the resultant binaries indexed by their gridpoint in fortran order with the binary in the order requested (C or F).
 
 ## `pip` Installation
 

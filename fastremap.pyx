@@ -14,7 +14,7 @@ Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
 Date: August 2018 - May 2022
 """
-from typing import Sequence
+from typing import Sequence, List
 cimport cython
 from libc.stdint cimport (  
   uint8_t, uint16_t, uint32_t, uint64_t,
@@ -1291,10 +1291,18 @@ def point_cloud(cnp.ndarray[ALLINT, ndim=3] arr):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def tobytes(cnp.ndarray[NUMBER, ndim=3] image, chunk_size:Sequence[int,int,int], order:str="C"):
+def tobytes(
+  cnp.ndarray[NUMBER, ndim=3] image, 
+  chunk_size:Sequence[int,int,int], 
+  order:str="C"
+) -> List[bytes]:
   """
-  Faster method for generating chunked byte encodings of an 
-  image.
+  Compute the cutout.tobytes(order) with the image divided into 
+  a grid of cutouts. Return the resultant binaries indexed by 
+  their cutout's gridpoint in fortran order.
+
+  This is faster than calling tobytes on each cutout individually
+  if the input and output orders match.
   """
   if order not in ["C", "F"]:
     raise ValueError(f"order must be C or F. Got: {order}")
