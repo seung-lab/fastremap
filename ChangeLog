@@ -1,6 +1,14 @@
 CHANGES
 =======
 
+1.14.0
+------
+
+* release(1.14.0): adds tobytes function
+* docs: add README info and docstring
+* docs: add tobytes example
+* feat: bulk tobytes (#35)
+
 1.13.5
 ------
 
