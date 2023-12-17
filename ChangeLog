@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* try adding setuptools
+* build: try using cython <3.0
+
 1.14.1
 ------
 

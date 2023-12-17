@@ -2,3 +2,4 @@ cython
 pytest
 tox
 twine
+setuptools
