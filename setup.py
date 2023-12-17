@@ -22,7 +22,7 @@ if sys.platform == 'darwin':
   extra_compile_args += ['-stdlib=libc++', '-mmacosx-version-min=10.9']
 
 setuptools.setup(
-  setup_requires=['pbr', 'cython', 'numpy'],
+  setup_requires=['pbr', 'cython<3.0', 'numpy'],
   python_requires=">=3.7,<4.0",
   pbr=True,
   ext_modules=[

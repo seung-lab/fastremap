@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+1.14.1
+------
+
+* chore: ignore fastremap.cpp
+* build: update for py312
 * build: update build
 
 1.14.0
