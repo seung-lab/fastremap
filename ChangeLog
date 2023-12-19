@@ -1,6 +1,13 @@
 CHANGES
 =======
 
+1.14.1
+------
+
+* build: temporarily exclude macos until ecosystem fixes itself
+* chore: ignore fastremap.cpp
+* chore: ignore fastremap.cpp
+* build: update for py312
 * build: update build
 
 1.14.0
