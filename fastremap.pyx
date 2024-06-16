@@ -30,6 +30,8 @@ import operator
 import numpy as np
 cimport numpy as cnp
 
+from libcpp.vector cimport vector
+
 __version__ = '1.14.0'
 __VERSION__ = __version__
 
@@ -848,77 +850,50 @@ def unique_via_renumber(labels, return_index=False):
   uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
   return uniq, idx, counts
 
-def unique_via_sort(labels):
-  if labels.size > np.iinfo(np.uint32).max:
-    return _unique_via_sort(labels, <uint64_t>0)
-  else:
-    return _unique_via_sort(labels, <uint32_t>0)
-
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels, COUNT_T dummy):
+def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
   """Slower than unique_via_array but can handle any label."""
   labels = np.copy(labels)
   labels.sort()
 
   cdef size_t voxels = labels.size  
 
-  count_dtype = np.uint32
-  if sizeof(COUNT_T) == 8:
-    count_dtype = np.uint64
+  cdef vector[ALLINT] uniq
+  uniq.reserve(100)
 
-  cdef cnp.ndarray[ALLINT, ndim=1] uniq = np.zeros((voxels,), dtype=labels.dtype)
-  cdef cnp.ndarray[COUNT_T, ndim=1] counts = np.zeros((voxels,), dtype=count_dtype)
+  cdef vector[uint64_t] counts
+  counts.reserve(100)
 
   cdef size_t i = 0
-  cdef size_t j = 0
 
   cdef ALLINT cur = labels[0]
-  cdef size_t accum = 1
+  cdef uint64_t accum = 1
   for i in range(1, voxels):
     if cur == labels[i]:
       accum += 1
     else:
-      uniq[j] = cur
-      counts[j] = accum
+      uniq.push_back(cur)
+      counts.push_back(accum)
       accum = 1
       cur = labels[i]
-      j += 1
 
-  uniq[j] = cur
-  counts[j] = accum
+  uniq.push_back(cur)
+  counts.push_back(accum)
 
-  return uniq[:j+1], counts[:j+1]
-
-def unique_via_array(labels, max_label, return_index=False):
-  """
-  unique(cnp.ndarray[ALLINT, ndim=1] labels, return_counts=False)
-
-  Faster implementation of np.unique that depends
-  on the maximum label in the array being less than
-  the size of the array.
-  """
-  if labels.size > np.iinfo(np.uint32).max:
-    return _unique_via_array(labels, max_label, return_index, <uint64_t>0)
-  else:
-    return _unique_via_array(labels, max_label, return_index, <uint32_t>0)
+  return np.array(uniq), np.array(counts)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _unique_via_array(
+def unique_via_array(
   cnp.ndarray[ALLINT, ndim=1] labels, 
   size_t max_label, 
-  return_index,
-  COUNT_T dummy
+  return_index
 ):
-  count_dtype = np.uint32
-  if sizeof(COUNT_T) == 8:
-    count_dtype = np.uint64
-
-  cdef cnp.ndarray[COUNT_T, ndim=1] counts = np.zeros( 
-    (max_label+1,), dtype=count_dtype
+  cdef cnp.ndarray[uint64_t, ndim=1] counts = np.zeros( 
+    (max_label+1,), dtype=np.uint64
   )
   cdef cnp.ndarray[uintptr_t, ndim=1] index
   
@@ -946,8 +921,8 @@ def _unique_via_array(
   cdef cnp.ndarray[ALLINT, ndim=1] segids = np.zeros( 
     (real_size,), dtype=labels.dtype
   )
-  cdef cnp.ndarray[uint32_t, ndim=1] cts = np.zeros( 
-    (real_size,), dtype=np.uint32
+  cdef cnp.ndarray[uint64_t, ndim=1] cts = np.zeros( 
+    (real_size,), dtype=np.uint64
   )
   cdef cnp.ndarray[uintptr_t, ndim=1] idx
 
