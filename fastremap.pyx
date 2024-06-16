@@ -32,9 +32,6 @@ cimport numpy as cnp
 
 from libcpp.vector cimport vector
 
-__version__ = '1.14.0'
-__VERSION__ = __version__
-
 ctypedef fused UINT:
   uint8_t
   uint16_t
