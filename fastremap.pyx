@@ -882,6 +882,8 @@ def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
   uniq.push_back(cur)
   counts.push_back(accum)
 
+  del labels
+
   return np.array(uniq), np.array(counts)
 
 @cython.boundscheck(False)
