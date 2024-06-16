@@ -57,10 +57,6 @@ ctypedef fused COMPLEX_NUMBER:
   NUMBER
   float complex 
 
-ctypedef fused COUNT_T:
-  uint32_t
-  uint64_t
-
 cdef extern from "ipt.hpp" namespace "pyipt":
   cdef void _ipt2d[T](T* arr, size_t sx, size_t sy)
   cdef void _ipt3d[T](
