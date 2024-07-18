@@ -753,13 +753,26 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
 
   return_index: also return the index of the first detected occurance 
     of each label.
+  return_inverse: If True, also return the indices of the unique array 
+    (for the specified axis, if provided) that can be used to reconstruct
+    the input array.
   return_counts: also return the unique label frequency as an array.
 
   Returns: 
-    if return_counts or return_index:
-      return (unique_labels, unique_index, unique_counts)
-    else:
-      return unique_labels
+    unique ndarray
+        The sorted unique values.
+    
+    unique_indices ndarray, optional
+        The indices of the first occurrences of the unique values in the original array. 
+        Only provided if return_index is True.
+    
+    unique_inverse ndarray, optional
+        The indices to reconstruct the original array from the unique array. 
+        Only provided if return_inverse is True.
+    
+    unique_counts ndarray, optional
+        The number of times each of the unique values comes up in the original array. 
+        Only provided if return_counts is True.
   """
   if not isinstance(labels, np.ndarray):
     labels = np.array(labels)
@@ -769,7 +782,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
 
   # These flags are currently unsupported so call uncle and
   # use the standard implementation instead.
-  if return_inverse or (axis is not None):
+  if axis is not None:
     return np.unique(
       labels, 
       return_index=return_index, 
@@ -781,7 +794,8 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   cdef size_t voxels = labels.size
 
   shape = labels.shape
-  fortran_order = labels.flags['F_CONTIGUOUS']
+  fortran_order = labels.flags.f_contiguous
+  order = "F" if fortran_order else "C"
   labels_orig = labels
   labels = reshape(labels, (voxels,))
 
@@ -792,33 +806,38 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   else:
     min_label, max_label = (0, 0)
 
-  def c_order_index(index):
+  def c_order_index(arr):
     if len(shape) > 1 and fortran_order:
       return np.ravel_multi_index(
-        np.unravel_index(index, shape, order='F'), 
+        np.unravel_index(arr, shape, order='F'), 
         shape, order='C'
       )
-    return index
+    return arr
 
   if voxels == 0:
     uniq = np.array([], dtype=labels.dtype)
     counts = np.array([], dtype=np.uint32)
     index = np.array([], dtype=np.uint64)
+    inverse = np.array([], dtype=np.uintp)
   elif min_label >= 0 and max_label < <int64_t>voxels:
-    uniq, index, counts = unique_via_array(labels, max_label, return_index=return_index)
+    uniq, index, counts, inverse = unique_via_array(labels, max_label, return_index=return_index, return_inverse=return_inverse)
   elif (max_label - min_label) <= <int64_t>voxels:
-    uniq, index, counts = unique_via_shifted_array(labels, min_label, max_label, return_index=return_index)
+    uniq, index, counts, inverse = unique_via_shifted_array(labels, min_label, max_label, return_index=return_index, return_inverse=return_inverse)
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
-    uniq, index, counts = unique_via_renumber(labels, return_index=return_index)
-  elif return_index:
-    return np.unique(labels_orig, return_index=return_index, return_counts=return_counts)
+    uniq, index, counts, inverse = unique_via_renumber(labels, return_index=return_index, return_inverse=return_inverse)
+  elif return_index or return_inverse:
+    return np.unique(labels_orig, return_index=return_index, return_counts=return_counts, return_inverse=return_inverse)
   else:
     uniq, counts = unique_via_sort(labels)
+    index = None
+    inverse = None
 
   results = [ uniq ]
   if return_index:
     # This is required to match numpy's behavior
     results.append(c_order_index(index))
+  if return_inverse:
+    results.append(reshape(inverse, shape, order=order))
   if return_counts:
     results.append(counts)
 
@@ -826,23 +845,23 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     return tuple(results)
   return uniq
 
-def unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False):
+def unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
   if min_label is None or max_label is None:
     min_label, max_label = minmax(labels)
 
   labels -= min_label
-  uniq, idx, counts = unique_via_array(labels, max_label - min_label + 1, return_index)
+  uniq, idx, counts, inverse = unique_via_array(labels, max_label - min_label + 1, return_index, return_inverse)
   labels += min_label
   uniq += min_label
-  return uniq, idx, counts
+  return uniq, idx, counts, inverse
 
-def unique_via_renumber(labels, return_index=False):
+def unique_via_renumber(labels, return_index=False, return_inverse=False):
   dtype = labels.dtype
   labels, remap = renumber(labels)
   remap = { v:k for k,v in remap.items() }
-  uniq, idx, counts = unique_via_array(labels, max(remap.keys()), return_index)
+  uniq, idx, counts, inverse = unique_via_array(labels, max(remap.keys()), return_index, return_inverse)
   uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
-  return uniq, idx, counts
+  return uniq, idx, counts, inverse
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
@@ -886,7 +905,7 @@ def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
 def unique_via_array(
   cnp.ndarray[ALLINT, ndim=1] labels, 
   size_t max_label, 
-  return_index
+  return_index, return_inverse,
 ):
   cdef cnp.ndarray[uint64_t, ndim=1] counts = np.zeros( 
     (max_label+1,), dtype=np.uint64
@@ -935,12 +954,26 @@ def unique_via_array(
     for i in range(max_label + 1):
       if counts[i] > 0:
         idx[j] = index[i]
-        j += 1   
+        j += 1
+  
+  cdef cnp.ndarray[uintptr_t, ndim=1] mapping
 
+  if return_inverse:
+    if segids.size:
+      mapping = np.zeros([segids[segids.size - 1] + 1], dtype=np.uintp)
+      for i in range(real_size):
+        mapping[segids[i]] = i
+      inverse_idx = mapping[labels]
+    else:
+      inverse_idx = np.zeros([0], dtype=np.uintp)
+
+  ret = [ segids, None, cts, None ]
   if return_index:
-    return segids, idx, cts
-  else:
-    return segids, None, cts
+    ret[1] = idx
+  if return_inverse:
+    ret[3] = inverse_idx
+
+  return ret
 
 def transpose(arr):
   """
