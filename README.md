@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/seung-lab/fastremap.svg?branch=master)](https://travis-ci.org/seung-lab/fastremap) [![PyPI version](https://badge.fury.io/py/fastremap.svg)](https://badge.fury.io/py/fastremap)  
+[![PyPI version](https://badge.fury.io/py/fastremap.svg)](https://badge.fury.io/py/fastremap)  
 
 # fastremap
 
