@@ -1,6 +1,27 @@
 CHANGES
 =======
 
+* ci: add arm64 and x86\_64 to macos build
+* perf: add return\_inverse to fr.unique
+* perf(unique/array): avoid two operations for return\_index
+* feat: point\_cloud supports 2d images
+
+1.14.2
+------
+
+* install: bump python to 3.8, add cnp.import\_array()
+* ci: re-add macos, remove travis, appveyor
+* ci: use numpy without qualification
+* ci: properly specify numpy 2.0 and use working artifact uploader
+* ci: switch to compiling with numpy 2.0
+* ci: use non-buggy version of cibuildwheel
+* refactor: remove COUNT\_T
+* redesign: remove \_\_version\_\_ attribute
+* perf: reduce memory usage during finaly copy for unique\_via\_sort
+* fix: unique supports large arrays for the counts
+* fix: accurate unique counts for large arrays
+* build: more modernizations
+
 1.14.1
 ------
 
