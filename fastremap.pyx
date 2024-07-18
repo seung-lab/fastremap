@@ -895,9 +895,9 @@ def unique_via_array(
   
   cdef uintptr_t sentinel = np.iinfo(np.uintp).max
   if return_index:
-    index = np.zeros( 
-      (max_label+1,), dtype=np.uintp
-    ) + sentinel
+    index = np.full( 
+      (max_label+1,), sentinel, dtype=np.uintp
+    )
 
   cdef size_t voxels = labels.shape[0]
   cdef size_t i = 0
