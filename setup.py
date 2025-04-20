@@ -23,7 +23,7 @@ if sys.platform == 'darwin':
 
 setuptools.setup(
   setup_requires=['pbr', 'cython', 'numpy'],
-  python_requires=">=3.8,<4.0",
+  python_requires=">=3.9,<4.0",
   pbr=True,
   ext_modules=[
     setuptools.Extension(
