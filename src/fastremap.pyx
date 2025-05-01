@@ -877,13 +877,21 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   # These flags are currently unsupported so call uncle and
   # use the standard implementation instead.
   if axis is not None:
-    return np.unique(
-      labels, 
-      return_index=return_index, 
-      return_inverse=return_inverse, 
-      return_counts=return_counts, 
-      axis=axis
-    )
+    if (
+      axis == 0
+      and (labels.ndim == 2 and np.dtype(labels.dtype).itemsize < 8)
+      and not (return_index or return_inverse or return_counts)
+      and labels.flags.c_contiguous
+    ):
+      return two_axis_unique(labels)
+    else:
+      return np.unique(
+        labels, 
+        return_index=return_index, 
+        return_inverse=return_inverse, 
+        return_counts=return_counts, 
+        axis=axis
+      )
 
   cdef size_t voxels = labels.size
 
@@ -938,6 +946,18 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   if len(results) > 1:
     return tuple(results)
   return uniq
+
+def two_axis_unique(labels):
+  """
+  Faster replacement for np.unique(labels, axis=0)
+  when ndim = 2 and the dtype can be widened.
+  """
+  dtype = labels.dtype
+  labels = labels.reshape((labels.size,), order="C")
+  labels = labels.view(widen_dtype(dtype))
+  labels = unique(labels)
+  N = len(labels)
+  return labels.view(dtype).reshape((N, 2), order="C")
 
 def unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
   if min_label is None or max_label is None:
