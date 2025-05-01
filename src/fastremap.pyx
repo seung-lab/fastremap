@@ -101,6 +101,23 @@ def match_array_orders(*arrs, order="K"):
   else:
     return [ np.asfortranarray(arr) for arr in arrs ]
 
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def indices(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, NUMBER value):
+  """
+  Search through an array and identify the indices where value matches the array.
+  """
+  cdef vector[uint64_t] all_indices
+  cdef uint64_t i = 0
+  cdef uint64_t size = arr.size
+
+  for i in range(size):
+    if arr[i] == value:
+      all_indices.push_back(i)
+
+  return np.asarray(all_indices, dtype=np.uint64)
+
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
   renumber(arr, start=1, preserve_zero=True, in_place=False)
