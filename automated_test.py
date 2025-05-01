@@ -397,6 +397,27 @@ def test_minmax():
   assert minval == np.min(volume)
   assert maxval == np.max(volume)
 
+def test_unique_axis_0():
+  arr = np.array([
+    [0,1],
+    [0,2],
+    [0,3],
+    [0,2],
+    [1,2],
+    [2,3],
+  ])
+
+  res = fastremap.unique(arr, axis=0)
+  ans = np.array([
+    [0,1],
+    [0,2],
+    [0,3],
+    [1,2],
+    [2,3],
+  ])
+
+  assert np.all(res == ans)
+
 @pytest.mark.parametrize("order", [ "C", "F" ])
 def test_unique(order):
   def reorder(arr):
