@@ -12,7 +12,7 @@ constrained environments when format shifting.
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018 - May 2022
+Date: August 2018 - May 2025
 """
 from typing import Sequence, List
 cimport cython
@@ -338,6 +338,83 @@ def fit_dtype(dtype, value, exotics=False):
   raise ValueError("Unable to find a compatible dtype for {} that can fit {}".format(
     dtype, value
   ))
+
+def widen_dtype(dtype, exotics:bool = False):
+  """
+  Widen the given dtype to the next size
+  of the same type. For example, 
+  int8 -> int16 or uint32 -> uint64
+
+  64-bit types will map to themselves.
+
+  Return: upgraded dtype
+  """
+  dtype = np.dtype(dtype)
+
+  if np.issubdtype(dtype, np.floating):
+    sequence = [ np.float16, np.float32, np.float64 ] 
+    if exotics:
+      sequence += [ np.longdouble ]
+  elif np.issubdtype(dtype, np.unsignedinteger):
+    sequence = [ np.uint8, np.uint16, np.uint32, np.uint64 ]
+  elif np.issubdtype(dtype, np.complexfloating):
+    sequence = [ np.complex64 ]
+    if exotics:
+      sequence += [ np.complex128, np.clongdouble ]
+  elif np.issubdtype(dtype, np.integer):
+    sequence = [ np.int8, np.int16, np.int32, np.int64 ]
+  elif np.issubdtype(dtype, (np.intp, np.uintp)):
+    return dtype
+  elif exotics:
+    raise ValueError(
+      f"Unsupported dtype: {dtype}\n"
+    )    
+  else:
+    raise ValueError(
+      f"Unsupported dtype: {dtype}\n"
+      f"Only standard floats, integers, and complex types are supported."
+      f"For additional types (e.g. long double, complex128, clongdouble), enable exotics."
+    )
+
+  idx = sequence.index(dtype)
+  return sequence[min(idx+1, len(sequence) - 1)]
+
+def narrow_dtype(dtype, exotics:bool = False):
+  """
+  Widen the given dtype to the next size
+  of the same type. For example, 
+  int16 -> int8 or uint64 -> uint32
+
+  8-bit types will map to themselves.
+
+  exotics: include float16
+
+  Return: upgraded dtype
+  """
+  dtype = np.dtype(dtype)
+  if dtype.itemsize == 1:
+    return dtype
+
+  if np.issubdtype(dtype, np.floating):
+    sequence = [ np.float32, np.float64, np.longdouble ] 
+    if exotics:
+      sequence = [ np.float16 ] + sequence
+  elif np.issubdtype(dtype, np.unsignedinteger):
+    sequence = [ np.uint8, np.uint16, np.uint32, np.uint64 ]
+  elif np.issubdtype(dtype, np.complexfloating):
+    sequence = [ np.complex64, np.complex128, np.clongdouble ]
+  elif np.issubdtype(dtype, np.integer):
+    sequence = [ np.int8, np.int16, np.int32, np.int64 ]
+  elif np.issubdtype(dtype, (np.intp, np.uintp)):
+    return dtype
+  else:
+    raise ValueError(
+      f"Unsupported dtype: {dtype}\n"
+      f"Only standard floats, integers, and complex types are supported."
+    )
+
+  idx = sequence.index(dtype)
+  return sequence[max(idx-1, 0)]
 
 def mask(arr, labels, in_place=False, value=0):
   """
