@@ -8,11 +8,17 @@ Renumber and relabel Numpy arrays at C++ speed and physically convert rectangula
 import fastremap
 
 uniq, cts = fastremap.unique(labels, return_counts=True) # may be much faster than np.unique
+
+idxs = fastremap.indices(labels, 1231) # important for huge arrays
+
 labels, remapping = fastremap.renumber(labels, in_place=True) # relabel values from 1 and refit data type
 ptc = fastremap.point_cloud(labels) # dict of coordinates by label
 
 labels = fastremap.refit(labels) # resize the data type of the array to fit extrema
 labels = fastremap.refit(labels, value=-35) # resize the data type to fit the value provided
+
+wider_dtype = fastremap.widen_dtype(np.uint32) # np.uint64
+narrower_dtype = fastremap.narrow_dtype(np.uint32) # np.uint16
 
 # remap all occurances of 1 -> 2
 labels = fastremap.remap(labels, { 1: 2 }, preserve_missing_labels=True, in_place=True)
@@ -44,8 +50,11 @@ binaries = fastremap.tobytes(labels, (64,64,64), order="F")
 ## All Available Functions 
 - **unique:** Faster implementation of `np.unique`.
 - **renumber:** Relabel array from 1 to N which can often use smaller datatypes.
+- **indices:** Optimized search for matching values.
 - **remap:** Custom relabeling of values in an array from a dictionary.
 - **refit:** Resize the data type of an array to the smallest that can contain the most extreme values in it.
+- **narrow_dtype:** Find the next sized up dtype. e.g. uint16 -> uint32
+- **widen_dtype:** Find the next sized down dtype. e.g. uint16 -> uint8
 - **mask:** Zero out labels in an array specified by a given list.
 - **mask_except**: Zero out all labels except those specified in a given list.
 - **component_map**: Extract an int-to-int dictionary mapping of labels from one image containing component labels to another parent labels.  
