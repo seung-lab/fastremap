@@ -871,12 +871,9 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   if not isinstance(labels, np.ndarray):
     labels = np.array(labels)
 
-  if not np.issubdtype(labels.dtype, np.integer):
-    raise TypeError("fastremap.unique only supports integer types.")
-
   # These flags are currently unsupported so call uncle and
   # use the standard implementation instead.
-  if axis is not None:
+  if (axis is not None) or (not np.issubdtype(labels.dtype, np.integer)):
     if (
       axis == 0
       and (labels.ndim == 2 and np.dtype(labels.dtype).itemsize < 8)
