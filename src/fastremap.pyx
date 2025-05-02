@@ -946,13 +946,18 @@ def two_axis_unique(labels):
   """
   Faster replacement for np.unique(labels, axis=0)
   when ndim = 2 and the dtype can be widened.
+
+  This special case is useful for sorting edge lists.
   """
   dtype = labels.dtype
-  labels = labels.reshape((labels.size,), order="C")
-  labels = labels.view(widen_dtype(dtype))
+  wide_dtype = widen_dtype(dtype)
+
+  labels = labels[:, [1,0]].reshape(-1, order="C")
+  labels = labels.view(wide_dtype)
   labels = unique(labels)
   N = len(labels)
-  return labels.view(dtype).reshape((N, 2), order="C")
+  labels = labels.view(dtype).reshape((N, 2), order="C")
+  return labels[:,[1,0]]
 
 def unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
   if min_label is None or max_label is None:
