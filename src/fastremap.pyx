@@ -1009,9 +1009,10 @@ def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
   uniq.push_back(cur)
   counts.push_back(accum)
 
+  dtype = labels.dtype
   del labels
 
-  return np.array(uniq), np.array(counts)
+  return np.array(uniq, dtype=dtype), np.array(counts, dtype=np.uint64)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
