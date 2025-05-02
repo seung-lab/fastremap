@@ -397,7 +397,8 @@ def test_minmax():
   assert minval == np.min(volume)
   assert maxval == np.max(volume)
 
-def test_unique_axis_0():
+@pytest.mark.parametrize("dtype", DTYPES)
+def test_unique_axis_0(dtype):
   arr = np.array([
     [0,1],
     [0,2],
@@ -405,16 +406,10 @@ def test_unique_axis_0():
     [0,2],
     [1,2],
     [2,3],
-  ])
+  ], dtype=dtype)
 
   res = fastremap.unique(arr, axis=0)
-  ans = np.array([
-    [0,1],
-    [0,2],
-    [0,3],
-    [1,2],
-    [2,3],
-  ])
+  ans = np.unique(arr, axis=0)
 
   assert np.all(res == ans)
 
