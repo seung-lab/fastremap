@@ -898,12 +898,10 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   labels_orig = labels
   labels = reshape(labels, (voxels,))
 
-  cdef int64_t max_label
-  cdef int64_t min_label
+  max_label = 0
+  min_label = 0
   if voxels > 0:
     min_label, max_label = minmax(labels)
-  else:
-    min_label, max_label = (0, 0)
 
   def c_order_index(arr):
     if len(shape) > 1 and fortran_order:
@@ -918,9 +916,9 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     counts = np.array([], dtype=np.uint32)
     index = np.array([], dtype=np.uint64)
     inverse = np.array([], dtype=np.uintp)
-  elif min_label >= 0 and max_label < <int64_t>voxels:
+  elif min_label >= 0 and max_label < int(voxels):
     uniq, index, counts, inverse = unique_via_array(labels, max_label, return_index=return_index, return_inverse=return_inverse)
-  elif (max_label - min_label) <= <int64_t>voxels:
+  elif (max_label - min_label) <= int(voxels):
     uniq, index, counts, inverse = unique_via_shifted_array(labels, min_label, max_label, return_index=return_index, return_inverse=return_inverse)
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
     uniq, index, counts, inverse = unique_via_renumber(labels, return_index=return_index, return_inverse=return_inverse)
