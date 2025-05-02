@@ -413,6 +413,13 @@ def test_unique_axis_0(dtype):
 
   assert np.all(res == ans)
 
+def test_unique_axis_0_random():
+  arr = np.random.randint(0,100000, size=[1000000,2], dtype=np.uint32)
+  a1 = fastremap.unique(arr, axis=0)
+  a2 = np.unique(arr, axis=0)
+  assert np.all(a1 == a2)
+
+
 @pytest.mark.parametrize("order", [ "C", "F" ])
 def test_unique(order):
   def reorder(arr):
