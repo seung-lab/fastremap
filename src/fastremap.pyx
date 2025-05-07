@@ -876,7 +876,12 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   if (axis is not None) or (not np.issubdtype(labels.dtype, np.integer)):
     if (
       axis == 0
-      and (labels.ndim == 2 and np.dtype(labels.dtype).itemsize < 8)
+      and (
+        labels.ndim == 2 
+        and labels.shape[1] == 2
+        and np.dtype(labels.dtype).itemsize < 8 
+        and np.issubdtype(labels.dtype, np.integer)
+      )
       and not (return_index or return_inverse or return_counts)
       and labels.flags.c_contiguous
     ):
