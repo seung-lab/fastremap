@@ -980,6 +980,13 @@ def unique_via_renumber(labels, return_index=False, return_inverse=False):
   remap = { v:k for k,v in remap.items() }
   uniq, idx, counts, inverse = unique_via_array(labels, max(remap.keys()), return_index, return_inverse)
   uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
+  uniq, idx2 = np.unique(uniq, return_index=True)
+  if idx is not None:
+    idx = idx[idx2]
+  if counts is not None:
+    counts = counts[idx2]
+  if inverse is not None:
+    inverse = inverse[idx2]
   return uniq, idx, counts, inverse
 
 @cython.boundscheck(False)
