@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List, Tuple, Union
 
 import numpy as np
 from numpy.typing import ArrayLike, DTypeLike, NDArray
@@ -8,13 +8,13 @@ def unique(
     return_index: bool = False,
     return_inverse: bool = False,
     return_counts: bool = False,
-    axis: int | None = None,
-) -> (
-    NDArray[Any]
-    | tuple[NDArray[Any], NDArray[Any]]
-    | tuple[NDArray[Any], NDArray[Any], NDArray[Any]]
-    | tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]]
-):
+    axis: Union[int, None] = None,
+) -> Union[
+    NDArray[Any],
+    Tuple[NDArray[Any], NDArray[Any]],
+    Tuple[NDArray[Any], NDArray[Any], NDArray[Any]],
+    Tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]],
+]:
     """Compute the sorted set of unique labels in the input array.
 
     Args:
@@ -55,10 +55,10 @@ def unique(
 
 def renumber(
     arr: NDArray[Any],
-    start: int | float = 1,
+    start: Union[int, float] = 1,
     preserve_zero: bool = True,
     in_place: bool = False,
-) -> tuple[NDArray[Any], dict[int | float, int | float]]:
+) -> Tuple[NDArray[Any], dict[Union[int, float], Union[int, float]]]:
     """Renumber an array.
 
     Given an array of integers, renumber all the unique values starting
@@ -80,14 +80,14 @@ def renumber(
 
 def indices(
     signatures: NDArray[Any],
-    value: int | float,
+    value: Union[int, float],
 ) -> NDArray[Any]:
     """Search an array for indices where value matches the array value."""
     ...
 
 def remap(
     arr: ArrayLike,
-    table: dict[int | float, int | float],
+    table: dict[Union[int, float], Union[int, float]],
     preserve_missing_labels: bool = False,
     in_place: bool = False,
 ) -> NDArray[Any]:
@@ -108,7 +108,7 @@ def remap(
 
 def refit(
     arr: NDArray[Any],
-    value: int | float | None = None,
+    value: Union[int, float, None] = None,
     increase_only: bool = False,
     exotics: bool = False,
 ) -> NDArray[Any]:
@@ -175,7 +175,7 @@ def mask(
     arr: ArrayLike,
     labels: ArrayLike,
     in_place: bool = False,
-    value: int | float = 0,
+    value: Union[int, float] = 0,
 ) -> NDArray[Any]:
     """Mask out designated labels in an array with the given value.
 
@@ -198,7 +198,7 @@ def mask_except(
     arr: NDArray[Any],
     labels: ArrayLike,
     in_place: bool = False,
-    value: int | float = 0,
+    value: Union[int, float] = 0,
 ) -> NDArray[Any]:
     """Mask out all labels except the provided list.
 
@@ -220,7 +220,7 @@ def mask_except(
 def component_map(
     component_labels: ArrayLike,
     parent_labels: ArrayLike,
-) -> dict[int | float, int | float]:
+) -> dict[Union[int, float], Union[int, float]]:
     """Generate a mapping from connected components to their parent labels.
 
     Given two sets of images that have a surjective mapping between their
@@ -239,7 +239,7 @@ def component_map(
 def inverse_component_map(
     parent_labels: ArrayLike,
     component_labels: ArrayLike,
-) -> dict[int | float, list[int | float]]:
+) -> dict[Union[int, float], List[Union[int, float]]]:
     """Generate a mapping from parent labels to connected components.
 
     Given two sets of images that have a mapping between their labels, generate
@@ -333,7 +333,9 @@ def ascontiguousarray(arr: NDArray[Any]) -> NDArray[Any]:
     """
     ...
 
-def minmax(arr: NDArray[Any]) -> tuple[int | float | None, int | float | None]:
+def minmax(
+    arr: NDArray[Any],
+) -> Tuple[Union[int, float, None], Union[int, float, None]]:
     """Returns (min(arr), max(arr)) computed in a single pass.
 
     Returns (None, None) if array is size zero.
@@ -369,9 +371,9 @@ def point_cloud(arr: NDArray[Any]) -> dict[int, NDArray[Any]]:
 
 def tobytes(
     image: NDArray[Any],
-    chunk_size: tuple[int, int, int],
+    chunk_size: Tuple[int, int, int],
     order: str = "C",
-) -> list[bytes]:
+) -> List[bytes]:
     """Compute the bytes with the image divided into a grid of cutouts.
 
     Return the resultant binaries indexed by their cutout's gridpoint in
