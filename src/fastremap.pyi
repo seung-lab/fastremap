@@ -136,7 +136,7 @@ def refit(
 def narrow_dtype(
     dtype: DTypeLike,
     exotics: bool = False,
-) -> np.dtype:
+) -> DTypeLike:
     """Widen the given dtype to the next size of the same type.
 
     For example, int16 -> int8 or uint64 -> uint32.
@@ -155,7 +155,7 @@ def narrow_dtype(
 def widen_dtype(
     dtype: DTypeLike,
     exotics: bool = False,
-) -> np.dtype:
+) -> DTypeLike:
     """Widen the given dtype to the next size of the same type.
 
     For example, int8 -> int16 or uint32 -> uint64.
@@ -285,6 +285,21 @@ def remap_from_array_kv(
 
     Returns:
         The remapped array.
+    """
+    ...
+
+def transpose(arr: NDArray[Any]) -> NDArray[Any]:
+    """For up to four dimensional matrices, perform in-place transposition.
+
+    Square matrices up to three dimensions are faster than numpy's out-of-place
+    algorithm. Default to the out-of-place implementation numpy uses for cases
+    that aren't specially handled.
+
+    Args:
+        arr: The input numpy array to transpose.
+
+    Returns:
+        The transposed numpy array
     """
     ...
 
