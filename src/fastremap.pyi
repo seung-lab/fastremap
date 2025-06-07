@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 from numpy.typing import ArrayLike, DTypeLike, NDArray
@@ -58,7 +58,7 @@ def renumber(
     start: Union[int, float] = 1,
     preserve_zero: bool = True,
     in_place: bool = False,
-) -> Tuple[NDArray[Any], dict[Union[int, float], Union[int, float]]]:
+) -> Tuple[NDArray[Any], Dict[int, int] | Dict[float, float]]:
     """Renumber an array.
 
     Given an array of integers, renumber all the unique values starting
@@ -87,7 +87,7 @@ def indices(
 
 def remap(
     arr: ArrayLike,
-    table: dict[Union[int, float], Union[int, float]],
+    table: Dict[int, int] | Dict[float, float],
     preserve_missing_labels: bool = False,
     in_place: bool = False,
 ) -> NDArray[Any]:
@@ -220,7 +220,7 @@ def mask_except(
 def component_map(
     component_labels: ArrayLike,
     parent_labels: ArrayLike,
-) -> dict[Union[int, float], Union[int, float]]:
+) -> Dict[int, int] | Dict[float, float]:
     """Generate a mapping from connected components to their parent labels.
 
     Given two sets of images that have a surjective mapping between their
@@ -239,7 +239,7 @@ def component_map(
 def inverse_component_map(
     parent_labels: ArrayLike,
     component_labels: ArrayLike,
-) -> dict[Union[int, float], List[Union[int, float]]]:
+) -> Dict[int, int] | Dict[float, float]:
     """Generate a mapping from parent labels to connected components.
 
     Given two sets of images that have a mapping between their labels, generate
@@ -354,7 +354,7 @@ def foreground(arr: NDArray[Any]) -> int:
     """Returns the number of non-zero voxels in an array."""
     ...
 
-def point_cloud(arr: NDArray[Any]) -> dict[int, NDArray[Any]]:
+def point_cloud(arr: NDArray[Any]) -> Dict[int, NDArray[Any]]:
     """Generate a mapping from labels to their (x, y, z) position in the image.
 
     Zero is considered a background label.
