@@ -36,5 +36,6 @@ setuptools.setup(
       extra_compile_args=extra_compile_args,
     )
   ],
+  data_files=[('', ['src/fastremap.pyi'])],
   long_description_content_type='text/markdown',
 )
