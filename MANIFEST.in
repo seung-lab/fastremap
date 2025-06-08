@@ -1,3 +1,1 @@
-recursive-include src *
-exclude src/fastremap.cpp
 include LICENSE

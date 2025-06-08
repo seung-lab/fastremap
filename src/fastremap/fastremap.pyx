@@ -135,6 +135,9 @@ def renumber(arr, start=1, preserve_zero=True, in_place=False):
 
   Return: a renumbered array, dict with remapping of oldval => newval
   """
+  if not isinstance(arr, np.ndarray):
+    arr = np.array(arr)
+
   if arr.size == 0:
     return arr, {}
 
