@@ -763,35 +763,32 @@ def _remap(cnp.ndarray[NUMBER] arr, dict table, uint8_t preserve_missing_labels)
   return arr
 
 @cython.boundscheck(False)
-def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals):
+def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals, in_place=True):
   """
   remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals)
   """
-  cdef UINT[:] valview = vals
-  cdef UINT[:] arrview = arr
-
   cdef size_t i = 0
   cdef size_t size = arr.size 
   cdef size_t maxkey = vals.size - 1
   cdef UINT elem
+
+  if not in_place:
+    arr = np.copy(arr)
 
   with nogil:
     for i in range(size):
       elem = arr[i]
       if elem < 0 or elem > maxkey:
         continue
-      arrview[i] = vals[elem]
+      arr[i] = vals[elem]
 
   return arr
 
 @cython.boundscheck(False)
-def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals):
+def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals, bint preserve_missing_labels=True, in_place=True):
   """
   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
   """
-  cdef ALLINT[:] keyview = keys
-  cdef ALLINT[:] valview = vals
-  cdef ALLINT[:] arrview = arr
   cdef flat_hash_map[ALLINT, ALLINT] remap_dict
 
   assert keys.size == vals.size
@@ -799,6 +796,9 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
   cdef size_t i = 0
   cdef size_t size = keys.size 
   cdef ALLINT elem
+
+  if not in_place:
+    arr = np.copy(arr)
 
   with nogil:
     for i in range(size):
@@ -811,9 +811,12 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
     for i in range(size):
       elem = arr[i]
       if remap_dict.find(elem) == remap_dict.end():
-        continue
+        if preserve_missing_labels:
+          continue
+        else:
+          raise KeyError("{} was not in the remap keys.".format(elem))
       else:
-          arrview[i] = remap_dict[elem]
+          arr[i] = remap_dict[elem]
 
   return arr
 
