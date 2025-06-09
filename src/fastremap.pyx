@@ -782,7 +782,7 @@ def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals, in_place=Tru
   return arr
 
 @cython.boundscheck(False)
-def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals, preserve_missing_labels=True, in_place=True):
+def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals, bint preserve_missing_labels=True, in_place=True):
   """
   remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.ndarray[ALLINT] vals)
   """
@@ -808,7 +808,7 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
     for i in range(size):
       elem = arr[i]
       if remap_dict.find(elem) == remap_dict.end():
-        if preserve_missing_labels is True:
+        if preserve_missing_labels:
           continue
         else:
           raise KeyError("{} was not in the remap keys.".format(elem))
