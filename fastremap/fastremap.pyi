@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Union
 
 import numpy as np
 from numpy.typing import ArrayLike, DTypeLike, NDArray
@@ -11,9 +11,9 @@ def unique(
     axis: Union[int, None] = None,
 ) -> Union[
     NDArray[Any],
-    Tuple[NDArray[Any], NDArray[Any]],
-    Tuple[NDArray[Any], NDArray[Any], NDArray[Any]],
-    Tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]],
+    tuple[NDArray[Any], NDArray[Any]],
+    tuple[NDArray[Any], NDArray[Any], NDArray[Any]],
+    tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]],
 ]:
     """Compute the sorted set of unique labels in the input array.
 
@@ -58,7 +58,7 @@ def renumber(
     start: Union[int, float] = 1,
     preserve_zero: bool = True,
     in_place: bool = False,
-) -> Tuple[NDArray[Any], Dict[int, int] | Dict[float, float]]:
+) -> tuple[NDArray[Any], dict[int, int] | dict[float, float]]:
     """Renumber an array.
 
     Given an array of integers, renumber all the unique values starting
@@ -87,7 +87,7 @@ def indices(
 
 def remap(
     arr: ArrayLike,
-    table: Dict[int, int] | Dict[float, float],
+    table: dict[int, int] | dict[float, float],
     preserve_missing_labels: bool = False,
     in_place: bool = False,
 ) -> NDArray[Any]:
@@ -220,7 +220,7 @@ def mask_except(
 def component_map(
     component_labels: ArrayLike,
     parent_labels: ArrayLike,
-) -> Dict[int, int] | Dict[float, float]:
+) -> dict[int, int] | dict[float, float]:
     """Generate a mapping from connected components to their parent labels.
 
     Given two sets of images that have a surjective mapping between their
@@ -239,7 +239,7 @@ def component_map(
 def inverse_component_map(
     parent_labels: ArrayLike,
     component_labels: ArrayLike,
-) -> Dict[int, int] | Dict[float, float]:
+) -> dict[int, int] | dict[float, float]:
     """Generate a mapping from parent labels to connected components.
 
     Given two sets of images that have a mapping between their labels, generate
@@ -335,7 +335,7 @@ def ascontiguousarray(arr: NDArray[Any]) -> NDArray[Any]:
 
 def minmax(
     arr: NDArray[Any],
-) -> Tuple[Union[int, float, None], Union[int, float, None]]:
+) -> tuple[Union[int, float, None], Union[int, float, None]]:
     """Returns (min(arr), max(arr)) computed in a single pass.
 
     Returns (None, None) if array is size zero.
@@ -354,7 +354,7 @@ def foreground(arr: NDArray[Any]) -> int:
     """Returns the number of non-zero voxels in an array."""
     ...
 
-def point_cloud(arr: NDArray[Any]) -> Dict[int, NDArray[Any]]:
+def point_cloud(arr: NDArray[Any]) -> dict[int, NDArray[Any]]:
     """Generate a mapping from labels to their (x, y, z) position in the image.
 
     Zero is considered a background label.
@@ -371,9 +371,9 @@ def point_cloud(arr: NDArray[Any]) -> Dict[int, NDArray[Any]]:
 
 def tobytes(
     image: NDArray[Any],
-    chunk_size: Tuple[int, int, int],
+    chunk_size: tuple[int, int, int],
     order: str = "C",
-) -> List[bytes]:
+) -> list[bytes]:
     """Compute the bytes with the image divided into a grid of cutouts.
 
     Return the resultant binaries indexed by their cutout's gridpoint in
