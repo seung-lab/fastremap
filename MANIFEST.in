@@ -1,1 +1,3 @@
+include fastremap/ipt.hpp
+include fastremap/ska_flat_hash_map.hpp
 include LICENSE
