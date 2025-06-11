@@ -317,7 +317,7 @@ def fit_dtype(dtype, value, exotics=False):
     e.g. float16 (half-precision, 16-bits) 
       or double complex (which takes 128-bits).
 
-  Return: refitted array
+  Return: refitted dtype
   """
   dtype = np.dtype(dtype)
   if np.issubdtype(dtype, np.floating):
