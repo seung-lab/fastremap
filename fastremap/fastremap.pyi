@@ -79,7 +79,7 @@ def renumber(
     ...
 
 def indices(
-    signatures: NDArray[Any],
+    arr: NDArray[Any],
     value: Union[int, float],
 ) -> NDArray[Any]:
     """Search an array for indices where value matches the array value."""
