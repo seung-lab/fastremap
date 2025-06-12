@@ -72,7 +72,7 @@ def minmax(arr):
   Returns (min(arr), max(arr)) computed in a single pass.
   Returns (None, None) if array is size zero.
   """
-  return _minmax(reshape(arr, (arr.size,)))
+  return _minmax(_reshape(arr, (arr.size,)))
 
 def _minmax(cnp.ndarray[NUMBER, ndim=1] arr):
   cdef size_t i = 0
@@ -92,7 +92,7 @@ def _minmax(cnp.ndarray[NUMBER, ndim=1] arr):
 
   return minval, maxval
 
-def match_array_orders(*arrs, order="K"):
+def _match_array_orders(*arrs, order="K"):
   if len(arrs) == 0:
     return []
 
@@ -157,11 +157,11 @@ def renumber(arr, start=1, preserve_zero=True, in_place=False):
 
   arr = np.lib.stride_tricks.as_strided(arr, shape=(arr.size,), strides=(nbytes,))
   arr, remap_dict = _renumber(arr, <int64_t>start, preserve_zero)
-  arr = reshape(arr, shape, order)
+  arr = _reshape(arr, shape, order)
 
   return arr, remap_dict
 
-def reshape(arr, shape, order=None):
+def _reshape(arr, shape, order=None):
   """
   If the array is contiguous, attempt an in place reshape
   rather than potentially making a copy.
@@ -293,7 +293,7 @@ def refit(arr, value=None, increase_only=False, exotics=False):
     else:
       value = min_value
 
-  dtype = fit_dtype(arr.dtype, value, exotics=exotics)
+  dtype = _fit_dtype(arr.dtype, value, exotics=exotics)
 
   if increase_only and np.dtype(dtype).itemsize <= np.dtype(arr.dtype).itemsize:
     return arr
@@ -301,7 +301,7 @@ def refit(arr, value=None, increase_only=False, exotics=False):
     return arr
   return arr.astype(dtype)
 
-def fit_dtype(dtype, value, exotics=False):
+def _fit_dtype(dtype, value, exotics=False):
   """
   Find the smallest dtype of the 
   same kind that will fit a given value.
@@ -486,9 +486,9 @@ def mask_except(arr, labels, in_place=False, value=0):
   if not in_place:
     arr = np.copy(arr, order=order)
 
-  arr = reshape(arr, (arr.size,))
+  arr = _reshape(arr, (arr.size,))
   arr = _mask_except(arr, labels, value)
-  return reshape(arr, shape, order=order)
+  return _reshape(arr, shape, order=order)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
@@ -555,12 +555,12 @@ def component_map(component_labels, parent_labels):
 
   shape = component_labels.shape 
 
-  component_labels, parent_labels = match_array_orders(
+  component_labels, parent_labels = _match_array_orders(
     component_labels, parent_labels
   )
 
-  component_labels = reshape(component_labels, (component_labels.size,))
-  parent_labels = reshape(parent_labels, (parent_labels.size,))
+  component_labels = _reshape(component_labels, (component_labels.size,))
+  parent_labels = _reshape(parent_labels, (parent_labels.size,))
   return _component_map(component_labels, parent_labels)
 
 @cython.boundscheck(False)
@@ -614,11 +614,11 @@ def inverse_component_map(parent_labels, component_labels):
     ))
 
   shape = component_labels.shape 
-  component_labels, parent_labels = match_array_orders(
+  component_labels, parent_labels = _match_array_orders(
     component_labels, parent_labels
   )
-  component_labels = reshape(component_labels, (component_labels.size,))
-  parent_labels = reshape(parent_labels, (parent_labels.size,))
+  component_labels = _reshape(component_labels, (component_labels.size,))
+  parent_labels = _reshape(parent_labels, (parent_labels.size,))
   return _inverse_component_map(parent_labels, component_labels)
 
 @cython.boundscheck(False)
@@ -692,9 +692,9 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
   if all([ k == v for k,v in table.items() ]) and preserve_missing_labels:
     return arr
 
-  arr = reshape(arr, (arr.size,))
+  arr = _reshape(arr, (arr.size,))
   arr = _remap(arr, table, preserve_missing_labels)
-  return reshape(arr, shape, order=order)
+  return _reshape(arr, shape, order=order)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
@@ -829,7 +829,7 @@ def pixel_pairs(labels):
   """
   if labels.size == 0:
     return 0
-  return _pixel_pairs(reshape(labels, (labels.size,)))
+  return _pixel_pairs(_reshape(labels, (labels.size,)))
 
 def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
   cdef size_t voxels = labels.size
@@ -891,7 +891,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
       and not (return_index or return_inverse or return_counts)
       and labels.flags.c_contiguous
     ):
-      return two_axis_unique(labels)
+      return _two_axis_unique(labels)
     else:
       return np.unique(
         labels, 
@@ -907,7 +907,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
   fortran_order = labels.flags.f_contiguous
   order = "F" if fortran_order else "C"
   labels_orig = labels
-  labels = reshape(labels, (voxels,))
+  labels = _reshape(labels, (voxels,))
 
   max_label = 0
   min_label = 0
@@ -928,15 +928,15 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     index = np.array([], dtype=np.uint64)
     inverse = np.array([], dtype=np.uintp)
   elif min_label >= 0 and max_label < int(voxels):
-    uniq, index, counts, inverse = unique_via_array(labels, max_label, return_index=return_index, return_inverse=return_inverse)
+    uniq, index, counts, inverse = _unique_via_array(labels, max_label, return_index=return_index, return_inverse=return_inverse)
   elif (max_label - min_label) <= int(voxels):
-    uniq, index, counts, inverse = unique_via_shifted_array(labels, min_label, max_label, return_index=return_index, return_inverse=return_inverse)
+    uniq, index, counts, inverse = _unique_via_shifted_array(labels, min_label, max_label, return_index=return_index, return_inverse=return_inverse)
   elif float(pixel_pairs(labels)) / float(voxels) > 0.66:
-    uniq, index, counts, inverse = unique_via_renumber(labels, return_index=return_index, return_inverse=return_inverse)
+    uniq, index, counts, inverse = _unique_via_renumber(labels, return_index=return_index, return_inverse=return_inverse)
   elif return_index or return_inverse:
     return np.unique(labels_orig, return_index=return_index, return_counts=return_counts, return_inverse=return_inverse)
   else:
-    uniq, counts = unique_via_sort(labels)
+    uniq, counts = _unique_via_sort(labels)
     index = None
     inverse = None
 
@@ -945,7 +945,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     # This is required to match numpy's behavior
     results.append(c_order_index(index))
   if return_inverse:
-    results.append(reshape(inverse, shape, order=order))
+    results.append(_reshape(inverse, shape, order=order))
   if return_counts:
     results.append(counts)
 
@@ -953,7 +953,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     return tuple(results)
   return uniq
 
-def two_axis_unique(labels):
+def _two_axis_unique(labels):
   """
   Faster replacement for np.unique(labels, axis=0)
   when ndim = 2 and the dtype can be widened.
@@ -970,21 +970,21 @@ def two_axis_unique(labels):
   labels = labels.view(dtype).reshape((N, 2), order="C")
   return labels[:,[1,0]]
 
-def unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
+def _unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
   if min_label is None or max_label is None:
     min_label, max_label = minmax(labels)
 
   labels -= min_label
-  uniq, idx, counts, inverse = unique_via_array(labels, max_label - min_label + 1, return_index, return_inverse)
+  uniq, idx, counts, inverse = _unique_via_array(labels, max_label - min_label + 1, return_index, return_inverse)
   labels += min_label
   uniq += min_label
   return uniq, idx, counts, inverse
 
-def unique_via_renumber(labels, return_index=False, return_inverse=False):
+def _unique_via_renumber(labels, return_index=False, return_inverse=False):
   dtype = labels.dtype
   labels, remap = renumber(labels)
   remap = { v:k for k,v in remap.items() }
-  uniq, idx, counts, inverse = unique_via_array(labels, max(remap.keys()), return_index, return_inverse)
+  uniq, idx, counts, inverse = _unique_via_array(labels, max(remap.keys()), return_index, return_inverse)
   uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
 
   if not return_index and not return_inverse:
@@ -1004,8 +1004,8 @@ def unique_via_renumber(labels, return_index=False, return_inverse=False):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
-  """Slower than unique_via_array but can handle any label."""
+def _unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
+  """Slower than _unique_via_array but can handle any label."""
   labels = np.copy(labels)
   labels.sort()
 
@@ -1041,7 +1041,7 @@ def unique_via_sort(cnp.ndarray[ALLINT, ndim=1] labels):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def unique_via_array(
+def _unique_via_array(
   cnp.ndarray[ALLINT, ndim=1] labels, 
   size_t max_label, 
   return_index, return_inverse,
@@ -1138,13 +1138,13 @@ def transpose(arr):
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
-    arr = ipt2d(arr)
+    arr = _internal_ipt2d(arr)
     return arr.view(dtype)
   elif arr.ndim == 3:
-    arr = ipt3d(arr)
+    arr = _internal_ipt3d(arr)
     return arr.view(dtype)
   elif arr.ndim == 4:
-    arr = ipt4d(arr)
+    arr = _internal_ipt4d(arr)
     return arr.view(dtype)
   else:
     return arr.T
@@ -1177,15 +1177,15 @@ def asfortranarray(arr):
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
-    arr = ipt2d(arr)
+    arr = _internal_ipt2d(arr)
     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes))
     return arr.view(dtype)
   elif arr.ndim == 3:
-    arr = ipt3d(arr)
+    arr = _internal_ipt3d(arr)
     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(nbytes, shape[0] * nbytes, shape[0] * shape[1] * nbytes))
     return arr.view(dtype)
   elif arr.ndim == 4:
-    arr = ipt4d(arr)
+    arr = _internal_ipt4d(arr)
     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
       strides=(
         nbytes, 
@@ -1225,11 +1225,11 @@ def ascontiguousarray(arr):
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
-    arr = ipt2d(arr)
+    arr = _internal_ipt2d(arr)
     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(shape[1] * nbytes, nbytes))
     return arr.view(dtype)
   elif arr.ndim == 3:
-    arr = ipt3d(arr)
+    arr = _internal_ipt3d(arr)
     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=(
         shape[2] * shape[1] * nbytes, 
         shape[2] * nbytes, 
@@ -1237,7 +1237,7 @@ def ascontiguousarray(arr):
       ))
     return arr.view(dtype)
   elif arr.ndim == 4:
-    arr = ipt4d(arr)
+    arr = _internal_ipt4d(arr)
     arr = np.lib.stride_tricks.as_strided(arr, shape=shape, 
       strides=(
         shape[3] * shape[2] * shape[1] * nbytes,
@@ -1249,7 +1249,7 @@ def ascontiguousarray(arr):
   else:
     return np.ascontiguousarray(arr)
 
-def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
+def _internal_ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
   cdef COMPLEX_NUMBER[:,:] arrview = arr
 
   cdef size_t sx
@@ -1290,7 +1290,7 @@ def ipt2d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=2] arr):
 
   return arr
 
-def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
+def _internal_ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
   cdef COMPLEX_NUMBER[:,:,:] arrview = arr
 
   cdef size_t sx
@@ -1334,7 +1334,7 @@ def ipt3d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=3] arr):
 
   return arr
 
-def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
+def _internal_ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
   cdef COMPLEX_NUMBER[:,:,:,:] arrview = arr
 
   cdef size_t sx
@@ -1383,7 +1383,7 @@ def ipt4d(cnp.ndarray[COMPLEX_NUMBER, cast=True, ndim=4] arr):
 
 def foreground(arr):
   """Returns the number of non-zero voxels in an array."""
-  arr = reshape(arr, (arr.size,))
+  arr = _reshape(arr, (arr.size,))
   return _foreground(arr)
 
 @cython.boundscheck(False)
@@ -1601,7 +1601,7 @@ def tobytes(
     for i in range(num_grid)
   ]
 
-  cdef cnp.ndarray[NUMBER, ndim=1] img = reshape(image, (image.size,))
+  cdef cnp.ndarray[NUMBER, ndim=1] img = _reshape(image, (image.size,))
 
   if order == "F": # b/c of guard above, this is F to F order
     for gz in range(sgz):
