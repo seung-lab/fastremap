@@ -258,6 +258,7 @@ def inverse_component_map(
 def remap_from_array(
     arr: NDArray[np.uint],
     vals: NDArray[np.uint],
+    in_place: bool = True,
 ) -> NDArray[Any]:
     """Remap an input numpy array according to the given values array.
 
@@ -265,6 +266,7 @@ def remap_from_array(
         arr: An N-dimensional numpy array.
         vals: An array of values to remap to, where the index of the value in
             the array corresponds to the label in the input array.
+        in_place: If True, modify the input array to reduce memory consumption.
 
     Returns:
         The remapped array.
@@ -275,6 +277,8 @@ def remap_from_array_kv(
     arr: NDArray[np.uint],
     keys: NDArray[np.uint],
     vals: NDArray[np.uint],
+    preserve_missing_labels: bool = True,
+    in_place: bool = True,
 ) -> NDArray[Any]:
     """Remap an input numpy array according to the keys and values arrays.
 
@@ -282,6 +286,10 @@ def remap_from_array_kv(
         arr: An N-dimensional numpy array.
         keys: An array of keys to remap from. Must be the same length as `vals`.
         vals: An array of values to remap to. Must be the same length as `vals`.
+        preserve_missing_labels: If an array value is not present in `keys`...
+            True: Leave it alone.
+            False: Throw a KeyError.
+        in_place: If True, modify the input array to reduce memory consumption.
 
     Returns:
         The remapped array.
