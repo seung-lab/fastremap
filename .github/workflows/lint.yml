@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements_dev.txt
 
       - name: Add mypy annotator
         uses: pr-annotators/mypy-pr-annotator@v1.0.0
