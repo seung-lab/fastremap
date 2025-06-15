@@ -1,10 +1,83 @@
-from typing import Any, Union
+from typing import Any, Literal, Union, overload
 
 import numpy as np
 from numpy.typing import ArrayLike, DTypeLike, NDArray
 
+@overload
 def unique(
     labels: ArrayLike,
+    *,
+    return_index: Literal[False] = False,
+    return_inverse: Literal[False] = False,
+    return_counts: Literal[False] = False,
+    axis: Union[int, None] = None,
+) -> NDArray[Any]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[True],
+    return_inverse: Literal[False] = False,
+    return_counts: Literal[False] = False,
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[False] = False,
+    return_inverse: Literal[True],
+    return_counts: Literal[False] = False,
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[False] = False,
+    return_inverse: Literal[False] = False,
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[False] = False,
+    return_inverse: Literal[True],
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[True],
+    return_inverse: Literal[False] = False,
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[True],
+    return_inverse: Literal[True],
+    return_counts: Literal[False] = False,
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    *,
+    return_index: Literal[True],
+    return_inverse: Literal[True],
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+def unique(
+    labels: ArrayLike,
+    *,
     return_index: bool = False,
     return_inverse: bool = False,
     return_counts: bool = False,
