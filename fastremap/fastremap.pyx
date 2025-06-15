@@ -847,7 +847,7 @@ def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
   return pairs
 
 @cython.binding(True)
-def unique(labels, return_index=False, return_inverse=False, return_counts=False, axis=None):
+def unique(labels, *, return_index=False, return_inverse=False, return_counts=False, axis=None):
   """
   Compute the sorted set of unique labels in the input array.
 
