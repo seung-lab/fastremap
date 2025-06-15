@@ -75,7 +75,7 @@ def unique(
     return_counts: Literal[True],
     axis: Union[int, None] = None,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]]: ...
-def unique(
+def unique(  # type: ignore[misc]
     labels: ArrayLike,
     *,
     return_index: bool = False,
