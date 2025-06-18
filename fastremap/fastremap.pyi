@@ -347,9 +347,9 @@ def remap_from_array(
     ...
 
 def remap_from_array_kv(
-    arr: NDArray[np.uint],
-    keys: NDArray[np.uint],
-    vals: NDArray[np.uint],
+    arr: NDArray[np.integer],
+    keys: NDArray[np.integer],
+    vals: NDArray[np.integer],
     preserve_missing_labels: bool = True,
     in_place: bool = True,
 ) -> NDArray[Any]:
