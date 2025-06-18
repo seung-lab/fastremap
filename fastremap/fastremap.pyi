@@ -131,7 +131,7 @@ def renumber(
     start: Union[int, float] = 1,
     preserve_zero: bool = True,
     in_place: bool = False,
-) -> tuple[NDArray[Any], dict[int, int] | dict[float, float]]:
+) -> Union[tuple[NDArray[Any], dict[int, int], dict[float, float]]]:
     """Renumber an array.
 
     Given an array of integers, renumber all the unique values starting
@@ -160,7 +160,7 @@ def indices(
 
 def remap(
     arr: ArrayLike,
-    table: dict[int, int] | dict[float, float],
+    table: Union[dict[int, int], dict[float, float]],
     preserve_missing_labels: bool = False,
     in_place: bool = False,
 ) -> NDArray[Any]:
@@ -293,7 +293,7 @@ def mask_except(
 def component_map(
     component_labels: ArrayLike,
     parent_labels: ArrayLike,
-) -> dict[int, int] | dict[float, float]:
+) -> Union[dict[int, int], dict[float, float]]:
     """Generate a mapping from connected components to their parent labels.
 
     Given two sets of images that have a surjective mapping between their
@@ -312,7 +312,7 @@ def component_map(
 def inverse_component_map(
     parent_labels: ArrayLike,
     component_labels: ArrayLike,
-) -> dict[int, int] | dict[float, float]:
+) -> Union[dict[int, int], dict[float, float]]:
     """Generate a mapping from parent labels to connected components.
 
     Given two sets of images that have a mapping between their labels, generate
