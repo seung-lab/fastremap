@@ -6,7 +6,6 @@ from numpy.typing import ArrayLike, DTypeLike, NDArray
 @overload
 def unique(
     labels: ArrayLike,
-    *,
     return_index: Literal[False] = False,
     return_inverse: Literal[False] = False,
     return_counts: Literal[False] = False,
@@ -15,7 +14,6 @@ def unique(
 @overload
 def unique(
     labels: ArrayLike,
-    *,
     return_index: Literal[True],
     return_inverse: Literal[False] = False,
     return_counts: Literal[False] = False,
@@ -24,8 +22,7 @@ def unique(
 @overload
 def unique(
     labels: ArrayLike,
-    *,
-    return_index: Literal[False] = False,
+    return_index: Literal[False],
     return_inverse: Literal[True],
     return_counts: Literal[False] = False,
     axis: Union[int, None] = None,
@@ -33,34 +30,32 @@ def unique(
 @overload
 def unique(
     labels: ArrayLike,
-    *,
     return_index: Literal[False] = False,
-    return_inverse: Literal[False] = False,
+    *,
+    return_inverse: Literal[True],
+    return_counts: Literal[False] = False,
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    return_index: Literal[False],
+    return_inverse: Literal[False],
     return_counts: Literal[True],
     axis: Union[int, None] = None,
 ) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
     labels: ArrayLike,
-    *,
     return_index: Literal[False] = False,
-    return_inverse: Literal[True],
-    return_counts: Literal[True],
-    axis: Union[int, None] = None,
-) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
-@overload
-def unique(
-    labels: ArrayLike,
-    *,
-    return_index: Literal[True],
     return_inverse: Literal[False] = False,
+    *,
     return_counts: Literal[True],
     axis: Union[int, None] = None,
-) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
     labels: ArrayLike,
-    *,
     return_index: Literal[True],
     return_inverse: Literal[True],
     return_counts: Literal[False] = False,
@@ -69,7 +64,40 @@ def unique(
 @overload
 def unique(
     labels: ArrayLike,
+    return_index: Literal[True],
+    return_inverse: Literal[False],
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    return_index: Literal[True],
+    return_inverse: Literal[False] = False,
     *,
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    return_index: Literal[False],
+    return_inverse: Literal[True],
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
+    return_index: Literal[False] = False,
+    *,
+    return_inverse: Literal[True],
+    return_counts: Literal[True],
+    axis: Union[int, None] = None,
+) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
+@overload
+def unique(
+    labels: ArrayLike,
     return_index: Literal[True],
     return_inverse: Literal[True],
     return_counts: Literal[True],
@@ -77,7 +105,6 @@ def unique(
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 def unique(  # type: ignore[misc]
     labels: ArrayLike,
-    *,
     return_index: bool = False,
     return_inverse: bool = False,
     return_counts: bool = False,
