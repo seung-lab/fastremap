@@ -27,14 +27,15 @@ setuptools.setup(
   pbr=True,
   ext_modules=[
     setuptools.Extension(
-      'fastremap',
-      sources=['src/fastremap.pyx'],
+      'fastremap.fastremap',
+      sources=['fastremap/fastremap.pyx'],
       depends=[],
       language='c++',
       language_level=3,
-      include_dirs=["src", str(NumpyImport())],
+      include_dirs=["fastremap", str(NumpyImport())],
       extra_compile_args=extra_compile_args,
     )
   ],
+  packages=setuptools.find_packages(),
   long_description_content_type='text/markdown',
 )

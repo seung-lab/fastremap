@@ -61,8 +61,9 @@ binaries = fastremap.tobytes(labels, (64,64,64), order="F")
 - **inverse_component_map**: Extract an int-to-list-of-ints dictionary mapping from an image containing groups of components to an image containing the components.  
 - **remap_from_array:** Same as remap, but the map is an array where the key is the array index and the value is the value.
 - **remap_from_array_kv:** Same as remap, but the map consists of two equal sized arrays, the first containing keys, the second containing values.
-- **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy otherwise.
-- **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, standard numpy algorithm otherwise.
+- **transpose:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, apply the stock `np.transpose` function otherwise.
+- **asfortranarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, apply the stock `np.asfortranarray` function otherwise.
+- **ascontiguousarray:** Perform an in-place matrix transposition for rectangular arrays if memory is contiguous, apply the stock `np.ascontiguousarray` function otherwise.
 - **minmax:** Compute the min and max of an array in one pass.
 - **pixel_pairs:** Computes the number of adjacent matching memory locations in an image. A quick heuristic for understanding if the image statistics are roughly similar to a connectomics segmentation.
 - **foreground:** Count the number of non-zero voxels rapidly.
