@@ -441,6 +441,13 @@ def ascontiguousarray(arr: NDArray[Any]) -> NDArray[Any]:
     """
     ...
 
+def fit_dtype(
+    dtype:DTypeLike, 
+    value:Union[int, float, np.integer, np.unsignedinteger, np.complexfloating, np.floating], 
+    exotics:bool = False,
+) -> DTypeLike:
+    ...
+
 def minmax(
     arr: NDArray[Any],
 ) -> tuple[Union[int, float, None], Union[int, float, None]]:

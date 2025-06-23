@@ -292,7 +292,7 @@ def refit(arr, value=None, increase_only=False, exotics=False):
     else:
       value = min_value
 
-  dtype = _fit_dtype(arr.dtype, value, exotics=exotics)
+  dtype = fit_dtype(arr.dtype, value, exotics=exotics)
 
   if increase_only and np.dtype(dtype).itemsize <= np.dtype(arr.dtype).itemsize:
     return arr
@@ -300,7 +300,7 @@ def refit(arr, value=None, increase_only=False, exotics=False):
     return arr
   return arr.astype(dtype)
 
-def _fit_dtype(dtype, value, exotics=False):
+def fit_dtype(dtype, value, exotics=False):
   """
   Find the smallest dtype of the 
   same kind that will fit a given value.
