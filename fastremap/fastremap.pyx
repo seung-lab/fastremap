@@ -926,6 +926,11 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     counts = np.array([], dtype=np.uint32)
     index = np.array([], dtype=np.uint64)
     inverse = np.array([], dtype=np.uintp)
+  elif voxels == 1:
+    uniq = labels.flatten()
+    counts = np.array([ 1 ], dtype=np.uint32)
+    index = np.array([ 0 ], dtype=np.uint64)
+    inverse = np.array([ 0 ], dtype=np.uintp)
   elif min_label >= 0 and max_label < int(voxels):
     uniq, index, counts, inverse = _unique_via_array(labels, max_label, return_index=return_index, return_inverse=return_inverse)
   elif (max_label - min_label) <= int(voxels):
