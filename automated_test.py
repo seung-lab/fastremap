@@ -429,6 +429,14 @@ def test_unique(order):
 
   assert len(fastremap.unique(np.array([], dtype=np.uint8))) == 0
 
+  labels = reorder(np.array([777]))
+  uniq_np, idx_np, inv_np, cts_np = np.unique(labels, return_counts=True, return_index=True, return_inverse=True)
+  uniq_fr, idx_fr, inv_fr, cts_fr,  = fastremap.unique(labels, return_counts=True, return_index=True, return_inverse=True)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(inv_np == inv_fr)
+  assert np.all(cts_np == cts_fr)
+  assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
+
   # array_unique
   labels = reorder(np.random.randint(0, 500, size=(128,128,128)))
   uniq_np, idx_np, inv_np, cts_np = np.unique(labels, return_counts=True, return_index=True, return_inverse=True)
