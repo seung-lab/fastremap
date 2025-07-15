@@ -465,7 +465,7 @@ def pixel_pairs(labels: NDArray[Any]) -> int:
     """
     ...
 
-def foreground(arr: NDArray[Any]) -> int:
+def foreground(arr: NDArray[np.integer]) -> int:
     """Returns the number of non-zero voxels in an array."""
     ...
 
