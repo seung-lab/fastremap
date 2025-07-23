@@ -846,7 +846,16 @@ def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
   return pairs
 
 @cython.binding(True)
-def unique(labels, return_index=False, return_inverse=False, return_counts=False, axis=None):
+def unique(
+  labels, 
+  return_index=False, 
+  return_inverse=False, 
+  return_counts=False, 
+  axis=None,
+  *,
+  equal_nan=True,
+  sorted=True,
+):
   """
   Compute the sorted set of unique labels in the input array.
 
@@ -897,7 +906,9 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
         return_index=return_index, 
         return_inverse=return_inverse, 
         return_counts=return_counts, 
-        axis=axis
+        axis=axis,
+        equal_nan=equal_nan,
+        sorted=sorted,
       )
 
   cdef size_t voxels = labels.size

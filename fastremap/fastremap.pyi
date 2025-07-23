@@ -10,6 +10,9 @@ def unique(
     return_inverse: Literal[False] = False,
     return_counts: Literal[False] = False,
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> NDArray[Any]: ...
 @overload
 def unique(
@@ -18,6 +21,9 @@ def unique(
     return_inverse: Literal[False] = False,
     return_counts: Literal[False] = False,
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -26,6 +32,9 @@ def unique(
     return_inverse: Literal[True],
     return_counts: Literal[False] = False,
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -35,6 +44,8 @@ def unique(
     return_inverse: Literal[True],
     return_counts: Literal[False] = False,
     axis: Union[int, None] = None,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -43,6 +54,9 @@ def unique(
     return_inverse: Literal[False],
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -52,6 +66,8 @@ def unique(
     *,
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -60,6 +76,9 @@ def unique(
     return_inverse: Literal[True],
     return_counts: Literal[False] = False,
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -68,6 +87,9 @@ def unique(
     return_inverse: Literal[False],
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -77,6 +99,8 @@ def unique(
     *,
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -85,6 +109,9 @@ def unique(
     return_inverse: Literal[True],
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -94,6 +121,8 @@ def unique(
     return_inverse: Literal[True],
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 @overload
 def unique(
@@ -102,6 +131,9 @@ def unique(
     return_inverse: Literal[True],
     return_counts: Literal[True],
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> tuple[NDArray[Any], NDArray[Any], NDArray[Any], NDArray[Any]]: ...
 def unique(  # type: ignore[misc]
     labels: ArrayLike,
@@ -109,6 +141,9 @@ def unique(  # type: ignore[misc]
     return_inverse: bool = False,
     return_counts: bool = False,
     axis: Union[int, None] = None,
+    *,
+    equal_nan:bool = True,
+    sorted:bool = True,
 ) -> Union[
     NDArray[Any],
     tuple[NDArray[Any], NDArray[Any]],
