@@ -421,11 +421,14 @@ def test_unique_axis_0_random():
 
 
 @pytest.mark.parametrize("order", [ "C", "F" ])
-def test_unique(order):
+@pytest.mark.parametrize("read_only", [ False, True ])
+def test_unique(read_only, order):
   def reorder(arr):
     if order == "F":
-      return np.asfortranarray(arr)
-    return np.ascontiguousarray(arr)
+      arr2 = np.asfortranarray(arr)
+    arr2 = np.ascontiguousarray(arr)
+    arr2.flags["WRITEABLE"] = (not read_only)
+    return arr2
 
   assert len(fastremap.unique(np.array([], dtype=np.uint8))) == 0
 
@@ -490,8 +493,9 @@ def test_unique(order):
   assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
 
   # renumber + array_unique
-  labels = reorder(np.random.randint(0, 1, size=(128,128,128)))
+  labels = np.random.randint(0, 1, size=(128,128,128))
   labels[0,0,0] = 128**3 + 10
+  labels = reorder(labels)
   uniq_np, idx_np, inv_np, cts_np = np.unique(labels, return_counts=True, return_index=True, return_inverse=True)
   uniq_fr, idx_fr, inv_fr, cts_fr = fastremap.unique(labels, return_counts=True, return_index=True, return_inverse=True)
   assert np.all(uniq_np == uniq_fr)
@@ -499,8 +503,9 @@ def test_unique(order):
   assert np.all(cts_np == cts_fr)  
   assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
 
-  labels = reorder(np.random.randint(0, 1, size=(128,128,128)))
+  labels = np.random.randint(0, 1, size=(128,128,128))
   labels[0,0,0] = 128**3 + 10
+  labels = reorder(labels)
   uniq_np, idx_np, inv_np, cts_np = np.unique(labels, return_counts=True, return_index=True, return_inverse=True)
   uniq_fr, idx_fr, cts_fr, inv_fr = fastremap.fastremap._unique_via_renumber(labels.flatten(), return_index=True, return_inverse=True)
   assert np.all(uniq_np == uniq_fr)
