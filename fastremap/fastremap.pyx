@@ -999,7 +999,7 @@ def _unique_via_renumber(labels, return_index=False, return_inverse=False):
     uniq.sort()
     return uniq, idx, counts, inverse
 
-  uniq, idx2 = np.unique(uniq, return_index=return_index)
+  uniq, idx2 = np.unique(uniq, return_index=True)
   if idx is not None:
     idx = idx[idx2]
   if counts is not None:
