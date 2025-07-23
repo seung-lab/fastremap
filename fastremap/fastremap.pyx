@@ -973,9 +973,18 @@ def _unique_via_shifted_array(labels, min_label=None, max_label=None, return_ind
   if min_label is None or max_label is None:
     min_label, max_label = minmax(labels)
 
-  labels -= min_label
-  uniq, idx, counts, inverse = _unique_via_array(labels, max_label - min_label + 1, return_index, return_inverse)
-  labels += min_label
+  if labels.flags.writeable:
+    labels -= min_label
+    arr = labels
+  else:
+    arr = labels - min_label
+
+  uniq, idx, counts, inverse = _unique_via_array(arr, max_label - min_label + 1, return_index, return_inverse)
+  del arr
+
+  if labels.flags.writeable:
+    labels += min_label
+
   uniq += min_label
   return uniq, idx, counts, inverse
 
