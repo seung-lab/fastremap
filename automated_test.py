@@ -774,3 +774,13 @@ def test_unique_order():
 
   for res, ans in zip(tup, tup2):
     assert np.all(res == ans)
+
+def test_unique_inverse_bug():
+  arr = np.full([673], 92, dtype=np.uint32)
+  arr[-1] = 1565
+
+  # Errors on 1.17.1
+  uniq, inv = fastremap.unique(arr, return_inverse=True)
+  
+
+
