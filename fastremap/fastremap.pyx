@@ -1063,7 +1063,10 @@ def _unique_via_array(
     (max_label+1,), dtype=np.uint64
   )
   cdef cnp.ndarray[uintptr_t, ndim=1] index
-  
+
+  # NOTE: This behavior differs from Numpy because it 
+  # may be iterating in F order, whereas numpy iterates in
+  # C order.
   cdef uintptr_t sentinel = np.iinfo(np.uintp).max
   if return_index:
     index = np.full( 
