@@ -1000,17 +1000,17 @@ def _unique_via_renumber(labels, return_index=False, return_inverse=False):
   uniq, idx, counts, inverse = _unique_via_array(labels, max(remap.keys()), return_index, return_inverse)
   uniq = np.array([ remap[segid] for segid in uniq ], dtype=dtype)
 
-  if not return_index and not return_inverse:
-    uniq.sort()
-    return uniq, idx, counts, inverse
+  sort_idx = np.argsort(uniq)
+  
+  uniq = uniq[sort_idx]
+  counts = counts[sort_idx]
 
-  uniq, idx2 = np.unique(uniq, return_index=True)
   if idx is not None:
-    idx = idx[idx2]
-  if counts is not None:
-    counts = counts[idx2]
+    idx = idx[sort_idx]
   if inverse is not None:
-    inverse = idx2[inverse]
+    inv_map = np.empty_like(sort_idx)
+    inv_map[sort_idx] = np.arange(len(sort_idx))
+    inverse = inv_map[inverse]
 
   return uniq, idx, counts, inverse
 
