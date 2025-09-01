@@ -150,6 +150,7 @@ def renumber(arr, start=1, preserve_zero=True, in_place=False):
   shape = arr.shape
   order = 'F' if arr.flags['F_CONTIGUOUS'] else 'C'
   in_place = in_place and (arr.flags['F_CONTIGUOUS'] or arr.flags['C_CONTIGUOUS'])
+  in_place = in_place and arr.flags.writeable
 
   if not in_place:
     arr = np.copy(arr, order=order)
@@ -482,7 +483,7 @@ def mask_except(arr, labels, in_place=False, value=0):
   else:
     order = 'C'
 
-  if not in_place:
+  if not in_place or not arr.flags.writeable:
     arr = np.copy(arr, order=order)
 
   arr = _reshape(arr, (arr.size,))
@@ -685,7 +686,7 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
     fit_value = min_label if abs(min_label) > abs(max_label) else max_label
     arr = refit(arr, fit_value, increase_only=True)
 
-  if not in_place and original_dtype == arr.dtype:
+  if (not in_place and original_dtype == arr.dtype) or not arr.flags.writeable:
     arr = np.copy(arr, order=order)
 
   if all([ k == v for k,v in table.items() ]) and preserve_missing_labels:
@@ -771,7 +772,7 @@ def remap_from_array(cnp.ndarray[UINT] arr, cnp.ndarray[UINT] vals, in_place=Tru
   cdef size_t maxkey = vals.size - 1
   cdef UINT elem
 
-  if not in_place:
+  if not in_place or not arr.flags.writeable:
     arr = np.copy(arr)
 
   with nogil:
@@ -796,7 +797,7 @@ def remap_from_array_kv(cnp.ndarray[ALLINT] arr, cnp.ndarray[ALLINT] keys, cnp.n
   cdef size_t size = keys.size 
   cdef ALLINT elem
 
-  if not in_place:
+  if not in_place or not arr.flags.writeable:
     arr = np.copy(arr)
 
   with nogil:
