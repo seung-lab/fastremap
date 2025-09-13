@@ -675,9 +675,6 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
 
   shape = arr.shape 
 
-  if in_place and not (arr.flags.f_contiguous or arr.flags.c_contiguous):
-    raise ValueError("Input array must be contiguous to use in_place.")
-
   if arr.flags['F_CONTIGUOUS']:
     order = 'F'
   else:
@@ -689,7 +686,14 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
     fit_value = min_label if abs(min_label) > abs(max_label) else max_label
     arr = refit(arr, fit_value, increase_only=True)
 
-  if (not in_place and original_dtype == arr.dtype) or not arr.flags.writeable:
+  make_copy = (
+    (not in_place)
+    or (original_dtype == arr.dtype) # avoid two copies b/c copied in refit
+    or (not arr.flags.writeable)
+    or not (arr.flags.f_contiguous or arr.flags.c_contiguous)
+  )
+
+  if make_copy:
     arr = np.copy(arr, order=order)
 
   if all([ k == v for k,v in table.items() ]) and preserve_missing_labels:
