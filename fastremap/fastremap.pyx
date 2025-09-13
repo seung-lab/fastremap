@@ -675,6 +675,9 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
 
   shape = arr.shape 
 
+  if in_place and not (arr.flags.f_contiguous or arr.flags.c_contiguous):
+    raise ValueError("Input array must be contiguous to use in_place.")
+
   if arr.flags['F_CONTIGUOUS']:
     order = 'F'
   else:
