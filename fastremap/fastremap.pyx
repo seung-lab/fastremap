@@ -687,10 +687,12 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
     arr = refit(arr, fit_value, increase_only=True)
 
   make_copy = (
-    (not in_place)
-    or (original_dtype == arr.dtype) # avoid two copies b/c copied in refit
-    or (not arr.flags.writeable)
-    or not (arr.flags.f_contiguous or arr.flags.c_contiguous)
+    (
+      (not in_place)
+      or (not arr.flags.writeable)
+      or not (arr.flags.f_contiguous or arr.flags.c_contiguous)
+    )
+    and (original_dtype == arr.dtype) # avoid two copies b/c copied in refit if dtype doesn't match
   )
 
   if make_copy:
