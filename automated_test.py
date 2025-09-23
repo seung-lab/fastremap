@@ -213,6 +213,19 @@ def test_remap_broken():
   res = fastremap.remap(labels, {5:5}, preserve_missing_labels=True)
   assert np.all(res == labels)
 
+def test_remap_in_place_broken():
+  data = np.array([0])
+  result = fastremap.remap(data, {0: 1}, in_place=True)
+  assert result[0] == 1
+  assert data[0] == 1
+
+def test_renumber_in_place_broken():
+  data = np.array([5])
+  result, mapping = fastremap.renumber(data, in_place=True)
+  assert result[0] == 1
+  assert data[0] == 1
+  assert mapping == { 0: 0, 5: 1 }
+
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize("in_place", [ True, False ])
 def test_mask(dtype, in_place):

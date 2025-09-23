@@ -118,10 +118,9 @@ def indices(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, NUMBER value):
 
   return np.asarray(all_indices, dtype=np.uint64)
 
+@cython.binding(True)
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
-  renumber(arr, start=1, preserve_zero=True, in_place=False)
-
   Given an array of integers, renumber all the unique values starting
   from 1. This can allow us to reduce the size of the data width required
   to represent it.
@@ -652,11 +651,9 @@ def _inverse_component_map(
 
   return remap
 
+@cython.binding(True)
 def remap(arr, table, preserve_missing_labels=False, in_place=False):
   """
-  remap(cnp.ndarray[COMPLEX_NUMBER] arr, dict table, 
-    preserve_missing_labels=False, in_place=False)
-
   Remap an input numpy array in-place according to the values in the given 
   dictionary "table".   
 
@@ -687,10 +684,12 @@ def remap(arr, table, preserve_missing_labels=False, in_place=False):
     arr = refit(arr, fit_value, increase_only=True)
 
   make_copy = (
-    (not in_place)
-    or (original_dtype == arr.dtype) # avoid two copies b/c copied in refit
-    or (not arr.flags.writeable)
-    or not (arr.flags.f_contiguous or arr.flags.c_contiguous)
+    (
+      (not in_place)
+      or (not arr.flags.writeable)
+      or not (arr.flags.f_contiguous or arr.flags.c_contiguous)
+    )
+    and (original_dtype == arr.dtype) # avoid two copies b/c copied in refit if dtype doesn't match
   )
 
   if make_copy:
