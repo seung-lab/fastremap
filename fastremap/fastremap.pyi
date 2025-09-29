@@ -158,7 +158,7 @@ def renumber(
     start: Union[int, float] = 1,
     preserve_zero: bool = True,
     in_place: bool = False,
-) -> Union[tuple[NDArray[Any], dict[int, int], dict[float, float]]]:
+) -> tuple[NDArray[Any], Union[dict[int, int], dict[float, float]]]:
     """Renumber an array.
 
     Given an array of integers, renumber all the unique values starting
