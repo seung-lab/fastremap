@@ -145,7 +145,7 @@ def is_solid(arr:np.ndarray, value:Optional[int|float] = None) -> bool:
     value = arr[0]
 
   if arr.dtype == np.float16:
-    return is_solid(arr.view(np.uint16), value.view(np.uint16))
+    return _is_solid(arr.view(np.uint16), np.float16(value).view(np.uint16))
   else:
     return _is_solid(arr, value)
 
