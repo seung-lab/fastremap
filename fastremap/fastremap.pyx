@@ -144,7 +144,10 @@ def is_solid(arr:np.ndarray, value:Optional[int|float] = None) -> bool:
   if value is None:
     value = arr[0]
 
-  return _is_solid(arr, value)
+  if arr.dtype == np.float16:
+    return is_solid(arr.view(np.uint16), value.view(np.uint16))
+  else:
+    return _is_solid(arr, value)
 
 @cython.binding(True)
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
