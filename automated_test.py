@@ -830,7 +830,11 @@ def test_is_solid():
   assert not fastremap.is_solid(arr, 0)
   assert fastremap.is_solid(arr, 2.5)
 
-
+def test_indices():
+  arr = np.array([[1,2,1], [3,1,2]], dtype=np.uint32)
+  arr = arr.reshape([arr.size])
+  result = fastremap.indices(arr, 1)
+  assert np.all(result == np.array([0, 2, 4]))
 
 
 
