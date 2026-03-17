@@ -498,3 +498,17 @@ def tobytes(
     and output orders match.
     """
     ...
+
+def is_solid(
+    arr: NDArray[Any],
+    value: Union[int,float, None] = None,
+) -> bool:
+    """
+    Checks if array is all one value or matches a given value.
+    This is different from np.array_equal because it accepts
+    integers as a comparison. It's different from np.all(img == 0)
+    because it has both early exit and doesn't create a copy.
+
+    Returns True if the array is empty.
+    """
+    ...

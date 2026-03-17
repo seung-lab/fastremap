@@ -128,6 +128,14 @@ def _is_solid(cnp.ndarray[NUMBER, ndim=1] arr, NUMBER value) -> bool:
 
 @cython.binding(True)
 def is_solid(arr:np.ndarray, value:Optional[int|float] = None) -> bool:
+  """
+  Checks if array is all one value or matches a given value.
+  This is different from np.array_equal because it accepts
+  integers as a comparison. It's different from np.all(img == 0)
+  because it has both early exit and doesn't create a copy.
+
+  Returns True if the array is empty.
+  """
   if arr.size == 0:
     return True
 
