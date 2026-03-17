@@ -803,4 +803,34 @@ def test_unique_inverse_bug():
   uniq, inv = fastremap.unique(arr, return_inverse=True)
   
 
+def test_is_solid():
+  arr = np.random.randint(-100, 100, size=[100,100,100])
+
+  assert not fastremap.is_solid(arr)
+
+  arr = np.zeros([100,100,100], dtype=int)
+  assert fastremap.is_solid(arr)
+  assert fastremap.is_solid(arr, 0)
+  assert not fastremap.is_solid(arr, 1)
+
+  arr = np.ones([100,100,100], dtype=int)
+  assert fastremap.is_solid(arr)
+  assert fastremap.is_solid(arr, 1)
+  assert not fastremap.is_solid(arr, 0)
+
+  arr[50,50,50] = 2
+  assert not fastremap.is_solid(arr)
+  assert not fastremap.is_solid(arr, 1)
+  assert not fastremap.is_solid(arr, 2)
+
+  arr = np.zeros([100,100,100], dtype=np.float16)
+  arr += 2.5
+  assert fastremap.is_solid(arr)
+  assert not fastremap.is_solid(arr, 1)
+  assert not fastremap.is_solid(arr, 0)
+  assert fastremap.is_solid(arr, 2.5)
+
+
+
+
 

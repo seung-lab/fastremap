@@ -118,6 +118,37 @@ def indices(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, NUMBER value):
 
   return np.asarray(all_indices, dtype=np.uint64)
 
+def _is_solid(cnp.ndarray[NUMBER, ndim=1] arr, NUMBER value) -> bool:
+  cdef uint64_t i = 0
+  cdef uint64_t size = arr.size
+  for i in range(size):
+    if arr[i] != value:
+      return False
+  return True
+
+@cython.binding(True)
+def is_solid(arr:np.ndarray, value:Optional[int|float] = None) -> bool:
+  """
+  Checks if array is all one value or matches a given value.
+  This is different from np.array_equal because it accepts
+  integers as a comparison. It's different from np.all(img == 0)
+  because it has both early exit and doesn't create a copy.
+
+  Returns True if the array is empty.
+  """
+  if arr.size == 0:
+    return True
+
+  arr = _reshape(arr, [arr.size,])
+
+  if value is None:
+    value = arr[0]
+
+  if arr.dtype == np.float16:
+    return _is_solid(arr.view(np.uint16), np.float16(value).view(np.uint16))
+  else:
+    return _is_solid(arr, value)
+
 @cython.binding(True)
 def renumber(arr, start=1, preserve_zero=True, in_place=False):
   """
