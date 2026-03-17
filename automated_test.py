@@ -823,6 +823,12 @@ def test_is_solid():
   assert not fastremap.is_solid(arr, 1)
   assert not fastremap.is_solid(arr, 2)
 
+  arr = np.zeros([100,100,100], dtype=np.float16)
+  arr += 2.5
+  assert fastremap.is_solid(arr)
+  assert not fastremap.is_solid(arr, 1)
+  assert not fastremap.is_solid(arr, 0)
+  assert fastremap.is_solid(arr, 2.5)
 
 
 
