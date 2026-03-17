@@ -806,7 +806,7 @@ def test_unique_inverse_bug():
 def test_is_solid():
   arr = np.random.randint(-100, 100, size=[100,100,100])
 
-  assert fastremap.is_solid(arr)
+  assert not fastremap.is_solid(arr)
 
   arr = np.zeros([100,100,100], dtype=int)
   assert fastremap.is_solid(arr)
