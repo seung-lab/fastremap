@@ -118,6 +118,9 @@ def indices(cnp.ndarray[NUMBER, cast=True, ndim=1] arr, NUMBER value):
 
   return np.asarray(all_indices, dtype=np.uint64)
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.nonecheck(False)
 def _is_solid(cnp.ndarray[NUMBER, ndim=1] arr, NUMBER value) -> bool:
   cdef uint64_t i = 0
   cdef uint64_t size = arr.size
