@@ -32,6 +32,7 @@ cimport numpy as cnp
 cnp.import_array()
 
 from libcpp.vector cimport vector
+from libcpp.algorithm cimport sort as std_sort, unique as std_unique
 
 ctypedef fused UINT:
   uint8_t
@@ -980,6 +981,11 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     uniq, index, counts, inverse = _unique_via_renumber(labels, return_index=return_index, return_inverse=return_inverse)
   elif return_index or return_inverse:
     return np.unique(labels_orig, return_index=return_index, return_counts=return_counts, return_inverse=return_inverse)
+  elif not return_counts:
+    uniq = _unique_via_sort_no_counts(labels)
+    index = None
+    inverse = None
+    counts = None
   else:
     uniq, counts = _unique_via_sort(labels)
     index = None
@@ -1054,6 +1060,25 @@ def _unique_via_renumber(labels, return_index=False, return_inverse=False):
     inverse = inv_map[inverse]
 
   return uniq, idx, counts, inverse
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _unique_via_sort_no_counts(cnp.ndarray[ALLINT, ndim=1] labels):
+  """Faster unique using std::sort and std::unique when counts are not needed."""
+  labels = np.copy(labels)
+  cdef size_t voxels = labels.size
+
+  if voxels == 0:
+    return np.array([], dtype=labels.dtype)
+
+  cdef ALLINT* end
+  with nogil:
+    std_sort(&labels[0], &labels[0] + voxels)
+    end = std_unique(&labels[0], &labels[0] + voxels)
+  cdef size_t num_unique = end - &labels[0]
+  labels.resize((num_unique,), refcheck=False)
+  return labels
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
