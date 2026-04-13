@@ -1080,10 +1080,10 @@ def _two_axis_unique_u64(cnp.ndarray[uint64_t, ndim=2] labels):
     del lo_packed
     i = j
 
-    mask = np.ones(n, dtype=bool)
-    mask[1:] = np.any(labels[1:] != labels[:-1], axis=1)
+  mask = np.ones(n, dtype=bool)
+  mask[1:] = np.any(labels[1:] != labels[:-1], axis=1)
 
-    return labels[mask]
+  return labels[mask]
 
 def _unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
   if min_label is None or max_label is None:
