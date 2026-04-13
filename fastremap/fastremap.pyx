@@ -926,7 +926,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
       and (
         labels.ndim == 2 
         and labels.shape[1] == 2
-        and np.dtype(labels.dtype).itemsize < 8 
+        # and np.dtype(labels.dtype).itemsize < 8 
         and np.issubdtype(labels.dtype, np.integer)
       )
       and not (return_index or return_inverse or return_counts)
@@ -1014,12 +1014,68 @@ def _two_axis_unique(labels):
   dtype = labels.dtype
   wide_dtype = widen_dtype(dtype)
 
+  if np.dtype(dtype).itemsize == 8:
+    return _two_axis_unique_u64(labels.view(np.uint64))
+
   labels = labels[:, [1,0]].reshape(-1, order="C")
   labels = labels.view(wide_dtype)
   labels = unique(labels)
   N = len(labels)
   labels = labels.view(dtype).reshape((N, 2), order="C")
   return labels[:,[1,0]]
+
+def _two_axis_unique_u64(cnp.ndarray[uint64_t, ndim=2] labels):
+  
+  # Sorting based on packed (u32,u32)->u64 is extremely fast
+  # but we can't do that for (u64,u64) because hardware doesn't
+  # support u128. So the alternative strategy here is to create
+  # a partially sorted order using the top bits of the u64 and
+  # then apply local refinements to the sorting order. In many
+  # cases, this is substantially faster.
+
+  # For situations where the top bits tend to cluster, perhaps
+  # it would make sense to adjust `labels >> 32` and make that
+  # integer variable in order to select a more variable section
+  # of the top bits?
+  
+  hi = labels >> 32
+  packed = (hi[:, 0] << 32) | hi[:, 1]
+  del hi
+
+  # NOTE: kind='stable' is required to replicate numpy semantics
+  # but is significantly slower.
+  order = np.argsort(packed) 
+  labels = labels[order]
+  packed = packed[order]
+  del order
+
+  cdef uint64_t n = len(packed)
+  cdef uint64_t i = 0
+  cdef uint64_t j = 0
+  cdef uint64_t run_len = 0
+
+  if n == 0:
+    return labels
+
+  while i < n:
+    j = i + 1
+
+    while j < n and packed[j] == packed[i]:
+      j += 1
+
+    run_len = j - i
+
+    if run_len > 1:
+      sub = labels[i:j]
+      idx = np.lexsort((sub[:, 1], sub[:, 0]))
+      labels[i:j] = sub[idx]
+
+    i = j
+
+    mask = np.ones(n, dtype=bool)
+    mask[1:] = np.any(labels[1:] != labels[:-1], axis=1)
+
+    return labels[mask]
 
 def _unique_via_shifted_array(labels, min_label=None, max_label=None, return_index=False, return_inverse=False):
   if min_label is None or max_label is None:
