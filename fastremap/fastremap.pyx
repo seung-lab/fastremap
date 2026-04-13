@@ -1076,10 +1076,11 @@ def _two_axis_unique_u64(cnp.ndarray[uint64_t, ndim=2] labels):
       labels[i:j] = labels[i:j][idx]
       del sub
 
-    del hi_packed
-    del lo_packed
     i = j
 
+  del hi_packed
+  del lo_packed
+  
   mask = np.ones(n, dtype=bool)
   mask[1:] = np.any(labels[1:] != labels[:-1], axis=1)
 
