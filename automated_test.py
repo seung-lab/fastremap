@@ -552,6 +552,13 @@ def test_unique(read_only, order):
   uniq = fastremap.unique(labels)
   assert np.all(uniq == np.array([1,2,3,4]))
 
+  # sort no counts
+  labels = reorder(np.random.randint(-1000, 128**3, size=(100,100,100)))
+  uniq_np, idx_np, inv_np = np.unique(labels, return_counts=False, return_index=True, return_inverse=True)
+  uniq_fr, idx_fr, inv_fr = fastremap.unique(labels, return_counts=False, return_index=True, return_inverse=True)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(inv_np == inv_fr)
+  assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
 
 def test_renumber_remap():
   labels = np.random.randint(-500, 500, size=(128,128,128)).astype(np.int64)
