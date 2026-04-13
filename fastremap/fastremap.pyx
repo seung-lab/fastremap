@@ -1039,17 +1039,22 @@ def _two_axis_unique_u64(cnp.ndarray[uint64_t, ndim=2] labels):
   # of the top bits?
   
   hi = labels >> 32
-  packed = (hi[:, 0] << 32) | hi[:, 1]
+  cdef cnp.ndarray[uint64_t] hi_packed = (hi[:, 0] << 32) | hi[:, 1]
   del hi
 
   # NOTE: kind='stable' is required to replicate numpy semantics
   # but is significantly slower.
-  order = np.argsort(packed) 
+  order = np.argsort(hi_packed) 
   labels = labels[order]
-  packed = packed[order]
+  hi_packed = hi_packed[order]
   del order
 
-  cdef uint64_t n = len(packed)
+  # must do lo after hi_packed is rearranged
+  lo = labels & 0xffffffff
+  cdef cnp.ndarray[uint64_t] lo_packed = (lo[:, 0] << 32) | lo[:, 1]
+  del lo
+
+  cdef uint64_t n = len(hi_packed)
   cdef uint64_t i = 0
   cdef uint64_t j = 0
   cdef uint64_t run_len = 0
@@ -1060,16 +1065,19 @@ def _two_axis_unique_u64(cnp.ndarray[uint64_t, ndim=2] labels):
   while i < n:
     j = i + 1
 
-    while j < n and packed[j] == packed[i]:
+    while j < n and hi_packed[j] == hi_packed[i]:
       j += 1
 
     run_len = j - i
 
     if run_len > 1:
-      sub = labels[i:j]
-      idx = np.lexsort((sub[:, 1], sub[:, 0]))
-      labels[i:j] = sub[idx]
+      sub = lo_packed[i:j]
+      idx = np.argsort(sub)
+      labels[i:j] = labels[i:j][idx]
+      del sub
 
+    del hi_packed
+    del lo_packed
     i = j
 
     mask = np.ones(n, dtype=bool)
