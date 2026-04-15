@@ -71,7 +71,7 @@ cdef extern from "ipt.hpp" namespace "pyipt":
     T* arr, size_t sx, size_t sy, size_t sz, size_t sw
   )
 
-NUMPY_SUPPORTS_SORTED = version.parse(np.__version__) >= version.parse("2.3.0")
+_NUMPY_SUPPORTS_SORTED = version.parse(np.__version__) >= version.parse("2.3.0")
 
 def minmax(arr):
   """
@@ -952,7 +952,7 @@ def unique(
       and labels.flags.c_contiguous
     ):
       return _two_axis_unique(labels)
-    elif NUMPY_SUPPORTS_SORTED:
+    elif _NUMPY_SUPPORTS_SORTED:
       return np.unique(
         labels, 
         return_index=return_index, 
