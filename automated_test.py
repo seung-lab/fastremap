@@ -569,6 +569,20 @@ def test_unique(read_only, order, equal_nan, sorted):
   assert np.all(inv_np == inv_fr)
   assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
 
+  # Test edge list sort
+  pairs = np.random.randint(0, int(1e10), size=[100_000, 2], dtype=np.uint64)
+  uniq_np = np.unique(pairs, axis=0, sorted=sorted)
+  uniq_fr = fastremap.unique(pairs, axis=0, sorted=sorted)
+
+  np_set = set(map(tuple, uniq_np))
+  fr_set = set(map(tuple, uniq_fr))
+  only_in_numpy = np.array(list(np_set - fr_set))
+  only_in_fastremap = np.array(list(fr_set - np_set))
+
+  assert 0 < uniq_np.size <= pairs.size
+  assert only_in_numpy.size == 0
+  assert only_in_fastremap.size == 0
+
 def test_renumber_remap():
   labels = np.random.randint(-500, 500, size=(128,128,128)).astype(np.int64)
   new_labels, remap = fastremap.renumber(labels, in_place=False)
