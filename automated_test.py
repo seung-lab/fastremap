@@ -562,6 +562,13 @@ def test_unique(read_only, order, equal_nan, sorted):
   assert np.all(inv_np == inv_fr)
   assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
 
+  floats = np.random.uniform(-1e6, 1e6, size=(100,100,100))
+  uniq_np, idx_np, inv_np = np.unique(labels, return_counts=False, return_index=True, return_inverse=True, equal_nan=equal_nan, sorted=sorted)
+  uniq_fr, idx_fr, inv_fr = fastremap.unique(labels, return_counts=False, return_index=True, return_inverse=True, equal_nan=equal_nan, sorted=sorted)
+  assert np.all(uniq_np == uniq_fr)
+  assert np.all(inv_np == inv_fr)
+  assert np.all(labels.flatten()[idx_np] == labels.flatten()[idx_fr])
+
 def test_renumber_remap():
   labels = np.random.randint(-500, 500, size=(128,128,128)).astype(np.int64)
   new_labels, remap = fastremap.renumber(labels, in_place=False)
