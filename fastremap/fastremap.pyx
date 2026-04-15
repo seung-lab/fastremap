@@ -25,11 +25,14 @@ cimport fastremap
 
 from collections import defaultdict
 from functools import reduce
+from packaging import version
 import operator
 
 import numpy as np
 cimport numpy as cnp
 cnp.import_array()
+
+from numpy.typing import ArrayLike, NDArray
 
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport sort as std_sort, unique as std_unique
@@ -67,6 +70,8 @@ cdef extern from "ipt.hpp" namespace "pyipt":
   cdef void _ipt4d[T](
     T* arr, size_t sx, size_t sy, size_t sz, size_t sw
   )
+
+NUMPY_SUPPORTS_SORTED = version.parse(np.__version__) >= version.parse("2.3.0")
 
 def minmax(arr):
   """
@@ -888,7 +893,16 @@ def _pixel_pairs(cnp.ndarray[ALLINT, ndim=1] labels):
   return pairs
 
 @cython.binding(True)
-def unique(labels, return_index=False, return_inverse=False, return_counts=False, axis=None):
+def unique(
+  labels:ArrayLike,
+  return_index:bool = False,
+  return_inverse:bool = False,
+  return_counts:bool = False,
+  axis:Optional[int] = None,
+  *,
+  equal_nan:bool = True,
+  sorted:bool = True,
+):
   """
   Compute the sorted set of unique labels in the input array.
 
@@ -914,6 +928,11 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     unique_counts ndarray, optional
         The number of times each of the unique values comes up in the original array. 
         Only provided if return_counts is True.
+
+    equal_nan: If True, collapses multiple NaN values in the return array
+        into one.
+
+    sorted: If True, the unique elements are sorted.
   """
   if not isinstance(labels, np.ndarray):
     labels = np.array(labels)
@@ -926,20 +945,31 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
       and (
         labels.ndim == 2 
         and labels.shape[1] == 2
-        # and np.dtype(labels.dtype).itemsize < 8 
+        and not (sorted and np.dtype(labels.dtype).itemsize >= 8)
         and np.issubdtype(labels.dtype, np.integer)
       )
       and not (return_index or return_inverse or return_counts)
       and labels.flags.c_contiguous
     ):
       return _two_axis_unique(labels)
+    elif NUMPY_SUPPORTS_SORTED:
+      return np.unique(
+        labels, 
+        return_index=return_index, 
+        return_inverse=return_inverse, 
+        return_counts=return_counts, 
+        axis=axis,
+        equal_nan=equal_nan,
+        sorted=sorted,
+      )
     else:
       return np.unique(
         labels, 
         return_index=return_index, 
         return_inverse=return_inverse, 
         return_counts=return_counts, 
-        axis=axis
+        axis=axis,
+        equal_nan=equal_nan,
       )
 
   cdef size_t voxels = labels.size
@@ -1004,7 +1034,7 @@ def unique(labels, return_index=False, return_inverse=False, return_counts=False
     return tuple(results)
   return uniq
 
-def _two_axis_unique(labels):
+def _two_axis_unique(labels:NDArray) -> NDArray:
   """
   Faster replacement for np.unique(labels, axis=0)
   when ndim = 2 and the dtype can be widened.
@@ -1042,9 +1072,7 @@ def _two_axis_unique_u64(cnp.ndarray[uint64_t, ndim=2] labels):
   cdef cnp.ndarray[uint64_t] hi_packed = (hi[:, 0] << 32) | hi[:, 1]
   del hi
 
-  # NOTE: kind='stable' is required to replicate numpy semantics
-  # but is significantly slower.
-  order = np.argsort(hi_packed) 
+  order = np.argsort(hi_packed)
   labels = labels[order]
   hi_packed = hi_packed[order]
   del order
