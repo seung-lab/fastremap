@@ -1405,7 +1405,7 @@ def _foreground(cnp.ndarray[ALLINT, ndim=1] arr):
     n_foreground += <size_t>(arr[i] != 0)
   return n_foreground
 
-def point_cloud(arr):
+def point_cloud(arr:np.ndarray, shell:bool = False):
   """
   point_cloud(arr)
 
@@ -1420,14 +1420,14 @@ def point_cloud(arr):
     arr = arr.view(np.uint8)
 
   if arr.ndim == 2:
-    return _point_cloud_2d(arr)
+    return _point_cloud_2d(arr, shell)
   else:
-    return _point_cloud_3d(arr)
+    return _point_cloud_3d(arr, shell)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _point_cloud_2d(cnp.ndarray[ALLINT, ndim=2] arr):
+def _point_cloud_2d(cnp.ndarray[ALLINT, ndim=2] arr, bint shell):
   cdef size_t n_foreground = foreground(arr)
 
   cdef size_t sx = arr.shape[0]
@@ -1443,13 +1443,32 @@ def _point_cloud_2d(cnp.ndarray[ALLINT, ndim=2] arr):
   cdef size_t j = 0
   
   cdef size_t idx = 0
-  for i in range(sx):
-    for j in range(sy):
-        if arr[i,j] != 0:
-          ptlabel[idx] = arr[i,j]
-          ptcloud[idx,0] = i
-          ptcloud[idx,1] = j
-          idx += 1
+  if shell:
+    for i in range(sx):
+      for j in range(sy):
+          if (
+            arr[i,j] != 0
+            and (
+              i == 0 or j == 0
+              or i == sx - 1 or j == sy - 1
+              or (i > 0 and arr[i-1,j] != arr[i,j])
+              or (i < sx - 1 and arr[i+1,j] != arr[i,j])
+              or (j > 0 and arr[i,j-1] != arr[i,j])
+              or (j < sy - 1 and arr[i,j+1] != arr[i,j])
+            )
+          ):
+            ptlabel[idx] = arr[i,j]
+            ptcloud[idx,0] = i
+            ptcloud[idx,1] = j
+            idx += 1
+  else:
+    for i in range(sx):
+      for j in range(sy):
+          if arr[i,j] != 0:
+            ptlabel[idx] = arr[i,j]
+            ptcloud[idx,0] = i
+            ptcloud[idx,1] = j
+            idx += 1
 
   sortidx = ptlabel.argsort()
   ptlabel = ptlabel[sortidx]
@@ -1475,7 +1494,7 @@ def _point_cloud_2d(cnp.ndarray[ALLINT, ndim=2] arr):
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)
-def _point_cloud_3d(cnp.ndarray[ALLINT, ndim=3] arr):
+def _point_cloud_3d(cnp.ndarray[ALLINT, ndim=3] arr, bint shell):
   cdef size_t n_foreground = foreground(arr)
 
   cdef size_t sx = arr.shape[0]
@@ -1493,15 +1512,39 @@ def _point_cloud_3d(cnp.ndarray[ALLINT, ndim=3] arr):
   cdef size_t k = 0
   
   cdef size_t idx = 0
-  for i in range(sx):
-    for j in range(sy):
-      for k in range(sz):
-        if arr[i,j,k] != 0:
-          ptlabel[idx] = arr[i,j,k]
-          ptcloud[idx,0] = i
-          ptcloud[idx,1] = j
-          ptcloud[idx,2] = k
-          idx += 1
+
+  if shell:
+    for i in range(sx):
+      for j in range(sy):
+        for k in range(sz):
+          if (
+            arr[i,j,k] != 0
+            and (
+              i == 0 or j == 0 or k == 0
+              or i == sx - 1 or j == sy - 1 or k == sz - 1
+              or (i > 0 and arr[i-1,j,k] != arr[i,j,k])
+              or (i < sx - 1 and arr[i+1,j,k] != arr[i,j,k])
+              or (j > 0 and arr[i,j-1,k] != arr[i,j,k])
+              or (j < sy - 1 and arr[i,j+1,k] != arr[i,j,k])
+              or (k > 0 and arr[i,j,k-1] != arr[i,j,k])
+              or (k < sz - 1 and arr[i,j,k+1] != arr[i,j,k])
+            )
+          ):
+            ptlabel[idx] = arr[i,j,k]
+            ptcloud[idx,0] = i
+            ptcloud[idx,1] = j
+            ptcloud[idx,2] = k
+            idx += 1
+  else:
+    for i in range(sx):
+      for j in range(sy):
+        for k in range(sz):
+          if arr[i,j,k] != 0:
+            ptlabel[idx] = arr[i,j,k]
+            ptcloud[idx,0] = i
+            ptcloud[idx,1] = j
+            ptcloud[idx,2] = k
+            idx += 1
 
   sortidx = ptlabel.argsort()
   ptlabel = ptlabel[sortidx]
