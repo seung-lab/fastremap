@@ -264,40 +264,6 @@ extract_contours_helper(
 	return contours;
 }
 
-// an alternative is the complex computational geometry strategy above...
-// which is much lower memory but hairy to implement and much slower so
-// long as we have that dang quadratic loop.
-std::vector<std::vector<uint32_t>> merge_contours_via_vcg_coloring(
-	const std::vector<std::vector<uint32_t>>& contours,
-	const std::vector<uint8_t>& vcg,
-	std::vector<uint32_t>& cc_labels,
-	const uint64_t N,
-	const uint64_t sx, const uint64_t sy
-) {
-	std::vector<std::vector<uint32_t>> merged_contours(N);
-	for (uint64_t i = 0; i < contours.size(); i++) {
-		auto& contour = contours[i];
-		uint32_t cc_label = cc_labels[contour[0]];
-
-		auto insertion_point_it = merged_contours[cc_label].end();
-		if (
-			merged_contours[cc_label].size() > 0 
-			&& merged_contours[cc_label][0] > contour[0]
-		) {
-			insertion_point_it = merged_contours[cc_label].begin();
-		}
-
-		merged_contours[cc_label].insert(
-			insertion_point_it, 
-			contour.begin(), 
-			contour.end()
-		);
-	}
-
-	return merged_contours;
-}
-
-
 template <typename LABEL>
 std::unordered_map<LABEL, std::vector<uint16_t>>
 extract_contours(
