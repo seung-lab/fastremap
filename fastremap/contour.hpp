@@ -65,15 +65,15 @@ void create_boundary_map(
 			if (x > 0 && labels[x + sx * y] == labels[(x-1) + sx * y]) {
 				int64_t node_left = (x-1) + sx * y;
 				int64_t node_right = x + sx * y;
-				boundaries[node_left] |= 0b0001;
-				boundaries[node_right] |= 0b0010;
+				boundaries[node_left] |= VCGDirectionCode::RIGHT;
+				boundaries[node_right] |= VCGDirectionCode::LEFT;
 			}
 			// assign horizontal edges
 			if (y > 0 && labels[x + sx * y] == labels[x + sx * (y-1)]) {
 				int64_t node_up = x + sx * y;
 				int64_t node_down = x + sx * (y-1);
-				boundaries[node_up] |= 0b1000;
-				boundaries[node_down] |= 0b0100;
+				boundaries[node_up] |= VCGDirectionCode::UP;
+				boundaries[node_down] |= VCGDirectionCode::DOWN;
 			}
 		}
 	}
