@@ -657,6 +657,45 @@ def test_point_cloud():
   ptc = fastremap.point_cloud(x)
   assert len(ptc) == 0
 
+  x = np.ones((3,3,3), dtype=np.uint8, order="F")
+  ptc = fastremap.point_cloud(x, shell=True)[1]
+  gt = np.array([
+    [0, 0, 0],
+    [1, 0, 0],
+    [2, 0, 0],
+    [0, 1, 0],
+    [1, 1, 0],
+    [2, 1, 0],
+    [0, 2, 0],
+    [1, 2, 0],
+    [2, 2, 0],
+    [0, 0, 1],
+    [1, 0, 1],
+    [2, 0, 1],
+    [0, 1, 1],
+    # [1, 1, 1],
+    [2, 1, 1],
+    [0, 2, 1],
+    [1, 2, 1],
+    [2, 2, 1],
+    [0, 0, 2],
+    [1, 0, 2],
+    [2, 0, 2],
+    [0, 1, 2],
+    [1, 1, 2],
+    [2, 1, 2],
+    [0, 2, 2],
+    [1, 2, 2],
+    [2, 2, 2],
+  ])
+
+  print(np.unique(ptc, return_counts=True, axis=0))
+
+  gt = set([ tuple(x) for x in gt ])
+  ptc = set([ tuple(x) for x in ptc ])
+
+  assert gt == ptc
+
 
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize("input_order", ['C','F'])
