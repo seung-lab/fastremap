@@ -220,7 +220,13 @@ extract_contours_helper(
 		}
 		else {
 			connected_component.reserve(100);
-			connected_component.emplace_back(loop_x, loop_y);
+
+			// ENABLE THIS LINE IF YOU WANT TO BE ABLE TO RECOVER
+			// INDIVIDUAL CONTOURS IN POSTPROCESSING
+			// This allows you to find the beginning and end of a contour
+			// by duplicating a point at the beginning and end of a contour.
+
+			// connected_component.emplace_back(loop_x, loop_y);
 
 			// go counterclockwise for |x  vs clockwise for x|
 			next_move = VCGDirectionCode::UP;
