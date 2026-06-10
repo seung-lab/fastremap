@@ -34,6 +34,7 @@ cnp.import_array()
 
 from numpy.typing import ArrayLike, NDArray
 
+from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport sort as std_sort, unique as std_unique
 
@@ -69,6 +70,11 @@ cdef extern from "ipt.hpp" namespace "pyipt":
   )
   cdef void _ipt4d[T](
     T* arr, size_t sx, size_t sy, size_t sz, size_t sw
+  )
+
+cdef extern from "contour.hpp" namespace "fastremap::contour":
+  cdef unordered_map[T, vector[uint16_t]] extract_contours[T](
+    T* labels, int64_t sx, int64_t sy, int64_t sz
   )
 
 _NUMPY_SUPPORTS_SORTED = version.parse(np.__version__) >= version.parse("2.3.0")
@@ -1572,7 +1578,7 @@ def _foreground(cnp.ndarray[ALLINT, ndim=1] arr):
     n_foreground += <size_t>(arr[i] != 0)
   return n_foreground
 
-def point_cloud(arr):
+def point_cloud(arr, shell:bool = False):
   """
   point_cloud(arr)
 
@@ -1588,8 +1594,31 @@ def point_cloud(arr):
 
   if arr.ndim == 2:
     return _point_cloud_2d(arr)
+  elif shell:
+    return _point_cloud_3d_shell(np.asfortranarray(arr))
   else:
     return _point_cloud_3d(arr)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _point_cloud_3d_shell(cnp.ndarray[ALLINT, ndim=3] arr):
+  cdef ALLINT[:,:,:] arrview = arr
+  cdef ALLINT* arrptr = <ALLINT*>&arrview[0,0,0]
+
+  sx, sy, sz = arr.shape[0], arr.shape[1], arr.shape[2]
+
+  cdef unordered_map[ALLINT, vector[uint16_t]] ptc_cpp = extract_contours(
+    arrptr, sx, sy, sz
+  )
+
+  result = {}
+  cdef vector[uint16_t] vec
+  for pair in ptc_cpp:
+    vec = pair.second
+    result[pair.first] = np.asarray(vec).reshape((len(vec) // 3, 3), order="C")
+
+  return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
