@@ -38,6 +38,7 @@ from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport sort as std_sort, unique as std_unique
 
+from cpython.ref cimport Py_INCREF
 from cython.operator cimport dereference as deref, preincrement
 from libcpp.utility cimport move
 from numpy cimport (
@@ -1606,7 +1607,12 @@ def point_cloud(arr, shell:bool = False):
   if arr.dtype == bool:
     arr = arr.view(np.uint8)
 
+  if arr.ndim not in (2,3):
+    raise ValueError(f"Point cloud only supported for 2d and 3d volumes. Got: {arr.ndim} dimensions.")
+
   if arr.ndim == 2:
+    if shell:
+      raise NotImplementedError("2d shell is not yet implemented.")
     return _point_cloud_2d(arr)
   elif shell:
     return _point_cloud_3d_shell(np.asfortranarray(arr))
@@ -1645,6 +1651,7 @@ def _point_cloud_3d_shell(cnp.ndarray[ALLINT, ndim=3] arr):
       owner.ptr = heap_vec
 
       arr_np = PyArray_SimpleNewFromData(1, &dim, NPY_UINT16, heap_vec.data())
+      Py_INCREF(owner) # avoid ref counter hitting zero when SetBaseObject steals the reference
       PyArray_SetBaseObject(arr_np, owner)
       result[deref(it).first] = arr_np.reshape((dim // 3, 3))
       preincrement(it)
