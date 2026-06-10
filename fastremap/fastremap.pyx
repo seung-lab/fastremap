@@ -38,6 +38,20 @@ from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport sort as std_sort, unique as std_unique
 
+from cython.operator cimport dereference as deref, preincrement
+from libcpp.utility cimport move
+from numpy cimport (
+    PyArray_SimpleNewFromData, PyArray_SetBaseObject, npy_intp, NPY_UINT16
+)
+
+# Lifetime manager: holds the vector on the heap, deletes it when
+# the last numpy array referencing its buffer is garbage-collected
+cdef class _VecOwner:
+    cdef vector[uint16_t]* ptr
+    def __dealloc__(self):
+        del self.ptr
+
+
 ctypedef fused UINT:
   uint8_t
   uint16_t
@@ -1612,12 +1626,29 @@ def _point_cloud_3d_shell(cnp.ndarray[ALLINT, ndim=3] arr):
     arrptr, sx, sy, sz
   )
 
+  # Claude Sonnet 4.6 helped optimize this section. It sped up the naive
+  # python loop orders of magnitude. Originally this was taking 14x the time
+  # of extract_contours, now it it is a fraction of the time. The function
+  # calls are new to me, but the method corresponds to a sensible C++ strategy.
+  # - WMS 6/10/26
   result = {}
-  cdef vector[uint16_t] vec
-  for pair in ptc_cpp:
-    vec = pair.second
-    result[pair.first] = np.asarray(vec).reshape((len(vec) // 3, 3), order="C")
+  cdef unordered_map[ALLINT, vector[uint16_t]].iterator it = ptc_cpp.begin()
+  cdef vector[uint16_t]* heap_vec
+  cdef npy_intp dim
+  cdef _VecOwner owner
 
+  while it != ptc_cpp.end():
+      heap_vec = new vector[uint16_t](move(deref(it).second))
+      dim = heap_vec.size()
+
+      owner = _VecOwner.__new__(_VecOwner)  # skip __init__ for speed
+      owner.ptr = heap_vec
+
+      arr_np = PyArray_SimpleNewFromData(1, &dim, NPY_UINT16, heap_vec.data())
+      PyArray_SetBaseObject(arr_np, owner)
+      result[deref(it).first] = arr_np.reshape((dim // 3, 3))
+      preincrement(it)
+  
   return result
 
 @cython.boundscheck(False)
