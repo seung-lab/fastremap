@@ -13,6 +13,7 @@ idxs = fastremap.indices(labels, 1231) # important for huge arrays
 
 labels, remapping = fastremap.renumber(labels, in_place=True) # relabel values from 1 and refit data type
 ptc = fastremap.point_cloud(labels) # dict of coordinates by label
+ptc = fastremap.point_cloud(labels, shell=True) # get the surface contours only (3d images only)
 
 labels = fastremap.refit(labels) # resize the data type of the array to fit extrema
 labels = fastremap.refit(labels, value=-35) # resize the data type to fit the value provided

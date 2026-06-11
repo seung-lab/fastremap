@@ -463,13 +463,15 @@ def foreground(arr: NDArray[np.integer]) -> int:
     """Returns the number of non-zero voxels in an array."""
     ...
 
-def point_cloud(arr: NDArray[Any]) -> dict[int, NDArray[Any]]:
+def point_cloud(arr: NDArray[Any], shell: bool = False) -> dict[int, NDArray[Any]]:
     """Generate a mapping from labels to their (x, y, z) position in the image.
 
     Zero is considered a background label.
 
     Args:
         arr: A 2D or 3D numpy array.
+        shell: (3d only) generate only the contour instead 
+            of a dense volumetric representation
 
     Returns:
         A dictionary mapping label values to their (x, y, z) coordinates in the
@@ -506,3 +508,7 @@ def is_solid(
     Returns True if the array is empty.
     """
     ...
+
+# Cython internal pickle helpers — not part of public API
+def __reduce_cython__(self) -> tuple: ...
+def __setstate_cython__(self, __pyx_state: object) -> None: ...

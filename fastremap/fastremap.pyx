@@ -34,8 +34,24 @@ cnp.import_array()
 
 from numpy.typing import ArrayLike, NDArray
 
+from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport sort as std_sort, unique as std_unique
+
+from cpython.ref cimport Py_INCREF
+from cython.operator cimport dereference as deref, preincrement
+from libcpp.utility cimport move
+from numpy cimport (
+    PyArray_SimpleNewFromData, PyArray_SetBaseObject, npy_intp, NPY_UINT16
+)
+
+# Lifetime manager: holds the vector on the heap, deletes it when
+# the last numpy array referencing its buffer is garbage-collected
+cdef class _VecOwner:
+    cdef vector[uint16_t]* ptr
+    def __dealloc__(self):
+        del self.ptr
+
 
 ctypedef fused UINT:
   uint8_t
@@ -69,6 +85,11 @@ cdef extern from "ipt.hpp" namespace "pyipt":
   )
   cdef void _ipt4d[T](
     T* arr, size_t sx, size_t sy, size_t sz, size_t sw
+  )
+
+cdef extern from "contour.hpp" namespace "fastremap::contour":
+  cdef unordered_map[T, vector[uint16_t]] extract_contours[T](
+    T* labels, int64_t sx, int64_t sy, int64_t sz
   )
 
 _NUMPY_SUPPORTS_SORTED = version.parse(np.__version__) >= version.parse("2.3.0")
@@ -1572,7 +1593,7 @@ def _foreground(cnp.ndarray[ALLINT, ndim=1] arr):
     n_foreground += <size_t>(arr[i] != 0)
   return n_foreground
 
-def point_cloud(arr):
+def point_cloud(arr, shell:bool = False):
   """
   point_cloud(arr)
 
@@ -1586,10 +1607,56 @@ def point_cloud(arr):
   if arr.dtype == bool:
     arr = arr.view(np.uint8)
 
+  if arr.ndim not in (2,3):
+    raise ValueError(f"Point cloud only supported for 2d and 3d volumes. Got: {arr.ndim} dimensions.")
+
   if arr.ndim == 2:
+    if shell:
+      raise NotImplementedError("2d shell is not yet implemented.")
     return _point_cloud_2d(arr)
+  elif shell:
+    return _point_cloud_3d_shell(np.asfortranarray(arr))
   else:
     return _point_cloud_3d(arr)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+@cython.nonecheck(False)
+def _point_cloud_3d_shell(cnp.ndarray[ALLINT, ndim=3] arr):
+  cdef ALLINT[:,:,:] arrview = arr
+  cdef ALLINT* arrptr = <ALLINT*>&arrview[0,0,0]
+
+  sx, sy, sz = arr.shape[0], arr.shape[1], arr.shape[2]
+
+  cdef unordered_map[ALLINT, vector[uint16_t]] ptc_cpp = extract_contours(
+    arrptr, sx, sy, sz
+  )
+
+  # Claude Sonnet 4.6 helped optimize this section. It sped up the naive
+  # python loop orders of magnitude. Originally this was taking 14x the time
+  # of extract_contours, now it it is a fraction of the time. The function
+  # calls are new to me, but the method corresponds to a sensible C++ strategy.
+  # - WMS 6/10/26
+  result = {}
+  cdef unordered_map[ALLINT, vector[uint16_t]].iterator it = ptc_cpp.begin()
+  cdef vector[uint16_t]* heap_vec
+  cdef npy_intp dim
+  cdef _VecOwner owner
+
+  while it != ptc_cpp.end():
+      heap_vec = new vector[uint16_t](move(deref(it).second))
+      dim = heap_vec.size()
+
+      owner = _VecOwner.__new__(_VecOwner)  # skip __init__ for speed
+      owner.ptr = heap_vec
+
+      arr_np = PyArray_SimpleNewFromData(1, &dim, NPY_UINT16, heap_vec.data())
+      Py_INCREF(owner) # avoid ref counter hitting zero when SetBaseObject steals the reference
+      PyArray_SetBaseObject(arr_np, owner)
+      result[deref(it).first] = arr_np.reshape((dim // 3, 3))
+      preincrement(it)
+  
+  return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
