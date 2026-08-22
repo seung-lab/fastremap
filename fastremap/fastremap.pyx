@@ -25,7 +25,6 @@ cimport fastremap
 
 from collections import defaultdict
 from functools import reduce
-from packaging import version
 import operator
 
 import numpy as np
@@ -92,7 +91,8 @@ cdef extern from "contour.hpp" namespace "fastremap::contour":
     T* labels, int64_t sx, int64_t sy, int64_t sz
   )
 
-_NUMPY_SUPPORTS_SORTED = version.parse(np.__version__) >= version.parse("2.3.0")
+_NUMPY_VERSION = tuple([ int(x) for x in np.__version__.split(".")]) 
+_NUMPY_SUPPORTS_SORTED = _NUMPY_VERSION >= (2,3,0)
 
 def minmax(arr):
   """
