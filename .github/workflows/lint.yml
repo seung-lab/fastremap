@@ -26,7 +26,7 @@ jobs:
         run: pip install cython numpy meson-python
 
       - name: Compile
-        run: python -m pip install --group dev -e .
+        run: python -m pip install --group dev -e . --no-build-isolation
 
       - name: Run mypy
         run: mypy fastremap
