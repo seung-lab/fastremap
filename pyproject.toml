@@ -1,7 +1,42 @@
 [build-system]
+build-backend = 'mesonpy'
 requires = [
-    "setuptools",
-    "wheel",
-    "numpy",
-    "cython",
+  'meson-python>=0.15.0',
+  'cython>=3.0',
+  'numpy',
 ]
+
+[project]
+name = 'fastremap'
+dynamic = ["version"]
+description = 'Remap, mask, renumber, unique, and in-place transposition of 3D labeled images. Point cloud too.'
+readme = { file = 'README.md', content-type = 'text/markdown' }
+requires-python = '>=3.9,<4.0'
+license = { text = 'LGPL-3.0' }
+authors = [
+  { name = 'William Silversmith', email = 'ws9@princeton.edu' },
+]
+dependencies = [
+  'numpy>=1.16.5',
+]
+classifiers = [
+  'Intended Audience :: Developers',
+  'Development Status :: 5 - Production/Stable',
+  'Programming Language :: Python',
+  'Programming Language :: Python :: 3',
+  'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12',
+  'Programming Language :: Python :: 3.13',
+  'Programming Language :: Python :: 3.14',
+  'Topic :: Utilities',
+]
+
+[project.urls]
+Homepage = 'https://github.com/seung-lab/fastremap'
+Repository = "https://github.com/seung-lab/fastremap/"
+"Bug Tracker" = "https://github.com/seung-lab/fastremap/issues"
+
+[tool.meson-python.args]
+setup = []
+
