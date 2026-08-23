@@ -25,13 +25,12 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Update pip
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pytest -r requirements.txt -r requirements_dev.txt setuptools wheel
 
       - name: Compile
-        run: python -m pip install -e . --no-build-isolation
+        run: python -m pip install --group dev -e . --no-build-isolation
 
       - name: Test with pytest
         run: pytest -v -x automated_test.py

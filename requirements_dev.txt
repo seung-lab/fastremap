@@ -1,5 +1,0 @@
-cython
-pytest
-tox
-twine
-mypy

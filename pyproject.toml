@@ -32,6 +32,13 @@ classifiers = [
   'Topic :: Utilities',
 ]
 
+[dependency-groups]
+dev = [
+  'pytest',
+  'twine',
+  'mypy',
+]
+
 [project.urls]
 Homepage = 'https://github.com/seung-lab/fastremap'
 Repository = "https://github.com/seung-lab/fastremap/"

@@ -13,7 +13,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: 3.13
           architecture: x64
 
       - name: Checkout
@@ -29,7 +29,7 @@ jobs:
         run: mypy fastremap
 
       - name: Compile
-        run: pip install -e . --no-build-isolation
+        run: pip install --group dev -e . --no-build-isolation
 
       - name: Run stub tests
         run: python -m mypy.stubtest fastremap --allowlist mypy.allowlist
