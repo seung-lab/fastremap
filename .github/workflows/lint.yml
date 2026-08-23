@@ -18,7 +18,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Add mypy annotator
         uses: pr-annotators/mypy-pr-annotator@v1.0.0
 
@@ -26,7 +26,7 @@ jobs:
         run: mypy fastremap
 
       - name: Compile
-        run: pip install --group dev -e . --no-build-isolation
+        run: python -m pip install --group dev -e . --no-build-isolation
 
       - name: Run stub tests
         run: python -m mypy.stubtest fastremap --allowlist mypy.allowlist
