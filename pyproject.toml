@@ -4,6 +4,7 @@ requires = [
   'meson-python>=0.15.0',
   'cython>=3.0',
   'numpy',
+  'ninja',
 ]
 
 [project]
