@@ -30,6 +30,11 @@ setuptools.setup(
       'fastremap.fastremap',
       sources=['fastremap/fastremap.pyx'],
       depends=[],
+      define_macros=[ 
+        ("NDEBUG", 1),
+        ("NPY_NO_DEPRECATED_API", 1),
+        ("NPY_1_7_API_VERSION", 1),
+      ],
       language='c++',
       language_level=3,
       include_dirs=["fastremap", str(NumpyImport())],
