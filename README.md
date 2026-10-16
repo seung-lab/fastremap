@@ -40,6 +40,7 @@ minval, maxval = fastremap.minmax(labels) # faster version of (np.min(labels), n
 num_pairs = fastremap.pixel_pairs(labels)  
 n_foreground = fastremap.foreground(labels) # number of nonzero voxels
 is_solid = fastremap.is_solid(labels, 1) # checks if all 1 w/ early exit, no copy
+is_sorted = fastremap.is_sorted(labels, asc=True) # checks sorted in ascending order
 
 # computes the cutout.tobytes(order) of each chunk and returns
 # the binaries indexed by fortran order in the order specified (C or F)
