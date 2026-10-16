@@ -6,7 +6,7 @@ on:
     tags:
       - '*'
 env:
-  CIBW_SKIP: cp27-* cp38* pp* cp312-manylinux_i686
+  CIBW_SKIP: cp27-* cp38* pp* cp312-manylinux_i686 *-win32
 
 jobs:
   build_wheels:
