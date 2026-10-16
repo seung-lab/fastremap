@@ -1582,6 +1582,35 @@ def foreground(arr):
   arr = _reshape(arr, (arr.size,))
   return _foreground(arr)
 
+def is_sorted(arr:NDArray[Any], asc:bool = True) -> bool:
+  """
+  Checks if the array is sorted.
+
+  asc = True means ascending order, False means descending.
+
+  Returns True if the array is sorted, else False.
+  """
+  arr = np.asarray(arr)
+  return _is_sorted(arr, asc=asc)
+
+def _is_sorted(cnp.ndarray[NUMBER, ndim=1] arr, asc:bool = True) -> bool:
+  if arr.size <= 1:
+    return True
+
+  cdef uint64_t i = 0
+  cdef uint64_t sz = arr.size
+
+  if asc:
+    for i in range(1,sz):
+      if arr[i] < arr[i-1]:
+        return False
+  else:
+    for i in range(1,sz):
+      if arr[i] > arr[i-1]:
+        return False
+
+  return True
+
 @cython.boundscheck(False)
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 @cython.nonecheck(False)

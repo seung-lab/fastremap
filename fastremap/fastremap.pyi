@@ -509,6 +509,20 @@ def is_solid(
     """
     ...
 
+def is_sorted(
+    arr: NDArray[Any],
+    asc: bool = True
+) -> bool:
+    """
+    Checks if the array is sorted.
+
+    asc = True means ascending order, False means descending.
+
+    Returns True if the array is sorted, else False.
+    """
+    ...
+
+
 # Cython internal pickle helpers — not part of public API
 def __reduce_cython__(self) -> tuple: ...
 def __setstate_cython__(self, __pyx_state: object) -> None: ...

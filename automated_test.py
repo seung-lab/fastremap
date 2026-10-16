@@ -905,5 +905,28 @@ def test_indices():
   result = fastremap.indices(arr, 1)
   assert np.all(result == np.array([0, 2, 4]))
 
+def test_is_sorted():
+  arr = np.array([5,129,19124, 1204012], dtype=np.uint32)
+  assert fastremap.is_sorted(arr, asc=True)
+  assert not fastremap.is_sorted(arr, asc=False)
+
+  arr = arr[::-1]
+  assert fastremap.is_sorted(arr, asc=False)
+  assert not fastremap.is_sorted(arr, asc=True)
+
+  arr = np.array([1])
+
+  arr = np.array([12515,2,3003,120,1])
+  assert not fastremap.is_sorted(arr, asc=True)
+  assert not fastremap.is_sorted(arr, asc=False)
+
+  arr.sort()
+  assert fastremap.is_sorted(arr, asc=True)
+  assert not fastremap.is_sorted(arr, asc=False)
+
+  assert fastremap.is_sorted([1]) == True
+  assert fastremap.is_sorted([]) == True
+
+
 
 
