@@ -1,7 +1,7 @@
 project(
   'fastremap',
   'cpp',
-  version: '1.20.1',
+  version: '1.21.0',
   default_options: ['cpp_std=c++11', 'optimization=3'],
 )
 
